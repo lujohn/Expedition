@@ -1,0 +1,14 @@
+{
+  "name": "Expedition",
+  "version": "1.0.0",
+  "description": "Settlers-Of-Catan-Clone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John Lu",
+  "license": "ISC",
+  "dependencies": {
+    "bower": "^1.8.0"
+  }
+}
