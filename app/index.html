@@ -7,10 +7,14 @@
 
 
 <body ng-controller="GameController">
+	<h1>{{welcome}}</h1>
 
     <div style="width: 480px; height: 980px" id="gameBoardContainer">
 
     </div>
+    <button ng-click="determinePlayerOrder()">Player Order</button>
+    <button ng-click="endTurn()">End Turn</button>
+    <button ng-click="showPlayerPanel()">Show Panel</button>
 
 <script src="../bower_components/angular/angular.js"></script>
 <script src="../bower_components/Snap.svg/dist/snap.svg.js"></script>
@@ -18,6 +22,7 @@
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers.js"></script>
 <script src="scripts/gameService.js"></script>
+<script src="scripts/playerService.js"></script>
 <script src="scripts/landFactory.js"></script>
 </body>
 </html>
