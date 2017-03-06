@@ -1,26 +1,32 @@
 /**
  * Created by johnlu on 3/3/17.
  */
+
 angular.module('expeditionApp')
-.service('GameModel', function () {
+.service('GameService', ['LandFactory', function (LandFactory) {
+    // Constant Variables
+    const LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat"];
+    //const COLOR_LOOKUP = {sheep : "#2eaa30", ore : "#bbbcb5", brick : "#842121", wood : "#663f1f", wheat : "#c4bb19"}
+    const NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];
+    const HEX_WIDTH = 130;
+    const HEX_HEIGHT = 150;
+    const BASE_X_OFFSET = 0;
+    const BASE_Y_OFFSET = 0;
+    const INCR_OFFSET = (HEX_WIDTH / 2);
+    const MID_ROW_IDX = 2;
+    const VERT_GAP_CLOSE = HEX_HEIGHT / 3.4;
 
-    // Note: A graph lends itself very well to the structure of the game
-    //var gameGraph
+    // Stores the lands in play for this game
+    let LAND_MATRIX = [[],[],[],[],[]]; 
+    // Stores lands for later lookup
+    let LAND_DICTIONARY = {}
 
-    var LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat"];
-    var NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];
-    var HEX_WIDTH = 130;
-    var HEX_HEIGHT = 150;
-    var BASE_X_OFFSET = 100;
-    var BASE_Y_OFFSET = 100;
-    var INCR_OFFSET = (HEX_WIDTH / 2);
-    var MID_ROW_IDX = 2;
-    var VERT_GAP_CLOSE = 37;
-    LAND_MATRIX = [[],[],[],[],[]];  // Stores the lands in play for this game
+    this.createRandomGame = function () {
+        // Generate lands randomly for now. MODIFY
+        generateLandsRandom();
+        // Assign dice numbers to land
+        assignLandDiceNumbersRandom();
 
-    this.createGame = function () {
-        // Generate land matrix randomly for now. Add in functionality to change later
-        generateLandMatrix();
         drawGameBoard();
     };
 
@@ -45,60 +51,74 @@ angular.module('expeditionApp')
 
     drawNewHex = function (xOffset, rowNum, colNum) {
         // Draw the land
-        var hexID = LAND_MATRIX[rowNum][colNum].landID;
-        console.log("hexID from drawNexHex(): " + hexID);
+        var land = LAND_MATRIX[rowNum][colNum];
+        console.log("landID from drawNexHex(): " + land.landID);
 
         // Grab game container
         var gameContainer = document.getElementById("gameBoardContainer");
 
         // Create new div element to hold land. ID must be set per
         // documentation for svg.js
-        var svgDiv = document.createElement("div");
-        svgDiv.id = hexID;
+        var landImage = document.createElement("img");
+        landImage.src = "images/grain.png"
+        landImage.id = land.landID;
+
+        // PUT INSIDE CSS SHEET LATER
+        landImage.style.height = HEX_HEIGHT + "px";
+        landImage.style.width = HEX_WIDTH + "px";
+        landImage.style.position = "absolute";
 
         // Apply necessary offsets to get land into place.
-        console.log("x left shift: " + (xOffset + (HEX_WIDTH * colNum)));
-        console.log("xOffset: " + xOffset + " HEX_WIDTH: " + HEX_WIDTH + " colNum: " + colNum);
-        xPos = (xOffset + (HEX_WIDTH * colNum)) + "px";
-        yPos = BASE_Y_OFFSET + (HEX_HEIGHT - VERT_GAP_CLOSE) * rowNum  + "px";
-        svgDiv.style.position = "absolute";
-        svgDiv.style.left = xPos;
-        svgDiv.style.top = yPos;
-        svgDiv.style.height = HEX_HEIGHT + "px";
-        svgDiv.style.width = HEX_WIDTH + "px";
+        xPos = (xOffset + (HEX_WIDTH * colNum));
+        yPos = (HEX_HEIGHT - VERT_GAP_CLOSE) * rowNum;
+        landImage.style.left = xPos + "px";
+        landImage.style.top = yPos + "px";
+
+        // Add handler for click
+        landImage.addEventListener("click", function (event) {
+            console.log(LAND_DICTIONARY[event.target.id]);
+            var landClicked = event.target.id;
+
+        });
+
+        // Fix Offsetting Later...
+        var diceLabel = document.createElement("h1");
+        diceLabel.innerHTML = land.diceNumber;
+        diceLabel.style.left = xPos + 60 + "px";
+        diceLabel.style.top = yPos + 40 + "px";
+        diceLabel.style.position = "absolute";
+        diceLabel.style.zIndex = "2000";
+        gameContainer.appendChild(diceLabel);
 
         // Add land div into container.
-        gameContainer.appendChild(svgDiv);
-
-        // Draw the land.
-        var draw = SVG(hexID).size(HEX_WIDTH, HEX_HEIGHT);
-        var hex = draw.path("m0,-75l64.9519052838329,37.49999999999999l0,75l-64.95190528383289,37.500000000000014l-64.9519052838329,-37.499999999999964l-4.263256414560601e-14,-74.99999999999999z");
-
-        // Position the land. This brings the entire hex into view.
-        hex.transform({x : HEX_WIDTH / 2, y : HEX_HEIGHT / 2});
-
-        // Apply proper color to land
-        //hex.fill = applyColor(landType)
-
+        gameContainer.appendChild(landImage);
     };
-
-    var applyColor = function (landType) {
-
-    }
     
-    var generateLandMatrix = function () {
+    var generateLandsRandom = function () {
         // Generate Lands Randomly. Get a number randomly between 0 and 4 (inclusive)
         var count = 0;
         var numRows = LAND_MATRIX.length;
         for (var row = 0; row < numRows; row++) {
             var numCols = NUM_HEXES_IN_ROW[row];
             for (var col = 0; col < numCols; col++, count++) {
+                // Calculate a random land type
                 var rand = Math.floor(Math.random() * 5);
-                var landString = LAND_TYPES[rand];
-                var newLand = {landID : "hex" + count.toString(), landType : landString};
+                var landType = LAND_TYPES[rand];
+                // Use Land Factory to create a land
+                var newLand = LandFactory.createLand(landType);
+                newLand.landID = "land" + count.toString();
+                // Store new land
                 LAND_MATRIX[row].push(newLand);
-                console.log("land generated -  id: " + newLand.landID + " type: " + newLand.landType);
+                LAND_DICTIONARY[newLand.landID] = newLand; 
+                console.log("land generated => " + newLand);
             }
         }
     }
-});
+
+    var assignLandDiceNumbersRandom = function () {
+        var possibleNumbers = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12];
+        for (var i = 0; i < possibleNumbers.length; i++) {
+            LAND_DICTIONARY["land" + i].diceNumber = possibleNumbers[i];
+        }
+    }
+}]);
