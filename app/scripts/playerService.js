@@ -3,15 +3,13 @@
  */
 angular.module('expeditionApp')
 .service('PlayerService', function() {
-	const PLAYER_COLORS = ["red", "blue", "yellow", "white"];
-	this.createPlayer = function (num) {
+	this.createPlayer = function (playerColor) {
 		var newPlayer = {};
 		newPlayer.playerNumber = 0;
 		newPlayer.landsOwned = {};
 		newPlayer.hand = [];
 		newPlayer.victoryPoints = 2;
-		newPlayer.color = PLAYER_COLORS[num];
-
+		newPlayer.color = playerColor;
 		return newPlayer;
 	}
 

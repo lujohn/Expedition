@@ -4,7 +4,7 @@
 angular.module('expeditionApp')
 .controller('GameController', ['$scope', 'GameService', function($scope, GameService) {
     $scope.welcome = "Welcome from the Game Controller!";
-
+    const PLAYER_COLORS = ["red", "blue", "yellow", "white"];
     //const COLOR_LOOKUP = {sheep : "#2eaa30", ore : "#bbbcb5", brick : "#842121", wood : "#663f1f", wheat : "#c4bb19"}
 
     // Constants used for drawing game board
@@ -18,16 +18,10 @@ angular.module('expeditionApp')
 
     /* =========================== For Testing Only ================================ */
     GameService.createRandomGame(4);
-    addPlayers(4);
+    GameService.addPlayers(PLAYER_COLORS);
 
     //drawGameBoard();
     $scope.activePlayer = GameService.getActivePlayer();
-
-    function addPlayers (numPlayers) {
-        for (var k = 0; k < numPlayers; k++) {
-            GameService.addPlayer(k);    
-        }
-    }
 
     /* ------------------------- Player Action Handlers ---------------------------- */
     $scope.offerTrade = function (otherPlayerColor) {
