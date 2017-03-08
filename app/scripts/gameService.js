@@ -12,7 +12,6 @@ angular.module('expeditionApp')
     const LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat"];
     this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
 
-
     /* ============================== State Information ============================== */
     this.landsMatrix = [[],[],[],[],[]];   // Stores the lands in play for this game
     this.landsDictionary = {}   // Stores lands for later lookup

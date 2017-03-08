@@ -1,6 +1,5 @@
-/**
- * Created by johnlu on 3/4/17.
- */
+
+/* NOTE: Store the points of the hex tiles for easier implmentation of Settlements and Roads */
 
 angular.module('expeditionApp')
 .factory('LandFactory', function() {
