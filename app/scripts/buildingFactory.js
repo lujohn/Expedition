@@ -6,6 +6,7 @@ angular.module('expeditionApp')
 	// Create new road
 	buildingFactory.createRoad = function (color, vertex1, vertex2) {
 		var newRoad = {};
+		newRoad.color = color;
 		newRoad.from = vertex1;
 		newRoad.to = vertex2;
 

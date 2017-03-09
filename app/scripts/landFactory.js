@@ -15,9 +15,10 @@ angular.module('expeditionApp')
 
         // State information
         newLand.hasRobber = false;
-        newLand.owners = [];
-        newLand.occupiedCorners = [];  // 0 to 6. 0 is north corner. Count counterclockwise
-        newLand.occupiedEdges = [];    // 'N', 'NE', 'NW', 'S', 'SE', 'SW'
+        newLand.occupiedCorners = {
+        };  // 0 to 6. 0 is north corner. Count counterclockwise
+        newLand.occupiedEdges = {
+        };    // 'N', 'NE', 'NW', 'S', 'SE', 'SW'
 
         return newLand;
     }

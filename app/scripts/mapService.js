@@ -66,15 +66,6 @@ angular.module('expeditionApp')
         drawHex(land, xOffset, yOffset);
 
         // DRAW DICE NUMBER WITH CANVAS
-        /*
-        var diceLabel = document.createElement("h1");
-        diceLabel.innerHTML = land.diceNumber;
-        diceLabel.style.left = xPos + 60 + "px";
-        diceLabel.style.top = yPos + 40 + "px";
-        diceLabel.style.position = "absolute";
-        diceLabel.style.zIndex = "2000";
-        gameContainer.appendChild(diceLabel);*/
-
     };
 
     function drawHex(land, xOffset, yOffset) {
