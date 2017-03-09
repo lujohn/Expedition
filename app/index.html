@@ -8,11 +8,12 @@
 
 <body ng-controller="GameController">
 	<h1>{{welcome}}</h1>
-
-    <div ng-controller="MapController" style="width: 600px; height: 600px" id="gameBoardContainer">
-    	<button ng-click="drawGame()">DRAW GAME</button>
+	<div ng-controller="MapController">
+	    <div style="width: 900px; height: 900px" id="gameBoardContainer">
+	    </div>
+	    <button ng-click="drawGame()">DRAW GAME</button>
     </div>
-    
+
     <button ng-click="determinePlayerOrder()">Player Order</button>
     <button ng-click="endTurn()">End Turn</button>
     <button ng-click="showPlayerPanel()">Show Panel</button>

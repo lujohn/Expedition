@@ -2,7 +2,7 @@
  * Created by johnlu on 3/3/17.
  */
 angular.module('expeditionApp')
-.controller('GameController', ['$scope', 'GameService', 'MapService', function($scope, GameService) {
+.controller('GameController', ['$scope', 'GameService', function($scope, GameService) {
     $scope.welcome = "Welcome from the Game Controller!";
     const PLAYER_COLORS = ["red", "blue", "yellow", "white"];
     /* =========================== For Testing Only ================================ */
@@ -46,7 +46,7 @@ angular.module('expeditionApp')
 }])
 .controller('MapController', ['$scope', 'MapService', function($scope, MapService) {
     $scope.drawGame = function () {
-        MapService.drawGameBoard();
+        MapService.createGameBoard();
     }
 }])
 .controller('PlayerController', ['$scope', 'PlayerService', function($scope, PlayerService, GameService) {
