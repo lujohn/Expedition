@@ -1,12 +1,11 @@
-describe('Test GameService', function () {
+describe('GameService Tests', function () {
 	
 	beforeEach(module('expeditionApp'));
 
-	var GameService, PlayerService;
+	var GameService;
 
 	beforeEach(inject(function(_GameService_, _PlayerService_) {
 		GameService = _GameService_;
-		PlayerService = _PlayerService_;
 	}));
 
 	describe('test gameWon function', function () {

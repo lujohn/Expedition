@@ -1,4 +1,4 @@
-describe('LandFactory', function () {
+describe('LandFactory Tests', function () {
 	beforeEach(module('expeditionApp'));
 
 	var LandFactory;
