@@ -29,7 +29,7 @@ angular.module('expeditionApp')
 		return false;
 	}
 
-	this.addEdge = function  (color, fromCoord, toCoord) {
+	this.addEdge = function (color, fromCoord, toCoord) {
 
 		// Do not add duplicates
 		if (this.hasEdge(fromCoord, toCoord)) {
@@ -43,12 +43,25 @@ angular.module('expeditionApp')
 			return false;
 		}
 
-		var v1 = coordinatesToString(fromCoord);
-        var v2 = coordinatesToString(toCoord);
-		this.edges[v1][v2] = color;
-        this.edges[v2][v1] = color;
-
+		// setEdge will set edge both directions
+		this.setEdge(color, fromCoord, toCoord);
         return true;
+	}
+
+	this.setEdge = function (color, from, to) {
+		var edges = this.getEdges(from);
+		edges[coordinatesToString(to)] = color;
+
+		// Add edge both ways
+		edges = this.getEdges(to);
+		edges[coordinatesToString(from)] = color;
+	}
+
+	this.setVertex = function (color, type, coord) {
+		var vertex = this.getVertex(coord);
+		vertex.color = color;
+		vertex.type = type;
+		vertex.available = false;
 	}
 
 	this.hasVertex = function (coord) {
@@ -60,6 +73,25 @@ angular.module('expeditionApp')
 		var to = coordinatesToString(toCoord);
 
 		return this.edges.hasOwnProperty(from) && this.edges[from].hasOwnProperty(to);
+	}
+
+	this.getVertex = function (coord) {
+		if (this.hasVertex(coord)) {
+			return this.verticies[coordinatesToString(coord)];
+		}
+		return null;
+	}
+
+	this.getEdges = function (coord) {
+		if (this.hasVertex(coord)) {
+			return this.edges[coordinatesToString(coord)];
+		}
+		return null;
+	}
+
+	this.getEdgeColor = function (from, to) {
+		var edges = this.getEdges(from);
+		return edges[coordinatesToString(to)];
 	}
 
 	/* ======================= Private Helper Functions ======================= */

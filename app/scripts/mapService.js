@@ -9,7 +9,7 @@
 */
 
 angular.module('expeditionApp')
-.service('MapService', ['GameService', function(GameService) {
+.service('MapService', ['GameService', 'MapGraphService', function(GameService, MapGraphService) {
 	const COLOR_LOOKUP = {sheep : "#2eaa30", ore : "#bbbcb5", brick : "#842121", wood : "#663f1f", wheat : "#c4bb19"}
 
 	// Constants used for drawing game board
@@ -108,38 +108,27 @@ angular.module('expeditionApp')
 
         });
 
-         gameContainer.appendChild(c);
+        gameContainer.appendChild(c);
     }
 
     /* ---------------------- Interaction with MapGraphService ----------------------- */
-    /*
     this.addRoadToGraph = function (road) {
-        var v1 = coordinatesToString(road.from);
-        var v2 = coordinatesToString(to);
-
-        if (this.verticies.hasOwnProperty(v1) && this.verticies.hasOwnProperty(v2)) {
-            this.adjacencyList[v1].v2 = road.color;
-            this.adjacencyList[v2].v1 = road.color;
-            return true;
-        }
-        console.log('Tried to add edge from: ' + fromStr + ' to: ' + toStr + ' but one or both non-existent!');
-        return false;
+        MapGraphService.setEdge(road.color, road.from, road.to);
     }
 
-    this.addBuildingToGraph = function(building) {
-        var vertex = this.verticies[building.location];
-        vertex.color = building.color;
-        vertex.type = building.type;
+    this.addBuildingToGraph = function (building) {
+        MapGraphService.setVertex(building.color, building.type, building.location);
     }
 
     // Checks if a road has already been built at the specified location
-    this.hasRoadAt = function (from, to) {
-        var fromStr = coordinatesToString(from);
-        var toStr = coordinatesToString(to);
-        var toCoordinates = this.adjacenyList[fromStr];
-
-        return toCoordinates.hasOwnProperty[toStr];
+    this.roadExistsAt = function (from, to) {
+        // Edge color initlized to null. Changed when road is built
+        return MapGraphService.getEdgeColor(from, to) != null;
     }
-    */
 
+    this.buildingExistsAt = function (coord) {
+        // vertex.type is initialized to null and changed when settlement is built.
+        var vertex = MapGraphService.getVertex(coord);
+        return vertex.type != null;
+    }
 }]);
