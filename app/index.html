@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Expedition</title>
+    <link href="styles/myStyles.css" rel="stylesheet">
 </head>
 
 
 <body ng-controller="GameController">
-	<h1>{{welcome}}</h1>
 	<div ng-controller="MapController">
-	    <div style="width: 1200px; height: 1200px" id="gameBoardContainer">
+	    <div id="gameBoardContainer">
 	    </div>
 	    <button ng-click="drawGame()">DRAW GAME</button>
+        <button ng-click="">Build Road</button>
+        <button ng-click="">Build Settlement</button>
     </div>
 
     <button ng-click="determinePlayerOrder()">Player Order</button>
-    <button ng-click="">Build Road</button>
-    <button ng-click="">Build Settlement</button>
+
     <button ng-click="endTurn()">End Turn</button>
     <button ng-click="showPlayerPanel()">Show Panel</button>
 
@@ -30,6 +31,7 @@
 <script src="scripts/landFactory.js"></script>
 <script src="scripts/mapService.js"></script>
 <script src="scripts/buildingFactory.js"></script>
+<script src="scripts/mapGraphService.js"></script>
 
 </body>
 </html>

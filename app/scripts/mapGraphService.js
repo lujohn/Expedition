@@ -94,6 +94,17 @@ angular.module('expeditionApp')
 		return edges[coordinatesToString(to)];
 	}
 
+	/* ============================= For Debugging ============================= */
+	this.getNumVerticies = function () {
+		var count = 0;
+		for (var prop in this.verticies) {
+			if (this.verticies.hasOwnProperty(prop)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	/* ======================= Private Helper Functions ======================= */
 	// Vertex constructor
 	function Vertex() {

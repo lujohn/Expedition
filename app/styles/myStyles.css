@@ -1,7 +1,10 @@
 #gameBoardContainer {
-
+	width: 1200px;
+	height: 1200px;
+	position: relative;
 }
 
-.land {
-
+div > canvas {
+	position: absolute;
 }
+

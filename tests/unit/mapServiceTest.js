@@ -83,4 +83,78 @@ describe('MapService Tests', function () {
 		// Check that there is no building at v2
 		expect(MapService.buildingExistsAt(v2)).toBeFalsy();
 	});
+
+	/* ------------------- Test addAllVerticiesInHexToGraph() --------------------- */
+	it('tests addAllVerticiesInHexToGraph() function', function () {
+		var xOffset = 0;
+		var yOffset = 0;
+		var hexCoordinates = {
+            A: [80 + xOffset, 0 + yOffset],
+            B: [160 + xOffset, 40 + yOffset],
+            C: [160 + xOffset, 120 + yOffset],
+            D: [80 + xOffset, 160 + yOffset],
+            E: [0 + xOffset, 120 + yOffset],
+            F: [0 + xOffset, 40 + yOffset]
+        };
+
+        MapService.addAllVerticiesInHexToGraph(hexCoordinates);
+
+        expect(MapGraphService.hasVertex([80,160])).toBeTruthy();
+        expect(MapGraphService.getVertex([0,40]).color === null).toBeTruthy();
+
+        // A and B should not be added again. But C-F should be added
+        xOffset = 10;
+        yOffset = 10;
+        var hexCoordinates2 = {
+            A: [80, 0],
+            B: [160, 40],
+            C: [160 + xOffset, 120 + yOffset],
+            D: [80 + xOffset, 160 + yOffset],
+            E: [0 + xOffset, 120 + yOffset],
+            F: [0 + xOffset, 40 + yOffset]
+        };
+
+        MapService.addAllVerticiesInHexToGraph(hexCoordinates2);
+
+        expect(MapGraphService.hasVertex([170,130])).toBeTruthy();
+        expect(MapGraphService.getVertex([90,170]).color === null).toBeTruthy();
+	});
+
+	/* -------------------- Test addAllEdgesFromHexToGraph() --------------------- */
+	it('tests addAllEdgesFromHexToGraph', function () {
+		var xOffset = 0;
+		var yOffset = 0;
+		var hexCoordinates = {
+            A: [80 + xOffset, 0 + yOffset],
+            B: [160 + xOffset, 40 + yOffset],
+            C: [160 + xOffset, 120 + yOffset],
+            D: [80 + xOffset, 160 + yOffset],
+            E: [0 + xOffset, 120 + yOffset],
+            F: [0 + xOffset, 40 + yOffset]
+        };
+        MapService.addAllVerticiesInHexToGraph(hexCoordinates);
+        MapService.addAllEdgesFromHexToGraph(hexCoordinates);
+        expect(MapGraphService.hasEdge([80,0], [160,40])).toBeTruthy();
+        expect(MapGraphService.hasEdge([160,120], [80,160])).toBeTruthy();
+        expect(MapGraphService.hasEdge([0,40],[80,0])).toBeTruthy();
+        expect(MapGraphService.hasEdge([80,0], [80,160])).toBeFalsy();
+
+        xOffset = 10;
+        yOffset = 10;
+        var hexCoordinates2 = {
+            A: [80, 0],
+            B: [160, 40],
+            C: [160 + xOffset, 120 + yOffset],
+            D: [80 + xOffset, 160 + yOffset],
+            E: [0 + xOffset, 120 + yOffset],
+            F: [0 + xOffset, 40 + yOffset]
+        };
+        MapService.addAllVerticiesInHexToGraph(hexCoordinates2);
+        MapService.addAllEdgesFromHexToGraph(hexCoordinates2);
+        expect(MapGraphService.hasEdge([10,50], [80,0])).toBeTruthy();
+        expect(MapGraphService.hasEdge([10,130], [10,50])).toBeTruthy();
+        expect(MapGraphService.hasEdge([160,40],[80,0])).toBeTruthy();
+        expect(MapGraphService.hasEdge([80,0], [10,130])).toBeFalsy();
+
+	});
 });
