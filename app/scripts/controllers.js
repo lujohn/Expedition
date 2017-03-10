@@ -2,7 +2,7 @@
  * Created by johnlu on 3/3/17.
  */
 angular.module('expeditionApp')
-.controller('GameController', ['$scope', 'GameService', function($scope, GameService) {
+.controller('GameController', ['$scope', 'GameService', function ($scope, GameService) {
     $scope.welcome = "Welcome from the Game Controller!";
     const PLAYER_COLORS = ["red", "blue", "yellow", "white"];
     /* =========================== For Testing Only ================================ */

@@ -20,6 +20,7 @@ angular.module('expeditionApp')
     const ROW_OFFSET = (HEX_WIDTH / 2);
     const MID_ROW_IDX = 2;
     const VERT_GAP_CLOSE = 40; //HEX_HEIGHT / 3.4;
+    
     this.createGameBoard = function () {
         // Draw the board row by row
         var numRows = GameService.landsMatrix.length;
@@ -109,5 +110,36 @@ angular.module('expeditionApp')
 
          gameContainer.appendChild(c);
     }
+
+    /* ---------------------- Interaction with MapGraphService ----------------------- */
+    /*
+    this.addRoadToGraph = function (road) {
+        var v1 = coordinatesToString(road.from);
+        var v2 = coordinatesToString(to);
+
+        if (this.verticies.hasOwnProperty(v1) && this.verticies.hasOwnProperty(v2)) {
+            this.adjacencyList[v1].v2 = road.color;
+            this.adjacencyList[v2].v1 = road.color;
+            return true;
+        }
+        console.log('Tried to add edge from: ' + fromStr + ' to: ' + toStr + ' but one or both non-existent!');
+        return false;
+    }
+
+    this.addBuildingToGraph = function(building) {
+        var vertex = this.verticies[building.location];
+        vertex.color = building.color;
+        vertex.type = building.type;
+    }
+
+    // Checks if a road has already been built at the specified location
+    this.hasRoadAt = function (from, to) {
+        var fromStr = coordinatesToString(from);
+        var toStr = coordinatesToString(to);
+        var toCoordinates = this.adjacenyList[fromStr];
+
+        return toCoordinates.hasOwnProperty[toStr];
+    }
+    */
 
 }]);

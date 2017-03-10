@@ -6,19 +6,7 @@ angular.module('expeditionApp')
 		newPlayer.color = playerColor;
 		// This object keeps track of which resources the player controls for each diceNumber
 		// Note: duplicates must be allowed here.
-		newPlayer.landsForDiceNumber = {
-			2: [],
-			3: [], 
-			4: [],
-			5: [],
-			6: [],
-			7: [],
-			8: [],
-			9: [],
-			10: [],
-			11: [],
-			12: []
-		};
+		newPlayer.landsForDiceNumber = { 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [] };
 		// This object keeps track of the number of each resource the player has in hand
 		newPlayer.resourcesInHand = {
 			"sheep": 0,
