@@ -48,6 +48,7 @@ angular.module('expeditionApp')
     $scope.drawGame = function () {
         MapService.createGameBoard();
     }
+    
 }])
 .controller('PlayerController', ['$scope', 'PlayerService', function($scope, PlayerService, GameService) {
 

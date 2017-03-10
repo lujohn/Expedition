@@ -3,27 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Expedition</title>
+    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles/myStyles.css" rel="stylesheet">
 </head>
 
 
-<body ng-controller="GameController">
-	<div ng-controller="MapController">
-	    <div id="gameBoardContainer">
-	    </div>
-	    <button ng-click="drawGame()">DRAW GAME</button>
+<body>
+    <div ng-controller="GameController" class="container">
+        <div class="row row-content">
+            <div class="col-xs-8" ng-controller="MapController">
+                <div style="border: 2px solid red" id="gameBoardContainer">
+                    Board Container
+                </div>
+                <button ng-click="drawGame()">DRAW GAME</button>
+            </div>
+            <div style="border: 2px solid yellow; height: 600px" class="col-xs-4">
+                Player Controls Go Here!
+                
+            </div>
+        </div>
+        <div class="row row-content">
+            <div style="border: 2px dashed blue; height: 400px" class="col-xs-8"> 
+                Player Stats go Here
+            </div>
+        </div>
+        
+        
         <button ng-click="">Build Road</button>
         <button ng-click="">Build Settlement</button>
+        <button ng-click="determinePlayerOrder()">Player Order</button>
+
+        <button ng-click="endTurn()">End Turn</button>
+        <button ng-click="showPlayerPanel()">Show Panel</button>
     </div>
 
-    <button ng-click="determinePlayerOrder()">Player Order</button>
-
-    <button ng-click="endTurn()">End Turn</button>
-    <button ng-click="showPlayerPanel()">Show Panel</button>
 
 <script src="../bower_components/angular/angular.js"></script>
-<script src="../bower_components/Snap.svg/dist/snap.svg.js"></script>
-<script src="../bower_components/svg.js/dist/svg.min.js"></script>
+
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers.js"></script>
 <script src="scripts/gameService.js"></script>

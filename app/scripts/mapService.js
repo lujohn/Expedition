@@ -71,7 +71,7 @@ angular.module('expeditionApp')
         MapGraphService.addEdge(null, v1, v2);
     }
 
-    /* --------------------------- Drawing the Logic -------------------------- */
+    /* ---------------------------- Drawing Logic --------------------------- */
     this.drawRoad = function () {
         /*var c = document.getElementById("land10");
         var ctx = c.getContext("2d");
