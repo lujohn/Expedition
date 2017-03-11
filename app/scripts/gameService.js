@@ -8,22 +8,12 @@
 angular.module('expeditionApp')
 .service('GameService', ['LandFactory', 'PlayerService', function (LandFactory, PlayerService) {
 
-    /* ------------------------ For Testing ------------------------------ */
-    const LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat"];
+    var LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat"];
     this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
 
-    /* ============================== State Information ============================== */
     this.landsMatrix = [[],[],[],[],[]];   // Stores the lands in play for this game
     this.landsDictionary = {}   // Stores lands for later lookup
-
-    this.turnsArray = []  // Array of player colors indicating turn order. Can reimplment with circular linked list
     this.playersDictionary = {};  // Player information as key, value pair <Color, PlayerObject>
-    this.activePlayer = PlayerService.createPlayer("red");
-
-    /* ============================ Land-related functions ============================= */
-    this.getActivePlayer = function() {
-        return this.activePlayer;
-    }
 
     this.createRandomGame = function (numPlayers) {
         // Generate lands randomly for now. MODIFY
@@ -50,18 +40,24 @@ angular.module('expeditionApp')
 
                 // Store new land
                 this.landsMatrix[row].push(newLand);
+                console.log(this.landsMatrix[row].length);
                 this.landsDictionary[newLand.landID] = newLand; 
-                console.log("land generated => " + newLand);
+                console.log("land generated => " + newLand.landID);
             }
         }
     }
 
-    // For Testing Only 
     this.assignLandDiceNumbersRandom = function () {
         var possibleNumbers = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12];
+        // Shuffle
+
         for (var i = 0; i < possibleNumbers.length; i++) {
             this.landsDictionary["land" + i].diceNumber = possibleNumbers[i];
         }
+    }
+
+    this.getLandWithID = function (landID) {
+        return this.landsDictionary[landID];
     }
 
     /* ============================ Player-related functions ============================= */
@@ -76,46 +72,23 @@ angular.module('expeditionApp')
         return false;
     }
 
-    // This function ends the active players turn by setting the active player property 
-    // to the next player indicated in the turnsArray field.
-    this.endTurn = function () {
-        var curPlayerIndex = this.turnsArray.indexOf(this.activePlayer.color);
-        if (curPlayerIndex === this.turnsArray.length - 1) {
-            this.activePlayer = this.playersDictionary[this.turnsArray[0]];
-        } else {
-            this.activePlayer = this.playersDictionary[this.turnsArray[curPlayerIndex + 1]];
-        }
-    }
-
     // Take an array of players (color strings) and adds them into the game
     this.addPlayers = function (colorsArray) {
         for (var i = 0; i < colorsArray.length; i++) {
             this.addPlayer(colorsArray[i]);
         }
-        // colorsArray.forEach( function (playerColor) {
-        //     this.addPlayer(playerColor);
-        // });
     }
 
     this.addPlayer = function (playerColor) {
-        // Do not allow duplicate colors. One player per color
-        if (this.turnsArray.includes(playerColor)) {
-            throw 'Tried to add multiple players of same color!';
-        }
 
         var newPlayer = PlayerService.createPlayer(playerColor);
 
-        // Store new player's color in turnsArray
-        this.turnsArray.push(newPlayer.color);
-
         // Store new player in dictionary.
         this.playersDictionary[playerColor] = newPlayer;
-
-        console.log("Player Created: " + newPlayer);
         return newPlayer;
     }
 
-    this.getPlayer = function (playerColor) {
+    this.getPlayerByColor = function (playerColor) {
         return this.playersDictionary[playerColor];
     }
 

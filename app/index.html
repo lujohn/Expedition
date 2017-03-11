@@ -9,39 +9,55 @@
 
 
 <body>
-    <div ng-controller="GameController" class="container">
+    <div class="container" ng-controller="GameController">
         <div class="row row-content">
-            <div class="col-xs-8" ng-controller="MapController">
+            <div class="col-xs-8">
                 <div style="border: 2px solid red" id="gameBoardContainer">
                     Board Container
                 </div>
-                <button ng-click="drawGame()">DRAW GAME</button>
+                <button ng-show="showStartButton" ng-click="start()">START</button>
             </div>
-            <div style="border: 2px solid yellow; height: 600px" class="col-xs-4">
-                Player Controls Go Here!
-                
-            </div>
-        </div>
-        <div class="row row-content">
-            <div style="border: 2px dashed blue; height: 400px" class="col-xs-8"> 
-                Player Stats go Here
-            </div>
-        </div>
-        
-        
-        <button ng-click="">Build Road</button>
-        <button ng-click="">Build Settlement</button>
-        <button ng-click="determinePlayerOrder()">Player Order</button>
 
-        <button ng-click="endTurn()">End Turn</button>
-        <button ng-click="showPlayerPanel()">Show Panel</button>
+            <div ng-show="INITIAL_STATE && !BUILDING_STATE" style="border: 2px solid yellow; height: 600px" class="col-xs-4">
+                <p>{{!BUILDING_STATE}}</p>
+                <h1>{{activePlayer.color}} Please Place Your First Settlement...</h1>
+            </div>
+
+            
+            <div ng-show="BUILDING_STATE" style="border: 2px solid yellow; height: 600px" class="col-xs-4">
+                <button ng-click="">Build Road</button>
+                <button ng-click="">Build Settlement</button> 
+                <button ng-click="endTurn()">End Turn</button>
+                <p>You clicked land {{presentLand.landID}}</p>
+                <p>Type:{{presentLand.type}}</p>
+
+            </div>
+        </div>
+        <div ng-show="ACTIVE_STATE" class="row row-content" ng-controller="PlayerController" style="border: 2px dashed blue;">
+            <div class="col-xs-3">
+                <h1>{{players[0]}}'s Stats</h1>
+                <p>Lands Owned: <span>{{}}</span></p>
+                <p>Resources in Hand: <span>{{}}</span> </p>
+                <p>Number of Settlements: <span>{{}}</span> </p>
+                <p>Victory Points: <span>{{}}</span> </p>
+            </div>
+            <div class="col-xs-3 pull-right">
+                <h1>{{players[0]}}'s Stats</h1>
+                <p>Lands Owned: <span>{{}}</span></p>
+                <p>Resources in Hand: <span>{{}}</span> </p>
+                <p>Number of Settlements: <span>{{}}</span> </p>
+                <p>Victory Points: <span>{{}}</span> </p>
+            </div>
+        </div>
+        
     </div>
 
 
 <script src="../bower_components/angular/angular.js"></script>
 
 <script src="scripts/app.js"></script>
-<script src="scripts/controllers.js"></script>
+<script src="scripts/gameController.js"></script>
+<script src="scripts/playerController.js"></script>
 <script src="scripts/gameService.js"></script>
 <script src="scripts/playerService.js"></script>
 <script src="scripts/landFactory.js"></script>
