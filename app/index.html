@@ -21,12 +21,22 @@
                 </div>
                 <button ng-if="showStartButton" ng-click="start()">START</button>
             </div>
-   
-            <div id="actionPanel" ng-show="INITIAL_STATE || BUILDING_STATE" style="border: 2px solid yellow; height: 400px" class="col-xs-4">
-                <h2>Choose a Land to Build On</h2>
-                <h2>Type:{{landClicked.type}}</h2>
+
+            <!-- JUST MAKE A FORM FOR THE INITAL SELECTION (MAYBE ALL LAND SELECTIONS) -->
+            <div id="InitialPanel" ng-show="INITIAL_STATE" style="border: 2px solid yellow; height: 400px" class="col-xs-4">
+                <h2>Player: {{activePlayer.color}} -- Please Pick!</h2>
+                <h2>Type:{{landSelected.type}}</h2>
+                <div ng-show="landSelected != null">
+                    <span class="btn btn-default" ng-click="selectedInitialResource('A')">A</span>
+                    <span class="btn btn-primary" ng-click="selectedInitialResource('B')">B</span>
+                    <span class="btn btn-success" ng-click="selectedInitialResource('C')">C</span>
+                    <span class="btn btn-info" ng-click>D</span>
+                    <span class="btn btn-warning" ng-click>E</span>
+                    <span class="btn btn-danger" ng-click>F</span>
+                </div>
+                <!-- THIS PART IS NOT COMPLETE -->
                 <div ng-if="BUILDING_STATE && LAND_SELECTED_STATE">
-                    <land-hex id="{{landClicked.landID}}"></land-hex>
+                    <land-hex id="{{landSelected.landID}}"></land-hex>
                 </div>
             </div>
         </div>
@@ -50,7 +60,7 @@
         <p>Building state: {{BUILDING_STATE}}</p>
         <p>Initial state: {{INITIAL_STATE}}</p>
         <p>Active state: {{ACTIVE_STATE}}</p>
-        <P>Land Selected state: {{LAND_SELECTED_STATE}}</P>
+        <P>Land Selected: {{landSelected.landID}}</P>
     </div>
 
 

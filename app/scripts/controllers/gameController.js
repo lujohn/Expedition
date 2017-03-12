@@ -7,27 +7,47 @@ angular.module('expeditionApp')
 
     const PLAYER_COLORS = ["red", "blue", "yellow", "white"];
 
-    var turnsOrder = []  // Array of player colors indicating turn order.
+    $scope.turnsOrder = []  // Array of player colors indicating turn order.
 
     /* =========================== For Testing Only ================================ */
     $scope.showStartButton = true;
     $scope.INITIAL_STATE = false;
     $scope.ACTIVE_STATE = false;
     $scope.BUILDING_STATE = false;
-    $scope.LAND_SELECTED_STATE = false;
 
+    $scope.landSelected = null;  // holds the last clicked land
+    $scope.activePlayer = null;
+
+    // TESTING WITH MOCK SETUP. USE ANGULAR FORM TO POPULATE INFO.
     $scope.start = function () {
         GameService.createRandomGame(2);
         MapService.assignCoordinatesToLands(GameService.landsMatrix);
-        GameService.addPlayers(['red', 'blue']);
+        GameService.addPlayers(['red', 'blue', 'yellow']);
+        $scope.turnsOrder = ['red', 'blue', 'yellow'];
 
         $scope.landsArray = GameService.landsMatrix;
         $scope.landsDictionary = GameService.landsDictionary;
 
-        $scope.activePlayer = GameService.getPlayerByColor('red');
+        $scope.activePlayer = GameService.getPlayerByColor('red');  // for testing. After, just set to first player in turnsOrder array
 
         $scope.showStartButton = false;
         $scope.INITIAL_STATE = true;
+    }
+
+    /* --------------------------- INITIAL_STATE logic ---------------------------- */
+    $scope.selectionsBuffer = {red: [], blue: [], yellow: []}
+    $scope.selectedInitialSettlement = function (hexCorner) {
+        var activePlayer = $scope.activePlayer;
+        var land = $scope.landSelected;
+        console.log(activePlayer.color + " you selected a " + land.type + " corner: " + hexCorner);
+
+        $scope.selectionsBuffer[activePlayer.color].push(land);
+
+        $scope.activePlayer = getNextPlayer();
+    }
+
+    $scope.selectedInitialRoad = function (corner1, corner2) {
+        var activePlayer = $scope.activePlayer;
     }
 
     $scope.toggleBuildingState = function () {
@@ -35,7 +55,17 @@ angular.module('expeditionApp')
     }
             
     /* ------------------------- Player Action Handlers ---------------------------- */
-    $scope.offerTrade = function (otherPlayerColor) {
+    $scope.clickedLand = function (landID) {
+        console.log(landID);
+        $scope.landSelected = $scope.landsDictionary[landID];
+        // if ($scope.BUILDING_STATE) {
+        //     var landSelected = this.landsDictionary[landID];
+        //     $scope.landSelected = landSelected;
+        // }
+    }   
+
+
+    $scope.offeredTrade = function (otherPlayerColor) {
     	console.log("offer trade");
     }
 
@@ -53,21 +83,23 @@ angular.module('expeditionApp')
     $scope.determinePlayerOrder = function () {
     	// Do dice Roll Animation? 
     	console.log("determine player order");
-    	$scope.showPlayerPanel();
+    }
+
+    /* --------------------------------- Helper functions ----------------------------- */
+    function getNextPlayer() {
+        var idx = $scope.turnsOrder.indexOf($scope.activePlayer.color) 
+        console.log("index of player is: " + idx);
+        if (idx === $scope.turnsOrder.length - 1) {
+            return GameService.getPlayerByColor($scope.turnsOrder[0]);
+        } else {
+            return GameService.getPlayerByColor($scope.turnsOrder[idx+1])
+        }
+
     }
 
     function beginNextTurn() {
     	$scope.activePlayer = GameService.getActivePlayer();
-    }
-
-    $scope.clickedLand = function (landID) {
-        console.log(landID);
-        $scope.LAND_SELECTED_STATE = true;
-        if ($scope.BUILDING_STATE) {
-            var landClicked = this.landsDictionary[landID];
-            $scope.landClicked = landClicked;
-        }
-    }										
+    }									
 
     // NOTE: DOM MANIPULATION SHOULD BE MOVED OUT OF CONTROLLER AND INTO DIRECTIVE
     /* --------------------------------- Drawing Logic -------------------------------- */
