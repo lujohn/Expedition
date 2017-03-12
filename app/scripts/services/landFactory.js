@@ -5,13 +5,14 @@ angular.module('expeditionApp')
 .factory('LandFactory', function() {
 
     var landFactory = {};
-    // Each land must keep track of it's state.
+    this.landCount = 0;
+
     landFactory.createLand = function(type) {
         var newLand = {};
         newLand.type = type;
         newLand.diceNumber = -1;
         // Note: the newLandID uniquely determines the location.
-        newLand.landID = "";
+        newLand.landID = "land" + this.landCount;
 
         // State information
         newLand.hasRobber = false;
@@ -20,6 +21,7 @@ angular.module('expeditionApp')
         newLand.occupiedEdges = {
         };    // 'N', 'NE', 'NW', 'S', 'SE', 'SW'
 
+        this.landCount++;
         return newLand;
     }
 

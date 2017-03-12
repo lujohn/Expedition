@@ -13,18 +13,21 @@
         <div class="row row-content">
             <div class="col-xs-8">
                 <div style="border: 2px solid red" id="gameBoardContainer">
-                    <div ng-repeat="landRow in lands">
+                    <div ng-repeat="landRow in landsArray">
                         <div ng-repeat="land in landRow">
-                            {{drawHex(land)}}
+                            <land-hex id="{{land.landID}}"></land-hex>
                         </div>
                     </div>
                 </div>
                 <button ng-if="showStartButton" ng-click="start()">START</button>
             </div>
    
-            <div ng-show="INITIAL_STATE && BUILDING_STATE" style="border: 2px solid yellow; height: 400px" class="col-xs-4">
+            <div id="actionPanel" ng-show="INITIAL_STATE || BUILDING_STATE" style="border: 2px solid yellow; height: 400px" class="col-xs-4">
                 <h2>Choose a Land to Build On</h2>
-                <h2>Type:{{presentLand.type}}</h2>
+                <h2>Type:{{landClicked.type}}</h2>
+                <div ng-if="BUILDING_STATE && LAND_SELECTED_STATE">
+                    <land-hex id="{{landClicked.landID}}"></land-hex>
+                </div>
             </div>
         </div>
         <div ng-show="ACTIVE_STATE" class="row row-content" style="border: 2px dashed blue;">
@@ -44,21 +47,25 @@
             </div>
         </div>
         <button ng-click="toggleBuildingState()">BUILD</button>
-        <p>{{BUILDING_STATE}}</p>
+        <p>Building state: {{BUILDING_STATE}}</p>
+        <p>Initial state: {{INITIAL_STATE}}</p>
+        <p>Active state: {{ACTIVE_STATE}}</p>
+        <P>Land Selected state: {{LAND_SELECTED_STATE}}</P>
     </div>
 
 
 <script src="../bower_components/angular/angular.js"></script>
 
 <script src="scripts/app.js"></script>
-<script src="scripts/gameController.js"></script>
-<script src="scripts/playerController.js"></script>
-<script src="scripts/gameService.js"></script>
-<script src="scripts/playerService.js"></script>
-<script src="scripts/landFactory.js"></script>
-<script src="scripts/mapService.js"></script>
-<script src="scripts/buildingFactory.js"></script>
-<script src="scripts/mapGraphService.js"></script>
+<script src="scripts/directives/landDirective.js"></script>
+<script src="scripts/controllers/gameController.js"></script>
+<script src="scripts/controllers/playerController.js"></script>
+<script src="scripts/services/gameService.js"></script>
+<script src="scripts/services/playerService.js"></script>
+<script src="scripts/services/landFactory.js"></script>
+<script src="scripts/services/mapService.js"></script>
+<script src="scripts/services/buildingFactory.js"></script>
+<script src="scripts/services/mapGraphService.js"></script>
 
 </body>
 </html>

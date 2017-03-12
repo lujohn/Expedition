@@ -31,7 +31,7 @@ angular.module('expeditionApp')
             var numCols = this.NUM_HEXES_IN_ROW[row];
             for (var col = 0; col < numCols; col++, count++) {
                 // Calculate a random land type
-                var rand = Math.floor(Math.random() * 5);
+                var rand = Math.floor(Math.random() * LAND_TYPES.length);
                 var landType = LAND_TYPES[rand];
 
                 // Use Land Factory to create a land
@@ -40,17 +40,25 @@ angular.module('expeditionApp')
 
                 // Store new land
                 this.landsMatrix[row].push(newLand);
-                console.log(this.landsMatrix[row].length);
                 this.landsDictionary[newLand.landID] = newLand; 
                 console.log("land generated => " + newLand.landID);
+                console.log(this.landsDictionary[newLand.landID] + "added to dictionary");
             }
         }
     }
 
     this.assignLandDiceNumbersRandom = function () {
         var possibleNumbers = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12];
-        // Shuffle
 
+        // Shuffle
+        for (var i = 0; i < possibleNumbers.length; i++){
+            var randIndex = Math.floor(Math.random() * possibleNumbers.length);
+            temp = possibleNumbers[randIndex];
+            possibleNumbers[randIndex] = possibleNumbers[i];
+            possibleNumbers[i] = temp;
+        }
+
+        // Assign
         for (var i = 0; i < possibleNumbers.length; i++) {
             this.landsDictionary["land" + i].diceNumber = possibleNumbers[i];
         }

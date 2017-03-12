@@ -5,8 +5,6 @@ angular.module('expeditionApp')
 .controller('GameController', ['$scope', 'GameService', 'MapService', 
     function ($scope, GameService, MapService) {
 
-
-    const COLOR_LOOKUP = {sheep : "#2eaa30", ore : "#bbbcb5", brick : "#842121", wood : "#663f1f", wheat : "#c4bb19"};
     const PLAYER_COLORS = ["red", "blue", "yellow", "white"];
 
     var turnsOrder = []  // Array of player colors indicating turn order.
@@ -16,12 +14,16 @@ angular.module('expeditionApp')
     $scope.INITIAL_STATE = false;
     $scope.ACTIVE_STATE = false;
     $scope.BUILDING_STATE = false;
+    $scope.LAND_SELECTED_STATE = false;
 
     $scope.start = function () {
         GameService.createRandomGame(2);
         MapService.assignCoordinatesToLands(GameService.landsMatrix);
         GameService.addPlayers(['red', 'blue']);
-        $scope.lands = GameService.landsMatrix;
+
+        $scope.landsArray = GameService.landsMatrix;
+        $scope.landsDictionary = GameService.landsDictionary;
+
         $scope.activePlayer = GameService.getPlayerByColor('red');
 
         $scope.showStartButton = false;
@@ -60,8 +62,10 @@ angular.module('expeditionApp')
 
     $scope.clickedLand = function (landID) {
         console.log(landID);
+        $scope.LAND_SELECTED_STATE = true;
         if ($scope.BUILDING_STATE) {
-            $scope.presentLand = GameService.getLandWithID(landID);
+            var landClicked = this.landsDictionary[landID];
+            $scope.landClicked = landClicked;
         }
     }										
 
