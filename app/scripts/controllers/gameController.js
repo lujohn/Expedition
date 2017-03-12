@@ -5,40 +5,40 @@ angular.module('expeditionApp')
 .controller('GameController', ['$scope', 'GameService', 'MapService', 
     function ($scope, GameService, MapService) {
 
-    const PLAYER_COLORS = ["red", "blue", "yellow", "white"];
-
-    $scope.turnsOrder = []  // Array of player colors indicating turn order.
-
     /* =========================== For Testing Only ================================ */
     $scope.showStartButton = true;
-    $scope.INITIAL_STATE = false;
-    $scope.ACTIVE_STATE = false;
-    $scope.BUILDING_STATE = false;
-
-    $scope.landSelected = null;  // holds the last clicked land
-    $scope.activePlayer = null;
+    $scope.SHOW_BUILD_PANEL = false;
+    $scope.SHOW_PLAYER_PANEL = false;
+    $scope.SHOw_DEVELOPEMENT_PANEL = false;
 
     // TESTING WITH MOCK SETUP. USE ANGULAR FORM TO POPULATE INFO.
     $scope.start = function () {
-        GameService.createRandomGame(2);
+
+        // Initialize Game with 2 players. Will generate lands
+        GameService.createRandomGame(3);
+
+        // Assign coordinates to lands.
         MapService.assignCoordinatesToLands(GameService.landsMatrix);
+
+        // Add players to Game
         GameService.addPlayers(['red', 'blue', 'yellow']);
-        $scope.turnsOrder = ['red', 'blue', 'yellow'];
 
-        $scope.landsArray = GameService.landsMatrix;
-        $scope.landsDictionary = GameService.landsDictionary;
+        // Set the active Player;
+        $scope.activePlayer = GameService.getPlayerByColor(GameService.turnsOrder[0]);
 
-        $scope.activePlayer = GameService.getPlayerByColor('red');  // for testing. After, just set to first player in turnsOrder array
-
+        // Remove Start Button
         $scope.showStartButton = false;
-        $scope.INITIAL_STATE = true;
+
+        // Set game state to INITAL STATE - which is the state for picking the initial
+        // 2 settlements and roads.
+        GameService.STATE = 0;
     }
 
     /* --------------------------- INITIAL_STATE logic ---------------------------- */
     $scope.selectionsBuffer = {red: [], blue: [], yellow: []}
     $scope.selectedInitialSettlement = function (hexCorner) {
         var activePlayer = $scope.activePlayer;
-        var land = $scope.landSelected;
+        var land = GameService.lastLandSelected;
         console.log(activePlayer.color + " you selected a " + land.type + " corner: " + hexCorner);
 
         $scope.selectionsBuffer[activePlayer.color].push(land);
@@ -55,14 +55,7 @@ angular.module('expeditionApp')
     }
             
     /* ------------------------- Player Action Handlers ---------------------------- */
-    $scope.clickedLand = function (landID) {
-        console.log(landID);
-        $scope.landSelected = $scope.landsDictionary[landID];
-        // if ($scope.BUILDING_STATE) {
-        //     var landSelected = this.landsDictionary[landID];
-        //     $scope.landSelected = landSelected;
-        // }
-    }   
+
 
 
     $scope.offeredTrade = function (otherPlayerColor) {
@@ -101,77 +94,5 @@ angular.module('expeditionApp')
     	$scope.activePlayer = GameService.getActivePlayer();
     }									
 
-    // NOTE: DOM MANIPULATION SHOULD BE MOVED OUT OF CONTROLLER AND INTO DIRECTIVE
-    /* --------------------------------- Drawing Logic -------------------------------- */
-    drawGame = function () {
-        var lands = GameService.landsMatrix;
-        for (var i = 0; i < lands.length; i++) {
-            for (var j = 0; j < lands[i].length; j++) {
-                drawHex(lands[i][j]);
-            }
-        }
-    }
 
-    $scope.drawHex = function(land) {
-        // Grab game container
-        var gameContainer = document.getElementById("gameBoardContainer");
-
-        // Create canvas element to contain new land
-        var c = document.createElement("canvas");
-        c.id = land.landID;
-        c.width = 160;
-        c.height = 160;
-
-        var landCoordA = land.coordinates["A"];
-        var xOffset = landCoordA[0] - 80;
-        var yOffset = landCoordA[1];
-        c.style.left = xOffset + "px";
-        c.style.top = yOffset + "px";
-
-        // Grab context
-        var ctx = c.getContext("2d");
-        ctx.lineWidth = 1.0;
-        ctx.strokeStyle = "#fff328";
-        ctx.fillStyle = COLOR_LOOKUP[land.type];
-
-        // Draw land piece
-        ctx.beginPath();
-        ctx.moveTo(80,0);
-        ctx.lineTo(160,40);
-        ctx.lineTo(160,120);
-        ctx.lineTo(80,160);
-        ctx.lineTo(0,120);
-        ctx.lineTo(0,40);
-        ctx.lineTo(80,0);
-        ctx.closePath();
-
-        ctx.stroke();     
-        ctx.fill();
-
-        // Add handler for click
-        c.addEventListener("click", function (event) {
-            clickedLand(event.target.id);
-        });
-        gameContainer.appendChild(c);
-    }
-
-    function clickedLand (landID) {
-        // use $apply here since call to this function is made directly from browser.
-        $scope.$apply($scope.clickedLand(landID));
-    }       
-
-    this.drawRoad = function () {
-        /*var c = document.getElementById("land10");
-        var ctx = c.getContext("2d");
-        ctx.lineWidth = 10;
-        ctx.strokeStyle = "#000000";
-
-        console.log("drawing road... from: x: " + road.from[0] + " y: " + road.from[1]);
-        console.log("to: x: " + road.to[0] + " y: " + road.to[1]);
-        ctx.beginPath();
-        ctx.moveTo(80, 0);
-        ctx.lineTo(160, 40);
-        ctx.closePath();
-        ctx.stroke();*/
-    }
 }])

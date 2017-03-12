@@ -1,9 +1,9 @@
 .container {
-    width: 1300px;
+    width: 1250px;
 }
 
 #gameBoardContainer {
-	height: 800px;
+	height: 650px;
 	position: relative;
 }
 

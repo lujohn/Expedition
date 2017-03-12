@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="expeditionApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Expedition</title>
+    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/myStyles.css" rel="stylesheet">
+</head>
+
+
+<body>
+    <div class="container" ng-controller="GameController">
+        <!-- Actions View -->
+        <div class="row row-content">
+            <div class="col-xs-6">
+                <media>
+                </media>
+            </div>
+
+            <!-- JUST MAKE A FORM FOR THE INITAL SELECTION (MAYBE ALL LAND SELECTIONS) -->
+            <div id="InitialPanel" ng-show="INITIAL_STATE" style="border: 2px solid yellow; height: 400px" class="col-xs-4">
+                <h2>Player: {{activePlayer.color}} -- Please Pick!</h2>
+                <h2>Type:{{landSelected.type}}</h2>
+                <div ng-show="landSelected != null">
+                    <span class="btn btn-default" ng-click="selectedInitialResource('A')">A</span>
+                    <span class="btn btn-primary" ng-click="selectedInitialResource('B')">B</span>
+                    <span class="btn btn-success" ng-click="selectedInitialResource('C')">C</span>
+                    <span class="btn btn-info" ng-click>D</span>
+                    <span class="btn btn-warning" ng-click>E</span>
+                    <span class="btn btn-danger" ng-click>F</span>
+                </div>
+                <!-- THIS PART IS NOT COMPLETE -->
+                <div ng-if="BUILDING_STATE && LAND_SELECTED_STATE">
+                    <land-hex id="{{landSelected.landID}}"></land-hex>
+                </div>
+            </div>
+        </div>
+        <div ng-show="ACTIVE_STATE" class="row row-content" style="border: 2px dashed blue;">
+            <div class="col-xs-3">
+                <h1>{{players[0]}}'s Stats</h1>
+                <p>Lands Owned: <span>{{}}</span></p>
+                <p>Resources in Hand: <span>{{}}</span> </p>
+                <p>Number of Settlements: <span>{{}}</span> </p>
+                <p>Victory Points: <span>{{}}</span> </p>
+            </div>
+            <div class="col-xs-3 pull-right">
+                <h1>{{players[0]}}'s Stats</h1>
+                <p>Lands Owned: <span>{{}}</span></p>
+                <p>Resources in Hand: <span>{{}}</span> </p>
+                <p>Number of Settlements: <span>{{}}</span> </p>
+                <p>Victory Points: <span>{{}}</span> </p>
+            </div>
+        </div>
+        <button ng-click="toggleBuildingState()">BUILD</button>
+        <p>Building state: {{BUILDING_STATE}}</p>
+        <p>Initial state: {{INITIAL_STATE}}</p>
+        <p>Active state: {{ACTIVE_STATE}}</p>
+        <P>Land Selected: {{landSelected.landID}}</P>
+    </div>
+
+
+<script src="../bower_components/angular/angular.js"></script>
+
+<script src="scripts/app.js"></script>
+<script src="scripts/directives/landDirective.js"></script>
+<script src="scripts/controllers/gameController.js"></script>
+<script src="scripts/controllers/playerController.js"></script>
+<script src="scripts/services/gameService.js"></script>
+<script src="scripts/services/playerService.js"></script>
+<script src="scripts/services/landFactory.js"></script>
+<script src="scripts/services/mapService.js"></script>
+<script src="scripts/services/buildingFactory.js"></script>
+<script src="scripts/services/mapGraphService.js"></script>
+
+</body>
+</html>

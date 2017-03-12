@@ -9,7 +9,7 @@
 */
 
 angular.module('expeditionApp')
-.service('MapService', ['GameService', 'MapGraphService', function(GameService, MapGraphService) {
+.service('MapService', ['MapGraphService', function(MapGraphService) {
 	
 	// Constants used for calculating hex coordinates
     const HEX_WIDTH = 160;

@@ -44,14 +44,26 @@ angular.module('expeditionApp')
 	        // Add event listener
 	        c.addEventListener('click', function () {
 	        	console.log("land clicked");
-	        	scope.$apply(scope.clickedLand(landID));
+	        	scope.$apply(scope.selectedLandWithID(landID));
 
-	        	if (scope.BUILDING_STATE) {
-	        		console.log("clicked land in building state (from landDirective)");
-	        		// Draw the hex inside action box
-	        		
-	        	}
 	        });
+
+	        /*
+            this.drawRoad = function () {
+		        var c = document.getElementById("land10");
+		        var ctx = c.getContext("2d");
+		        ctx.lineWidth = 10;
+		        ctx.strokeStyle = "#000000";
+
+		        console.log("drawing road... from: x: " + road.from[0] + " y: " + road.from[1]);
+		        console.log("to: x: " + road.to[0] + " y: " + road.to[1]);
+		        ctx.beginPath();
+		        ctx.moveTo(80, 0);
+		        ctx.lineTo(160, 40);
+		        ctx.closePath();
+		        ctx.stroke();
+		    }
+		    */
 		}
 	}; 
 });

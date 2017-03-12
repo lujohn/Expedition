@@ -14,6 +14,11 @@ angular.module('expeditionApp')
     this.landsMatrix = [[],[],[],[],[]];   // Stores the lands in play for this game
     this.landsDictionary = {}   // Stores lands for later lookup
     this.playersDictionary = {};  // Player information as key, value pair <Color, PlayerObject>
+    this.turnsOrder = []  // Array of player colors indicating turn order.
+
+    this.STATE = -1;
+    this.activePlayer = null;
+    this.lastLandSelected = null;
 
     this.createRandomGame = function (numPlayers) {
         // Generate lands randomly for now. MODIFY
@@ -90,7 +95,7 @@ angular.module('expeditionApp')
     this.addPlayer = function (playerColor) {
 
         var newPlayer = PlayerService.createPlayer(playerColor);
-
+        this.turnsOrder.push(newPlayer); 
         // Store new player in dictionary.
         this.playersDictionary[playerColor] = newPlayer;
         return newPlayer;
