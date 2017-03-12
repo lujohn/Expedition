@@ -4,6 +4,8 @@
 angular.module('expeditionApp')
 .controller('GameController', ['$scope', 'GameService', 'MapService', 
     function ($scope, GameService, MapService) {
+
+
     const COLOR_LOOKUP = {sheep : "#2eaa30", ore : "#bbbcb5", brick : "#842121", wood : "#663f1f", wheat : "#c4bb19"};
     const PLAYER_COLORS = ["red", "blue", "yellow", "white"];
 
@@ -19,13 +21,15 @@ angular.module('expeditionApp')
         GameService.createRandomGame(2);
         MapService.assignCoordinatesToLands(GameService.landsMatrix);
         GameService.addPlayers(['red', 'blue']);
-
+        $scope.lands = GameService.landsMatrix;
         $scope.activePlayer = GameService.getPlayerByColor('red');
 
         $scope.showStartButton = false;
         $scope.INITIAL_STATE = true;
+    }
 
-        drawGame();
+    $scope.toggleBuildingState = function () {
+        $scope.BUILDING_STATE = !$scope.BUILDING_STATE;
     }
             
     /* ------------------------- Player Action Handlers ---------------------------- */
@@ -54,15 +58,14 @@ angular.module('expeditionApp')
     	$scope.activePlayer = GameService.getActivePlayer();
     }
 
-    function clickedLand (landID) {
-        console.log("$scope.BUILDING_STATE"); 
-        $scope.BUILDING_STATE = !$scope.BUILDING_STATE;
-        $scope.presentLand = GameService.getLandWithID(landID);
-        console.log($scope.BUILDING_STATE); 
-        console.log(GameService.getLandWithID(landID));
-    }														
+    $scope.clickedLand = function (landID) {
+        console.log(landID);
+        if ($scope.BUILDING_STATE) {
+            $scope.presentLand = GameService.getLandWithID(landID);
+        }
+    }										
 
-
+    // NOTE: DOM MANIPULATION SHOULD BE MOVED OUT OF CONTROLLER AND INTO DIRECTIVE
     /* --------------------------------- Drawing Logic -------------------------------- */
     drawGame = function () {
         var lands = GameService.landsMatrix;
@@ -73,7 +76,7 @@ angular.module('expeditionApp')
         }
     }
 
-    function drawHex(land) {
+    $scope.drawHex = function(land) {
         // Grab game container
         var gameContainer = document.getElementById("gameBoardContainer");
 
@@ -115,6 +118,11 @@ angular.module('expeditionApp')
         });
         gameContainer.appendChild(c);
     }
+
+    function clickedLand (landID) {
+        // use $apply here since call to this function is made directly from browser.
+        $scope.$apply($scope.clickedLand(landID));
+    }       
 
     this.drawRoad = function () {
         /*var c = document.getElementById("land10");

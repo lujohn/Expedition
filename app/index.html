@@ -13,27 +13,21 @@
         <div class="row row-content">
             <div class="col-xs-8">
                 <div style="border: 2px solid red" id="gameBoardContainer">
-                    Board Container
+                    <div ng-repeat="landRow in lands">
+                        <div ng-repeat="land in landRow">
+                            {{drawHex(land)}}
+                        </div>
+                    </div>
                 </div>
-                <button ng-show="showStartButton" ng-click="start()">START</button>
+                <button ng-if="showStartButton" ng-click="start()">START</button>
             </div>
-
-            <div ng-show="INITIAL_STATE && !BUILDING_STATE" style="border: 2px solid yellow; height: 600px" class="col-xs-4">
-                <p>{{!BUILDING_STATE}}</p>
-                <h1>{{activePlayer.color}} Please Place Your First Settlement...</h1>
-            </div>
-
-            
-            <div ng-show="BUILDING_STATE" style="border: 2px solid yellow; height: 600px" class="col-xs-4">
-                <button ng-click="">Build Road</button>
-                <button ng-click="">Build Settlement</button> 
-                <button ng-click="endTurn()">End Turn</button>
-                <p>You clicked land {{presentLand.landID}}</p>
-                <p>Type:{{presentLand.type}}</p>
-
+   
+            <div ng-show="INITIAL_STATE && BUILDING_STATE" style="border: 2px solid yellow; height: 400px" class="col-xs-4">
+                <h2>Choose a Land to Build On</h2>
+                <h2>Type:{{presentLand.type}}</h2>
             </div>
         </div>
-        <div ng-show="ACTIVE_STATE" class="row row-content" ng-controller="PlayerController" style="border: 2px dashed blue;">
+        <div ng-show="ACTIVE_STATE" class="row row-content" style="border: 2px dashed blue;">
             <div class="col-xs-3">
                 <h1>{{players[0]}}'s Stats</h1>
                 <p>Lands Owned: <span>{{}}</span></p>
@@ -49,7 +43,8 @@
                 <p>Victory Points: <span>{{}}</span> </p>
             </div>
         </div>
-        
+        <button ng-click="toggleBuildingState()">BUILD</button>
+        <p>{{BUILDING_STATE}}</p>
     </div>
 
 
