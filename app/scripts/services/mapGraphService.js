@@ -25,7 +25,6 @@ angular.module('expeditionApp')
 			this.edges[coordString] = {};
 			return true;
 		}
-		console.log('Tried to add duplicate vertex' + coordString);
 		return false;
 	}
 
@@ -33,13 +32,11 @@ angular.module('expeditionApp')
 
 		// Do not add duplicates
 		if (this.hasEdge(fromCoord, toCoord)) {
-			console.log("attempted to add duplicate edge!");
 			return false;
 		}
 
 		// If either vertex does not exist, return false with no modifcations
 		if (!this.hasVertex(fromCoord) || ! this.hasVertex(toCoord)) {
-			console.log("attmpted to add edge to vertex that does not exist!");
 			return false;
 		}
 
@@ -111,6 +108,10 @@ angular.module('expeditionApp')
 		this.color = null;
 		this.type = null;
 		this.available = true;
+
+		this.toString = function () {
+			return "color: " + this.color + "type: " + this.type + " available: " + this.available;
+		}
 	}
 
 	// converts [x,y] coordinates to string representation "x,y"

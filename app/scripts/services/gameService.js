@@ -46,8 +46,6 @@ angular.module('expeditionApp')
                 // Store new land
                 this.landsMatrix[row].push(newLand);
                 this.landsDictionary[newLand.landID] = newLand; 
-                console.log("land generated => " + newLand.landID);
-                console.log(this.landsDictionary[newLand.landID] + "added to dictionary");
             }
         }
     }
@@ -93,11 +91,10 @@ angular.module('expeditionApp')
     }
 
     this.addPlayer = function (playerColor) {
-
         var newPlayer = PlayerService.createPlayer(playerColor);
         this.turnsOrder.push(newPlayer); 
-        // Store new player in dictionary.
         this.playersDictionary[playerColor] = newPlayer;
+
         return newPlayer;
     }
 

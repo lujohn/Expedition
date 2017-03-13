@@ -20,6 +20,10 @@ angular.module('expeditionApp')
 		newBuilding.color = color;
 		newBuilding.type = "settlement";
 
+		newBuilding.toString = function() {
+			return "location: " + newBuilding.location + ", color: " + newBuilding.color + ", type: " + newBuilding.type;
+		}
+
 		return newBuilding;
 	};
 

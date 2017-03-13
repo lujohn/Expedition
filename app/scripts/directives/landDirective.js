@@ -4,13 +4,11 @@ angular.module('expeditionApp')
 	return {
 		link: function (scope, element, attr) {
 	        // Create canvas element to contain new land
-	        console.log("from landHex directive");
 	        var c = document.createElement("canvas");
 	        c.width = 160;
 	        c.height = 160;
 
 	        var landID = attr.id;
-	        console.log("From directive: " + landID);
 	        var landToDraw = scope.landsDictionary[landID];
 	        var landCoordA = landToDraw.coordinates["A"];
 

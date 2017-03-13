@@ -14,6 +14,8 @@ angular.module('expeditionApp')
         // Note: the newLandID uniquely determines the location.
         newLand.landID = "land" + this.landCount;
 
+        newLand.coordinates = {}; 
+
         // State information
         newLand.hasRobber = false;
         newLand.occupiedCorners = {

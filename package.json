@@ -12,6 +12,8 @@
     "bower": "^1.8.0"
   },
   "devDependencies": {
+    "angular-animate": "^1.6.3",
+    "install": "^0.8.7",
     "jasmine-core": "^2.5.2",
     "karma": "^1.5.0",
     "karma-chrome-launcher": "^2.0.0",

@@ -12,14 +12,75 @@
     <div class="container" ng-controller="GameController">
         <div class="row row-content">
             <div ng-controller="MapController" class="col-xs-8">
-                <div style="border: 2px solid red" id="gameBoardContainer">
+                <div id="gameBoardContainer">
                     <div ng-repeat="landRow in landsArray">
                         <div ng-repeat="land in landRow">
                             <land-hex id="{{land.landID}}"></land-hex>
                         </div>
                     </div>
                 </div>
-                <button ng-if="showStartButton" ng-click="start()">START</button>
+                <div class="row row-content animate-show-hide fade" ng-show="SHOW_BUILD_SETTLEMENT_PANEL">
+                    <div class="col-xs-12" ng-controller="BuildController">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Build Settlement: {{activePlayer.color | uppercase}}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-9">
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <p>Land Selected: {{lastLandSelected.type}}</p>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <h3>Choose the corner to place your settlement on</h3>
+                                                <div class="btn-group">
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('A')">A</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('B')">B</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('C')">C</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('D')">D</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('E')">E</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('F')">F</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-content animate-show-hide fade" ng-show="SHOW_BUILD_ROAD_PANEL">
+                    <div class="col-xs-12" ng-controller="BuildController">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Build Road: {{activePlayer.color | uppercase}}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-9">
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <p>Land Selected: {{lastLandSelected.type}}</p>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <h3>Choose the corner to place your settlement on</h3>
+                                                <div class="btn-group">
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('A')">A</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('B')">B</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('C')">C</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('D')">D</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('E')">E</span>
+                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('F')">F</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div ng-controller="MainControlsController" class="col-xs-4">
                 <div class="panel panel-primary">
@@ -30,7 +91,8 @@
                         <div class="row">
                             <div class="col-xs-6">
                                 <div class="btn-group-vertical">
-                                    <span class="btn btn-lg btn-danger" ng-click="showBuildMenu()">Build</span>
+                                    <span class="btn btn-lg btn-danger" ng-click="showBuildSettlement()">Build Settlement</span>
+                                    <span class="btn btn-lg btn-danger" ng-click="showBuildRoad()">Build Road</span>
                                     <span class="btn btn-lg btn-warning" ng-click="">Trade</span>
                                     <span class="btn btn-lg btn-info" ng-click="showPlayerInfo()">Info</span>
                                     <span class="btn btn-lg btn-success" ng-click="showDevCardMenu()">Development Card</span>
@@ -46,44 +108,19 @@
             </div>
         </div>
         <hr>
-        <div class="row row-content" ng-show="SHOW_BUILD_PANEL">
-            <div class="col-xs-10" ng-controller="BuildController">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Build Menu (Settlement/City)</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <div class="btn-group-vertical">
-                                    <span class="btn btn-info btn-lg" ng-click="">Settlement</span><br>
-                                    <span class="btn btn-info btn-lg">City</span><br>
-                                    <span class="btn btn-default btn-lg">Road.</span><br>
-                                </div>
-                            </div>
-                            <div class="col-xs-9">
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <img src="images/wood.png" style="height: 160px; width: 160px">
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <h3>Choose the corner to place your settlement on</h3>
-                                        <div class="btn-group">
-                                            <span class="btn btn-default btn-sm">A</span>
-                                            <span class="btn btn-default btn-sm">B</span>
-                                            <span class="btn btn-default btn-sm">C</span>
-                                            <span class="btn btn-default btn-sm">D</span>
-                                            <span class="btn btn-default btn-sm">E</span>
-                                            <span class="btn btn-default btn-sm">F</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div class="row row-content" ng-show="SHOW_PLAYER_PANEL">
             <div class="col-xs-10">
                 <div class="panel panel-danger">
@@ -126,6 +163,7 @@
 
 
 <script src="../bower_components/angular/angular.js"></script>
+<script src="../bower_components/angular-animate/angular-animate.js"></script>
 
 <script src="scripts/app.js"></script>
 <script src="scripts/directives/landDirective.js"></script>

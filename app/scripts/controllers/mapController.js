@@ -1,6 +1,11 @@
+// Handles all map interactions
+
 angular.module('expeditionApp')
 .controller('MapController', ['$scope','GameService', 'MapService', function ($scope, GameService, MapService) {
-	// Handles all map interactions
+
+	// Assign coordinates to lands.
+    MapService.initializeGraph(GameService.landsMatrix);
+    console.log("Number of Verticies: " + MapService.getNumVerticies());
 
 	$scope.landsArray = GameService.landsMatrix;
     $scope.landsDictionary = GameService.landsDictionary;
@@ -10,6 +15,6 @@ angular.module('expeditionApp')
         var landSelected = $scope.landsDictionary[landID];
 
         // Update Game Service State
-        GameService.lastLandSelected = landSelected;
+        $scope.lastLandSelected = landSelected;
     }   
 }]);

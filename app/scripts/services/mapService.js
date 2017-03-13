@@ -44,7 +44,6 @@ angular.module('expeditionApp')
     this.addAllVerticiesInHexToGraph = function (hexCoordinates) {
         for (var coordLabel in hexCoordinates) {
             if (hexCoordinates.hasOwnProperty(coordLabel)) {
-                console.log("Adding vertex: " + coordLabel + ": " + hexCoordinates[coordLabel]);
                 var coord = hexCoordinates[coordLabel];  // coordLabel is A, B, C . . . or F
                 MapGraphService.addVertex(coord);  // coord is [x,y] coordinates
             }
@@ -68,7 +67,7 @@ angular.module('expeditionApp')
         MapGraphService.addEdge(null, v1, v2);
     }
 
-    this.assignCoordinatesToLands = function (lands) {
+    this.initializeGraph = function (lands) {
         var xOffset = 0; var yOffset = 0;
         for (var i = 0; i < lands.length; i++) {
             var row = lands[i];
@@ -93,7 +92,13 @@ angular.module('expeditionApp')
                     F: [0 + xOffset, 40 + yOffset] 
                 };
                 lands[i][j].coordinates = hexCoordinates;
+                this.addAllVerticiesInHexToGraph(hexCoordinates);
+                this.addAllEdgesFromHexToGraph(hexCoordinates);
             }
         }
+    }
+
+    this.getNumVerticies = function () {
+        return MapGraphService.getNumVerticies();
     }
 }]);

@@ -3,4 +3,4 @@
  */
 'use strict'
 
-angular.module('expeditionApp', []);
+angular.module('expeditionApp', ['ngAnimate']);
