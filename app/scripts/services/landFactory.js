@@ -24,6 +24,10 @@ angular.module('expeditionApp')
         };    // 'N', 'NE', 'NW', 'S', 'SE', 'SW'
 
         this.landCount++;
+
+        newLand.toString = function () {
+            return newLand.type;
+        }
         return newLand;
     }
 

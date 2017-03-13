@@ -4,12 +4,15 @@ angular.module('expeditionApp')
 	var buildingFactory = {};
 
 	// Create new road
-	buildingFactory.createRoad = function (color, vertex1, vertex2) {
+	buildingFactory.createRoad = function (color, coord1, coord2) {
 		var newRoad = {};
 		newRoad.color = color;
-		newRoad.from = vertex1;
-		newRoad.to = vertex2;
+		newRoad.from = coord1;
+		newRoad.to = coord2;
 
+		newRoad.toString = function () {
+			return "from: " + newRoad.from + " to: " + newRoad.to +  " color: " + newRoad.color;
+		}
 		return newRoad;
 	};
 

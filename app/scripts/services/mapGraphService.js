@@ -45,6 +45,11 @@ angular.module('expeditionApp')
         return true;
 	}
 
+	this.registerLandToVertex = function (land, coord) {
+		var vertex = this.getVertex(coord);
+		vertex.lands.push(land);
+	}
+
 	this.setEdge = function (color, from, to) {
 		var edges = this.getEdges(from);
 		edges[coordinatesToString(to)] = color;
@@ -105,9 +110,10 @@ angular.module('expeditionApp')
 	/* ======================= Private Helper Functions ======================= */
 	// Vertex constructor
 	function Vertex() {
-		this.color = null;
-		this.type = null;
-		this.available = true;
+		this.color = null;  // owner
+		this.type = null;  // settlement or building
+		this.available = true;  // is vertex available
+		this.lands = [];  // Lands that this vertex controls
 
 		this.toString = function () {
 			return "color: " + this.color + "type: " + this.type + " available: " + this.available;

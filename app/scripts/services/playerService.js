@@ -38,6 +38,12 @@ angular.module('expeditionApp')
 
 		newPlayer.addBuilding = function (building) {
 			this.buildingsOwned.push(building);
+
+			// Be sure to decrease resource
+		}
+
+		newPlayer.addResource = function (type) {
+			this.resourcesInHand[type]++;
 		}
 
 		// This function is called after the dice has been rolled. It goes through
@@ -52,6 +58,9 @@ angular.module('expeditionApp')
 			}
 		}
 
+		newPlayer.toString = function () {
+			return this.color;
+		}
 		return newPlayer;
 	}
 });

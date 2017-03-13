@@ -40,6 +40,45 @@ angular.module('expeditionApp')
         return vertex.type != null;
     }
 
+    // This function returns the lands associated with the given building. Used mainly for 
+    // incrementing the resources in player's hands
+    this.getLandsForBuilding = function (building) {
+        return MapGraphService.getVertex(building.location).lands;
+    }
+
+    this.initializeGraph = function (lands) {
+        var xOffset = 0; var yOffset = 0;
+        for (var i = 0; i < lands.length; i++) {
+            var row = lands[i];
+            for (var j = 0; j < row.length; j++) {
+                xOffset = Math.abs(MID_ROW_IDX - i) * ROW_OFFSET;
+                xOffset += (HEX_WIDTH * j);  // Additionally, shift left by hexagon's height * column
+                
+                // Shift down by hexagon's height * row
+                yOffset = (HEX_HEIGHT - VERT_GAP_CLOSE) * i;
+
+                /* This information is used by the MapGraph algorithms for uniquely identifying 
+                verticies. It aides with retrieving and placing settlements, cities, and roads.
+                This infomration is necessary to make a graph implementation work because verticies
+                are not unique - multiple lands may share the same vertex. Alternamtive implementation 
+                can be to store a mapping from shared points into one vertex id... */
+                var hexCoordinates = {
+                    A: [80 + xOffset, 0 + yOffset],
+                    B: [160 + xOffset, 40 + yOffset],
+                    C: [160 + xOffset, 120 + yOffset],
+                    D: [80 + xOffset, 160 + yOffset],
+                    E: [0 + xOffset, 120 + yOffset],
+                    F: [0 + xOffset, 40 + yOffset] 
+                };
+                var land = lands[i][j];
+                land.coordinates = hexCoordinates;
+                this.addAllVerticiesInHexToGraph(hexCoordinates);
+                this.addAllEdgesFromHexToGraph(hexCoordinates);
+                this.registerLandWithVerticies(land);
+            }
+        }
+    }
+
     // This function adds all verticies found in the parameter lands matrix
     this.addAllVerticiesInHexToGraph = function (hexCoordinates) {
         for (var coordLabel in hexCoordinates) {
@@ -67,33 +106,14 @@ angular.module('expeditionApp')
         MapGraphService.addEdge(null, v1, v2);
     }
 
-    this.initializeGraph = function (lands) {
-        var xOffset = 0; var yOffset = 0;
-        for (var i = 0; i < lands.length; i++) {
-            var row = lands[i];
-            for (var j = 0; j < row.length; j++) {
-                xOffset = Math.abs(MID_ROW_IDX - i) * ROW_OFFSET;
-                xOffset += (HEX_WIDTH * j);  // Additionally, shift left by hexagon's height * column
-                
-                // Shift down by hexagon's height * row
-                yOffset = (HEX_HEIGHT - VERT_GAP_CLOSE) * i;
-
-                /* This information is used by the MapGraph algorithms for uniquely identifying 
-                verticies. It aides with retrieving and placing settlements, cities, and roads.
-                This infomration is necessary to make a graph implementation work because verticies
-                are not unique - multiple lands may share the same vertex. Alternamtive implementation 
-                can be to store a mapping from shared points into one vertex id... */
-                var hexCoordinates = {
-                    A: [80 + xOffset, 0 + yOffset],
-                    B: [160 + xOffset, 40 + yOffset],
-                    C: [160 + xOffset, 120 + yOffset],
-                    D: [80 + xOffset, 160 + yOffset],
-                    E: [0 + xOffset, 120 + yOffset],
-                    F: [0 + xOffset, 40 + yOffset] 
-                };
-                lands[i][j].coordinates = hexCoordinates;
-                this.addAllVerticiesInHexToGraph(hexCoordinates);
-                this.addAllEdgesFromHexToGraph(hexCoordinates);
+    this.registerLandWithVerticies = function (land) {
+        // For each of the land's corners, register the land as belonging to the vertex (corner)
+        // in the graph.
+        var hexCoords = land.coordinates;
+        for (var corner in hexCoords) {
+            if (hexCoords.hasOwnProperty(corner)) {
+                var cornerCoord = hexCoords[corner];
+                MapGraphService.registerLandToVertex(land, cornerCoord);
             }
         }
     }

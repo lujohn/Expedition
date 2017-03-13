@@ -4,20 +4,20 @@ angular.module('expeditionApp')
 
 	$scope.showBuildSettlement = function () {
 		console.log("showBuildSettlement called");
-		$scope.$parent.SHOW_BUILD_SETTLEMENT_PANEL = !$scope.$parent.SHOW_BUILD_SETTLEMENT_PANEL;  // inherited scope property from GameController
+		$scope.setActivePanel(1);  // inherited scope property from GameController
 	}
 
 	$scope.showBuildRoad = function () {
-		$scope.$parent.SHOW_BUILD_ROAD_PANEL = !$scope.$parent.SHOW_BUILD_ROAD_PANEL;  // inherited scope property from GameController
+		$scope.setActivePanel(2);  // inherited scope property from GameController
 	}
 
 	$scope.showPlayerInfo = function () {
 		console.log("showInfo called (from MainControlsController");
-		$scope.$parent.SHOW_PLAYER_PANEL = !$scope.$parent.SHOW_PLAYER_PANEL;
+		$scope.setActivePanel(3);
 	}
 
 	$scope.showDevCard = function () {
 		console.log("developementCard button clicked (from MainControlsController");
-		$scope.$parent.SHOW_DEVELOPEMENT_PANEL = !$scope.$parent.SHOW_DEVELOPEMENT_PANEL;
+		$scope.setActivePanel(4);
 	}
 }]);

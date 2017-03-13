@@ -18,7 +18,10 @@ angular.module('expeditionApp')
 
     this.STATE = -1;
     this.activePlayer = null;
-    this.lastLandSelected = null;
+
+    this.setActivePlayer = function (num) {
+        this.activePlayer = this.turnsOrder[num];
+    }
 
     this.createRandomGame = function (numPlayers) {
         // Generate lands randomly for now. MODIFY

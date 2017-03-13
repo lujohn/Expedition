@@ -15,6 +15,8 @@ angular.module('expeditionApp')
         var landSelected = $scope.landsDictionary[landID];
 
         // Update Game Service State
-        $scope.lastLandSelected = landSelected;
+        $scope.$parent.lastLandSelected = landSelected;
+
+        $scope.$parent.activeControlPanel = 1;
     }   
 }]);

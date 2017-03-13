@@ -6,25 +6,51 @@ angular.module('expeditionApp')
     function ($scope, GameService, MapService) {
 
     // Initialize Game with 2 players. Will generate lands
-    GameService.createRandomGame(3);
+    GameService.createRandomGame(2);
 
     // Add players to Game
-    GameService.addPlayers(['red', 'blue', 'yellow']);
-
-    // Set the active Player;
-    $scope.activePlayer = GameService.turnsOrder[0];
+    GameService.addPlayers(['red', 'blue']);
 
     // Set game state to INITAL STATE - which is the state for picking the initial
     // 2 settlements and roads.
     GameService.STATE = 0;
 
+    // Set active player to red
+    GameService.setActivePlayer(0);
+
 
     // Initialize Scope
-    $scope.showStartButton = false;
-    $scope.SHOW_BUILD_SETTLEMENT_PANEL = false;
-    $scope.SHOW_BUILD_ROAD_PANEL = false;
-    $scope.SHOW_PLAYER_PANEL = false;
-    $scope.SHOW_DEVELOPEMENT_PANEL = false;
+    $scope.activePlayer = null;
+    $scope.activeControlPanel = 0;
+    $scope.lastLandSelected = null;
+
+    // Update activePlayer whenever it changes in GameService
+    $scope.$watch('GameService.activePlayer', function () {
+        $scope.activePlayer = GameService.activePlayer;
+    });
+
+    $scope.setActivePanel = function (num) {
+        $scope.activeControlPanel = num;
+    }
+
+    $scope.isActivePanel = function(num) {
+        return $scope.activeControlPanel === num;
+    }
+
+    $scope.setActivePlayer = function(num) {
+        $scope.activePlayer = GameService.turnsOrder[num];
+    }
+
+    $scope.setGameState = function(num) {
+        if (num === 0) {
+            // INITIAL STATE
+            GameService.STATE = num;
+        } else if (num === 1) {
+            // ACTIVE STATE
+            console.log("changing game state to 1! So Exciting");
+
+        }
+    }
 
     /* ------------------------- Player Action Handlers ---------------------------- */
 
