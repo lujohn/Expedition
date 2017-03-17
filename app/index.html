@@ -80,7 +80,8 @@
                 </div>
             </div>
             <div ng-controller="MainControlsController" class="col-xs-4">
-                <div class="panel panel-primary">
+                <p style="padding: 20px"></p>
+                <div ng-show="showMainControls" class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title">Main Controls</h3>
                     </div>
@@ -102,9 +103,9 @@
                         </div>
                     </div>
                 </div>
+                <div ng-show="!showMainControls" ng-click="rollDice()" class="btn btn-default">Roll Dice</div>
             </div>
         </div>
-        <hr>
 
 
 

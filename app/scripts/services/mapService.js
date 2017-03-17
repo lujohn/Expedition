@@ -17,35 +17,8 @@ angular.module('expeditionApp')
     const ROW_OFFSET = (HEX_WIDTH / 2);
     const MID_ROW_IDX = 2;
     const VERT_GAP_CLOSE = 40; 
-    
 
-    /* ---------------------- Interaction with MapGraphService ----------------------- */
-    this.addRoadToGraph = function (road) {
-        MapGraphService.setEdge(road.color, road.from, road.to);
-    }
-
-    this.addBuildingToGraph = function (building) {
-        MapGraphService.setVertex(building.color, building.type, building.location);
-    }
-
-    // Checks if a road has already been built at the specified location
-    this.roadExistsAt = function (from, to) {
-        // Edge color initlized to null. Changed when road is built
-        return MapGraphService.getEdgeColor(from, to) != null;
-    }
-
-    this.buildingExistsAt = function (coord) {
-        // vertex.type is initialized to null and changed when settlement is built.
-        var vertex = MapGraphService.getVertex(coord);
-        return vertex.type != null;
-    }
-
-    // This function returns the lands associated with the given building. Used mainly for 
-    // incrementing the resources in player's hands
-    this.getLandsForBuilding = function (building) {
-        return MapGraphService.getVertex(building.location).lands;
-    }
-
+    // This function must be called before using MapService.
     this.initializeGraph = function (lands) {
         var xOffset = 0; var yOffset = 0;
         for (var i = 0; i < lands.length; i++) {
@@ -117,6 +90,34 @@ angular.module('expeditionApp')
             }
         }
     }
+
+    /* ---------------------- Interaction with MapGraphService ----------------------- */
+    this.addRoadToGraph = function (road) {
+        MapGraphService.setEdge(road.color, road.from, road.to);
+    }
+
+    this.addBuildingToGraph = function (building) {
+        MapGraphService.setVertex(building.color, building.type, building.location);
+    }
+
+    // Checks if a road has already been built at the specified location
+    this.roadExistsAt = function (from, to) {
+        // Edge color initlized to null. Changed when road is built
+        return MapGraphService.getEdgeColor(from, to) != null;
+    }
+
+    this.buildingExistsAt = function (coord) {
+        // vertex.type is initialized to null and changed when settlement is built.
+        var vertex = MapGraphService.getVertex(coord);
+        return vertex.type != null;
+    }
+
+    // This function returns the lands associated with the given building. Used mainly for 
+    // incrementing the resources in player's hands
+    this.getLandsForBuilding = function (building) {
+        return MapGraphService.getVertex(building.location).lands;
+    }
+
 
     this.getNumVerticies = function () {
         return MapGraphService.getNumVerticies();

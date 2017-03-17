@@ -1,11 +1,10 @@
 // Handles all map interactions
 
 angular.module('expeditionApp')
-.controller('MapController', ['$scope','GameService', 'MapService', function ($scope, GameService, MapService) {
+.controller('MapController', ['$scope','GameService', function ($scope, GameService, MapService) {
 
 	// Assign coordinates to lands.
-    MapService.initializeGraph(GameService.landsMatrix);
-    console.log("Number of Verticies: " + MapService.getNumVerticies());
+    GameService.initializeMap(GameService.landsMatrix);
 
 	$scope.landsArray = GameService.landsMatrix;
     $scope.landsDictionary = GameService.landsDictionary;

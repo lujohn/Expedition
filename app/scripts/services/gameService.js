@@ -6,7 +6,8 @@
     the game */
 
 angular.module('expeditionApp')
-.service('GameService', ['LandFactory', 'PlayerService', function (LandFactory, PlayerService) {
+.service('GameService', ['LandFactory', 'PlayerService', 'MapService', 'BuildingFactory', 
+    function (LandFactory, PlayerService, MapService, BuildingFactory) {
 
     var LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat"];
     this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
@@ -16,13 +17,45 @@ angular.module('expeditionApp')
     this.playersDictionary = {};  // Player information as key, value pair <Color, PlayerObject>
     this.turnsOrder = []  // Array of player colors indicating turn order.
 
+    /* STATES:
+        0: INITIAL - players choose initial settlements and roads
+        1: ACTIVE - Game is in session
+        2: END 
+    */
     this.STATE = -1;
+
+    // Pointer to active player
     this.activePlayer = null;
+
+    /* ================================ Observers ================================ */
+    // Observers for activePlayer change.
+    var activePlayerOberservers = [];
+    this.registerActivePlayerObserver = function (observer) {
+        activePlayerOberservers.push(observer);
+    }
+
+    // Observers for GAME STATE change
+    var gameStateObservers = [];
+    this.registerGameStateObserver = function (observer) {
+        gameStateObservers.push(observer);
+    }
+
+    this.setGameState = function (state) {
+        this.STATE = state;
+        for (var i = 0; i < gameStateObservers.length; i++) {
+            gameStateObservers[i].gameStateChanged(state);
+        }
+    }
 
     this.setActivePlayer = function (num) {
         this.activePlayer = this.turnsOrder[num];
+        console.log("active player set to: " + this.turnsOrder[num].color);
+        // Notify all observers
+        for (var i = 0; i < activePlayerOberservers.length; i++) {
+            activePlayerOberservers[i].updateActivePlayer(this.activePlayer);
+        }
     }
-
+    /* ============================== Game Creation ============================== */
     this.createRandomGame = function (numPlayers) {
         // Generate lands randomly for now. MODIFY
         this.generateLandsRandom();
@@ -74,12 +107,47 @@ angular.module('expeditionApp')
         return this.landsDictionary[landID];
     }
 
+    /* ============================== Map-related functions ============================== */
+    this.addRoad = function (color, from, to) {
+        var newRoad = BuildingFactory.createRoad(color, from, to);
+        this.playersDictionary[color].addRoad(newRoad);
+
+        MapService.addRoadToGraph(newRoad);
+
+        return newRoad; // return road created
+    }
+
+    this.addBuilding = function (color, coordinates) {
+        var newBuilding = BuildingFactory.createBuilding(color, coordinates);
+        this.playersDictionary[color].addBuilding(newBuilding);
+
+        MapService.addBuildingToGraph(newBuilding);
+
+        return newBuilding;  // return the building created
+    }
+
+    this.roadExists = function (from, to) {
+        return MapService.roadExistsAt(from, to);
+    }
+
+    this.buildingExists = function (coordinates) {
+        return MapService.buildingExistsAt(coordinates);
+    }
+
+    this.getLandsForBuilding = function (building) {
+        return MapService.getLandsForBuilding(building);
+    }
+
+    this.initializeMap = function (lands) {
+        MapService.initializeGraph(lands);
+    }
+
     /* ============================ Player-related functions ============================= */
     // Checks if the game has been won. The game is over when any player's "victoryPoints" 
     // is 10 or above. 
     this.gameWon = function () {
-        for (var i = 0; i < this.turnsArray.length; i++) {
-            if (this.playersDictionary[this.turnsArray[i]].victoryPoints >= 10) {
+        for (var i = 0; i < this.turnsOrder.length; i++) {
+            if (this.playersDictionary[this.turnsOrder[i]].victoryPoints >= 10) {
                 return true;
             }
         }
@@ -90,6 +158,7 @@ angular.module('expeditionApp')
     this.addPlayers = function (colorsArray) {
         for (var i = 0; i < colorsArray.length; i++) {
             this.addPlayer(colorsArray[i]);
+            console.log("turnsOrder: " + this.turnsOrder);
         }
     }
 
@@ -105,8 +174,13 @@ angular.module('expeditionApp')
         return this.playersDictionary[playerColor];
     }
 
+    // This function returns the player whose turn number is "num"
+    this.getPlayer = function (num) {
+        return this.turnsOrder[0];  
+    }
+
     this.getNumPlayers = function () {
-        return this.turnsArray.length;
+        return this.turnsOrder.length;
     }
 
 }]);

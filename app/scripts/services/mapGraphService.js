@@ -14,6 +14,13 @@ angular.module('expeditionApp')
 	// {key => fromCoord, value => { key => toCoord, value => color } }	
 	this.edges = {};  
 
+	// Every vertex has one, two, or three lands that it controls. This function
+	// assigns those lands to the vertex
+	this.registerLandToVertex = function (land, coord) {
+		var vertex = this.getVertex(coord);
+		vertex.lands.push(land);
+	}
+
 	this.addVertex = function (coordinates) {
 		// turn coordinates [x, y] into "x,y" for use as a key
 		var coordString = coordinates.toString(coordinates);
@@ -35,19 +42,22 @@ angular.module('expeditionApp')
 			return false;
 		}
 
-		// If either vertex does not exist, return false with no modifcations
-		if (!this.hasVertex(fromCoord) || ! this.hasVertex(toCoord)) {
-			return false;
+		// If either vertex does not exist, add them in. Shouldn't happen, but just in case.
+		if (!this.hasVertex(fromCoord)) {
+			var coordString = coordinatesToString(fromCoord);
+			var newVertex = new Vertex(coordString);
+			this.verticies[coordString] = newVertex
+		}
+
+		if (!this.hasVertex(toCoord)) {
+			var coordString = coordinatesToString(toCoord);
+			var newVertex = new Vertex(coordString);
+			this.verticies[coordString] = newVertx;
 		}
 
 		// setEdge will set edge both directions
 		this.setEdge(color, fromCoord, toCoord);
         return true;
-	}
-
-	this.registerLandToVertex = function (land, coord) {
-		var vertex = this.getVertex(coord);
-		vertex.lands.push(land);
 	}
 
 	this.setEdge = function (color, from, to) {
@@ -58,6 +68,7 @@ angular.module('expeditionApp')
 		edges = this.getEdges(to);
 		edges[coordinatesToString(from)] = color;
 	}
+
 
 	this.setVertex = function (color, type, coord) {
 		var vertex = this.getVertex(coord);

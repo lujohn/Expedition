@@ -1,3 +1,8 @@
+body {
+	background-image: url("../images/oceanPattern3.png");
+	background-attachment: fixed;
+}
+
 .container {
     width: 1250px;
 }

@@ -2,34 +2,67 @@
  * Created by johnlu on 3/3/17.
  */
 angular.module('expeditionApp')
-.controller('GameController', ['$scope', 'GameService', 'MapService', 
-    function ($scope, GameService, MapService) {
+.controller('GameController', ['$scope', 'GameService',
+    function ($scope, GameService) {
+
+    /* ============================= Observer Registration ========================== */
+    $scope.activePlayer = null;
+    // Initialize Scope
+    $scope.lastLandSelected = null;
+    $scope.showMainControls = true;
+    $scope.presentPlayerPanel = false;
+
+
+    // Listen for changes in the active player
+    GameService.registerActivePlayerObserver(this);
+    this.updateActivePlayer = function (activePlayer) {
+        $scope.activePlayer = activePlayer;
+    }
+
+    // Listen for change in Game State
+    GameService.registerGameStateObserver(this);
+    this.gameStateChanged = function (newState) {
+        if (newState === 1) {
+            console.log("Game State changed to 1");
+            GameService.setActivePlayer(0);
+
+            // Hide all panels
+            $scope.setActivePanel(-1);
+
+            // Hide the main controls and show the dice button
+            $scope.showMainControls = false;
+
+            // Modal presentation would be nice. Panel should have button for dice roll
+            $scope.presentPlayerPanel = true;
+        }
+    }
 
     // Initialize Game with 2 players. Will generate lands
     GameService.createRandomGame(2);
 
     // Add players to Game
-    GameService.addPlayers(['red', 'blue']);
-
-    // Set game state to INITAL STATE - which is the state for picking the initial
-    // 2 settlements and roads.
-    GameService.STATE = 0;
+    GameService.addPlayers(['red']);
 
     // Set active player to red
     GameService.setActivePlayer(0);
 
+    // Set game state to INITAL STATE - which is the state for picking the initial
+    // 2 settlements and roads.
+    GameService.setGameState(0);
 
-    // Initialize Scope
-    $scope.activePlayer = null;
+    /* ================================ Display Panels =============================== */
+    // Control Panels:
+    // -1: Show No Panel
+    // 0: Building Settlment Panel - for building settlements
+    // 1: Building Road Panel - build roads
+    // 2: Trade
+    // 3: Info
+    // 4: Development Card
+
+    // Start at 0 for INITIAL STATE
     $scope.activeControlPanel = 0;
-    $scope.lastLandSelected = null;
-
-    // Update activePlayer whenever it changes in GameService
-    $scope.$watch('GameService.activePlayer', function () {
-        $scope.activePlayer = GameService.activePlayer;
-    });
-
     $scope.setActivePanel = function (num) {
+        console.log("active Panel set to " + num);
         $scope.activeControlPanel = num;
     }
 
@@ -41,19 +74,14 @@ angular.module('expeditionApp')
         $scope.activePlayer = GameService.turnsOrder[num];
     }
 
-    $scope.setGameState = function(num) {
-        if (num === 0) {
-            // INITIAL STATE
-            GameService.STATE = num;
-        } else if (num === 1) {
-            // ACTIVE STATE
-            console.log("changing game state to 1! So Exciting");
+    /* ================================== Game Flow  ================================== */
+    $scope.rollDice = function () {
+        $scope.showMainControls = true;
 
-        }
+        var rollResult = Math.floor(Math.random() * 13);
+
+        alert("you rolled: " + rollResult);
     }
-
-    /* ------------------------- Player Action Handlers ---------------------------- */
-
 
     /* --------------------------------- Helper functions ----------------------------- */
     function getNextPlayer() {
