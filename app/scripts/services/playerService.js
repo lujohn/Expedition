@@ -42,8 +42,15 @@ angular.module('expeditionApp')
 			// Be sure to decrease resource
 		}
 
-		newPlayer.addResource = function (type) {
-			this.resourcesInHand[type]++;
+		newPlayer.incrementResource = function (land) {
+			this.resourcesInHand[land.type]++;
+		}
+
+		// takes an array of lands and increments resource for each
+		newPlayer.incrementResourcesForLands = function (lands) {
+			for (var i = 0; i < lands.length; i++) {
+				this.incrementResource(lands[i]);
+			}
 		}
 
 		// This function is called after the dice has been rolled. It goes through

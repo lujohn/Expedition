@@ -5,14 +5,24 @@ angular.module('expeditionApp')
 .controller('GameController', ['$scope', 'GameService',
     function ($scope, GameService) {
 
-    /* ============================= Observer Registration ========================== */
-    $scope.activePlayer = null;
     // Initialize Scope
+    $scope.activePlayer = null;
     $scope.lastLandSelected = null;
     $scope.showMainControls = true;
     $scope.presentPlayerPanel = false;
 
+    // Control Panels:
+    // -1: Show No Panel
+    // 0: Building Settlment Panel - for building settlements
+    // 1: Building Road Panel - build roads
+    // 2: Trade
+    // 3: Info
+    // 4: Development Card
 
+    // Start at 0 for INITIAL STATE
+    $scope.activeControlPanel = 0;
+
+    /* ============================= Observer Registration ========================== */
     // Listen for changes in the active player
     GameService.registerActivePlayerObserver(this);
     this.updateActivePlayer = function (activePlayer) {
@@ -37,8 +47,9 @@ angular.module('expeditionApp')
         }
     }
 
+    /* =============================== Game Creation ================================ */
     // Initialize Game with 2 players. Will generate lands
-    GameService.createRandomGame(2);
+    GameService.createRandomGame(1);
 
     // Add players to Game
     GameService.addPlayers(['red']);
@@ -51,16 +62,6 @@ angular.module('expeditionApp')
     GameService.setGameState(0);
 
     /* ================================ Display Panels =============================== */
-    // Control Panels:
-    // -1: Show No Panel
-    // 0: Building Settlment Panel - for building settlements
-    // 1: Building Road Panel - build roads
-    // 2: Trade
-    // 3: Info
-    // 4: Development Card
-
-    // Start at 0 for INITIAL STATE
-    $scope.activeControlPanel = 0;
     $scope.setActivePanel = function (num) {
         console.log("active Panel set to " + num);
         $scope.activeControlPanel = num;
@@ -81,6 +82,8 @@ angular.module('expeditionApp')
         var rollResult = Math.floor(Math.random() * 13);
 
         alert("you rolled: " + rollResult);
+
+
     }
 
     /* --------------------------------- Helper functions ----------------------------- */

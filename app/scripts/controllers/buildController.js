@@ -21,7 +21,7 @@ angular.module('expeditionApp')
 		// Get the active player
 		var activePlayer = GameService.activePlayer;  // Inherited from MapController
 
-		// Create a Settlement
+		// This will add the building to the player and the map
 		var newSettlement = GameService.addBuilding(activePlayer.color, coordOfCorner);
 
 		if (GameService.STATE === 0) {
@@ -44,6 +44,8 @@ angular.module('expeditionApp')
 		// Create new road
 		var coord1 = landToBuildOn.coordinates[corners[0]];
 		var coord2 = landToBuildOn.coordinates[corners[1]];
+
+		// This will add the road to the player and the map
 		var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
 
 		// Store in buffer
@@ -94,6 +96,8 @@ angular.module('expeditionApp')
 			// Allocate to each player, the resouces corresponding to the lands of his/her second settlement
 			var landsForBuilding = GameService.getLandsForBuilding(secondSettlement);
 			console.log("Lands for Second Settlement of " + player.color + " are: " + landsForBuilding);
+
+			player.incrementResourcesForLands(landsForBuilding);
 		}
 	}
 }]);

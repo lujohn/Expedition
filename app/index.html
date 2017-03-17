@@ -107,50 +107,27 @@
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="row row-content" ng-show="SHOW_PLAYER_PANEL">
+        <div class="row row-content" ng-show="true">
             <div class="col-xs-10">
-                <div class="panel panel-danger">
+                <div class="panel panel-warning">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Player Details </h3>
+                        <h1 class="panel-title">Player Details </h1>
                     </div>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-xs-3">
-                                <div class="btn-group-vertical">
-                                    <span class="btn btn-info btn-lg">Settlement</span><br>
-                                    <span class="btn btn-info btn-lg">City</span><br>
-                                    <span class="btn btn-default btn-lg">Road.</span><br>
-                                </div>
+                                <h1> Victory Points: {{activePlayer.victoryPoints}}</h1>
+                                <h5> Number of Buildings: {{activePlayer.buildingsOwned.length}}</h5>
+                                <h5> Number of Roads: {{activePlayer.roadsOwned.length}}</h5>
                             </div>
-                            <div class="col-xs-9">
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <img src="images/wood.png" style="height: 160px; width: 160px">
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <h3>Choose the corner to place your settlement on</h3>
-                                        <div class="btn-group">
-                                            <span class="btn btn-default btn-sm">A</span>
-                                            <span class="btn btn-default btn-sm">B</span>
-                                            <span class="btn btn-default btn-sm">C</span>
-                                            <span class="btn btn-default btn-sm">D</span>
-                                            <span class="btn btn-default btn-sm">E</span>
-                                            <span class="btn btn-default btn-sm">F</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-xs-3 pull-right">
+                                <h3>Player: {{activePlayer.color | uppercase }}</h3>
+                                <h3>Resources In Hand</h3>
+                                <h5>Sheep: {{activePlayer.resourcesInHand.sheep}}</h5>
+                                <h5>Ore: {{activePlayer.resourcesInHand.ore}}</h5>
+                                <h5>Brick: {{activePlayer.resourcesInHand.brick}}</h5>
+                                <h5>Wood: {{activePlayer.resourcesInHand.wood}}</h5>
+                                <h5>Wheat: {{activePlayer.resourcesInHand.wheat}}</h5>
                             </div>
                         </div>
                     </div>
