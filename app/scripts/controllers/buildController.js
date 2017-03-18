@@ -85,8 +85,6 @@ angular.module('expeditionApp')
 
 	function distributeStartingResources () {
 
-		console.log(turnsOrder[turnsIndex].toString());
-
 		for (var i = 0; i < turnsOrder.length; i++) {
 			var player = turnsOrder[i];
 			var myBufEntry = myBuf[player.color];
@@ -94,10 +92,8 @@ angular.module('expeditionApp')
 			console.log("secondSettlement location: " + secondSettlement.location);
 
 			// Allocate to each player, the resouces corresponding to the lands of his/her second settlement
-			var landsForBuilding = GameService.getLandsForBuilding(secondSettlement);
-			console.log("Lands for Second Settlement of " + player.color + " are: " + landsForBuilding);
-
-			player.incrementResourcesForLands(landsForBuilding);
+			console.log("Lands for Second Settlement of " + player.color + " are: " + secondSettlement.lands);
+			player.incrementResourcesForBuilding(secondSettlement);
 		}
 	}
 }]);

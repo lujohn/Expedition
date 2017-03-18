@@ -114,8 +114,8 @@ angular.module('expeditionApp')
 
     // This function returns the lands associated with the given building. Used mainly for 
     // incrementing the resources in player's hands
-    this.getLandsForBuilding = function (building) {
-        return MapGraphService.getVertex(building.location).lands;
+    this.getLandsForCoordinates = function (coordinates) {
+        return MapGraphService.getVertex(coordinates).lands;
     }
 
 

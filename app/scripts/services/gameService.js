@@ -119,9 +119,14 @@ angular.module('expeditionApp')
 
     this.addBuilding = function (color, coordinates) {
         var newBuilding = BuildingFactory.createBuilding(color, coordinates);
+        newBuilding.lands = MapService.getLandsForCoordinates(coordinates);
+
+        // Add building to the player
         this.playersDictionary[color].addBuilding(newBuilding);
 
+        // Add building to the graph
         MapService.addBuildingToGraph(newBuilding);
+
 
         return newBuilding;  // return the building created
     }
@@ -134,15 +139,18 @@ angular.module('expeditionApp')
         return MapService.buildingExistsAt(coordinates);
     }
 
-    this.getLandsForBuilding = function (building) {
-        return MapService.getLandsForBuilding(building);
-    }
-
     this.initializeMap = function (lands) {
         MapService.initializeGraph(lands);
     }
 
     /* ============================ Player-related functions ============================= */
+    this.diceRolled = function (diceResult) {
+        for (var i = 0; i < this.turnsOrder.length; i++) {
+            var player = this.turnsOrder[i];
+            player.diceRolled(diceResult);
+        }
+    }
+
     // Checks if the game has been won. The game is over when any player's "victoryPoints" 
     // is 10 or above. 
     this.gameWon = function () {

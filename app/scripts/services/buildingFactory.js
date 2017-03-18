@@ -22,6 +22,7 @@ angular.module('expeditionApp')
 		newBuilding.location = vertex;
 		newBuilding.color = color;
 		newBuilding.type = "settlement";
+		newBuilding.lands = {};  // the lands the building sits on
 
 		newBuilding.toString = function() {
 			return "location: " + newBuilding.location + ", color: " + newBuilding.color + ", type: " + newBuilding.type;

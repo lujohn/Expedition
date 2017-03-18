@@ -6,7 +6,7 @@ angular.module('expeditionApp')
 		newPlayer.color = playerColor;
 		// This object keeps track of which resources the player controls for each diceNumber
 		// Note: duplicates must be allowed here.
-		newPlayer.landsForDiceNumber = { 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [] };
+		newPlayer.resourcesForDiceNumber = { 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [] };
 		// This object keeps track of the number of each resource the player has in hand
 		newPlayer.resourcesInHand = {
 			"sheep": 0,
@@ -17,7 +17,6 @@ angular.module('expeditionApp')
 		};
 		newPlayer.victoryPoints = 2;
 
-		// !!!Create Service for These !!!
 		newPlayer.buildingsOwned = [];  // (key, value) => (location : Coordinates, building : building)
 		newPlayer.roadsOwned = [];
 
@@ -38,32 +37,33 @@ angular.module('expeditionApp')
 
 		newPlayer.addBuilding = function (building) {
 			this.buildingsOwned.push(building);
-
-			// Be sure to decrease resource
-		}
-
-		newPlayer.incrementResource = function (land) {
-			this.resourcesInHand[land.type]++;
-		}
-
-		// takes an array of lands and increments resource for each
-		newPlayer.incrementResourcesForLands = function (lands) {
-			for (var i = 0; i < lands.length; i++) {
-				this.incrementResource(lands[i]);
-			}
-		}
-
-		// This function is called after the dice has been rolled. It goes through
-		// all of the lands owned by this player and adds to the resources the 
-		// player currently holds.
-		newPlayer.diceRolled = function (numberRolled) {
-			var lands = this.landsForDiceNumber[numberRolled];
+			
+			// Associate each of the buildings' lands with a dice number for easier distributing
+			// of resources later.
+			var lands = building.lands;
 			for (var i = 0; i < lands.length; i++) {
 				var land = lands[i];
-				// increment the player's resources
-				this.resourcesInHand[land.type]++;
+				this.resourcesForDiceNumber[land.diceNumber].push(land.type);
 			}
 		}
+
+		newPlayer.incrementResource = function (type) {
+			this.resourcesInHand[type]++;
+		}
+
+		newPlayer.incrementResourcesForBuilding = function (building) {
+			for (var i = 0; i < building.lands.length; i++) {
+				this.incrementResource(building.lands[i].type);
+			}
+		}
+
+		newPlayer.diceRolled = function (diceResult) {
+			var resourcesEarned = this.resourcesForDiceNumber[diceResult];
+			for (var i = 0; i < resourcesEarned.length; i++) {
+				this.incrementResource(resourcesEarned[i]);
+			}
+		}
+
 
 		newPlayer.toString = function () {
 			return this.color;
