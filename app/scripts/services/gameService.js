@@ -102,14 +102,21 @@ angular.module('expeditionApp')
     }
 
     this.assignLandDiceNumbersRandom = function () {
-        var possibleNumbers = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12];
+        var possibleNumbers = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12];
 
         // Shuffle Dice Numbers
         shuffle(possibleNumbers);
 
-        // Assign dice numbers to land
-        for (var i = 0; i < possibleNumbers.length; i++) {
-            this.landsDictionary["land" + i].diceNumber = possibleNumbers[i];
+        // Assign dice numbers to land 
+        var idx = 0;
+        for (var i = 0; i < this.landsMatrix.length; i++) {
+            var numCols = this.NUM_HEXES_IN_ROW[i];
+            for (var j = 0; j < numCols; j++) {
+                var land = this.landsMatrix[i][j];
+                if (land.type !== "dessert") {
+                    this.landsMatrix[i][j].diceNumber = possibleNumbers[idx++];
+                }
+            }
         }
     }
 

@@ -83,7 +83,7 @@ angular.module('expeditionApp')
 
         alert("you rolled: " + rollResult);
 
-        GameService.diceRolled(diceResult);
+        GameService.diceRolled(rollResult);
     }
 
     /* --------------------------------- Helper functions ----------------------------- */

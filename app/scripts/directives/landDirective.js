@@ -41,33 +41,36 @@ angular.module('expeditionApp')
 	        ctx.stroke();     
 	        ctx.fill();
 
-	        // Create the Dice Number associated with the land
-	        var diceNumberImage = document.createElement("img");
-	        diceNumberImage.width = 40;
-	        diceNumberImage.height = 40;
-	        diceNumberImage.src = "images/landNumber" + landToDraw.diceNumber + ".svg";
-	        diceNumberImage.style.position = "absolute";
-	        diceNumberImage.style.left = xOffset + (80 - diceNumberImage.width / 2) + "px" ;  // **Add constants
-	        diceNumberImage.style.top = yOffset + (80 - diceNumberImage.height / 2) + "px";
-	      
-
-	        // So dice will display on top of land
-	        diceNumberImage.style.zIndex = 2;
-
-	   		// Get the gameBoard to add land canvas and dice image on.
-	        var gameBoardContainer = document.getElementById("gameBoardContainer");
-	        gameBoardContainer.appendChild(diceNumberImage);
+	        // Get the gameBoard to add land canvas and dice image on.
+			var gameBoardContainer = document.getElementById("gameBoardContainer");
 	        gameBoardContainer.appendChild(landCanvas);
 
-	        // Register event listener to land and dice number
+	        // Event handler for land and dice number clicks
 	        var landClickedEvent = function () {
 	        	scope.$apply(scope.selectedLandWithID(landID));
+	        }
+	        // Create the Dice Number associated with the land
+	        if (landToDraw.type !== "dessert") {
+	        	var diceNumberImage = document.createElement("img");
+		        diceNumberImage.width = 40;
+		        diceNumberImage.height = 40;
+		        diceNumberImage.src = "images/landNumber" + landToDraw.diceNumber + ".svg";
+		        diceNumberImage.style.position = "absolute";
+		        diceNumberImage.style.left = xOffset + (80 - diceNumberImage.width / 2) + "px" ;  // **Add constants
+		        diceNumberImage.style.top = yOffset + (80 - diceNumberImage.height / 2) + "px";
+
+		        // So dice will display on top of land
+		        diceNumberImage.style.zIndex = 2;
+
+		        // Register event handler with dice number
+    	        diceNumberImage.addEventListener('click', landClickedEvent);
+
+    	        // Add dice number to game board
+		        gameBoardContainer.appendChild(diceNumberImage);
 	        }
 
 	        // Add event listener
 	        landCanvas.addEventListener('click', landClickedEvent);
-	        diceNumberImage.addEventListener('click', landClickedEvent);
-
 		}
 	}; 
 });
