@@ -9,7 +9,15 @@ angular.module('expeditionApp')
 .service('GameService', ['LandFactory', 'PlayerService', 'MapService', 'BuildingFactory', 
     function (LandFactory, PlayerService, MapService, BuildingFactory) {
 
-    var LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat"];
+    //var LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat", "desert"];
+    var LAND_CONSTRUCTION_DICTIONARY = {
+        "grain": 4,
+        "lumber": 4,
+        "wool": 4,
+        "ore": 3,
+        "brick": 3,
+        "dessert": 1
+    };
     this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
 
     this.landsMatrix = [[],[],[],[],[]];   // Stores the lands in play for this game
@@ -65,19 +73,26 @@ angular.module('expeditionApp')
     };
 
     this.generateLandsRandom = function () {
-        // Generate Lands Randomly. Get a number randomly between 0 and 4 (inclusive)
-        var count = 0;
+        // construct an array of lands
+        var arrangement = [];
+        for (var prop in LAND_CONSTRUCTION_DICTIONARY) {
+            if (LAND_CONSTRUCTION_DICTIONARY.hasOwnProperty(prop)) {
+                var numLandsForType = LAND_CONSTRUCTION_DICTIONARY[prop];
+                for (var i = 0; i < numLandsForType; i++) {
+                    arrangement.push(prop);
+                }
+            }
+        }
+        // Arrange Lands Randomly. Get a number randomly between 0 and 4 (inclusive)
+        shuffle(arrangement);
+        var idx = 0;
         var numRows = this.landsMatrix.length;
         for (var row = 0; row < numRows; row++) {
             var numCols = this.NUM_HEXES_IN_ROW[row];
-            for (var col = 0; col < numCols; col++, count++) {
-                // Calculate a random land type
-                var rand = Math.floor(Math.random() * LAND_TYPES.length);
-                var landType = LAND_TYPES[rand];
-
+            for (var col = 0; col < numCols; col++, idx++) {
                 // Use Land Factory to create a land
-                var newLand = LandFactory.createLand(landType);
-                newLand.landID = "land" + count.toString();
+                var newLand = LandFactory.createLand(arrangement[idx]);
+                newLand.landID = "land" + idx.toString(); 
 
                 // Store new land
                 this.landsMatrix[row].push(newLand);
@@ -90,12 +105,7 @@ angular.module('expeditionApp')
         var possibleNumbers = [2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12];
 
         // Shuffle Dice Numbers
-        for (var i = 0; i < possibleNumbers.length; i++){
-            var randIndex = Math.floor(Math.random() * possibleNumbers.length);
-            temp = possibleNumbers[randIndex];
-            possibleNumbers[randIndex] = possibleNumbers[i];
-            possibleNumbers[i] = temp;
-        }
+        shuffle(possibleNumbers);
 
         // Assign dice numbers to land
         for (var i = 0; i < possibleNumbers.length; i++) {
@@ -107,6 +117,15 @@ angular.module('expeditionApp')
         return this.landsDictionary[landID];
     }
 
+    /* Helper - Shuffle function */
+    function shuffle(array) {
+        for (var i = 0; i < array.length; i++) {
+            var randIndex = Math.floor(Math.random() * array.length);
+            temp = array[randIndex];
+            array[randIndex] = array[i];
+            array[i] = temp;
+        }
+    }
     /* ============================== Map-related functions ============================== */
     this.addRoad = function (color, from, to) {
         var newRoad = BuildingFactory.createRoad(color, from, to);
