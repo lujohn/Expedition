@@ -13,42 +13,65 @@ angular.module('expeditionApp')
 	        var landCanvas = document.createElement("canvas");
 	        var xOffset = landCoordA[0] - 80;
 	        var yOffset = landCoordA[1];
-
-
 	        landCanvas.width = 160;  // **Change to Angular Constant 
 	        landCanvas.height = 160;
 	        landCanvas.style.left = xOffset + "px";
 	        landCanvas.style.top = yOffset + "px";
 	        landCanvas.style.zIndex = 1;
 
-	        // Grab land canvas context text
-	        var ctx = landCanvas.getContext("2d");
-	        ctx.lineWidth = 1.0;
-	        ctx.strokeStyle = "#fff328";
-	        ctx.fillStyle = COLOR_LOOKUP[landToDraw.type];
+	        landCanvas.isHovering = false;
 
-	        // Draw land piece
-	        ctx.beginPath();
-	        ctx.moveTo(80,0);
-	        ctx.lineTo(160,40);
-	        ctx.lineTo(160,120);
-	        ctx.lineTo(80,160);
-	        ctx.lineTo(0,120);
-	        ctx.lineTo(0,40);
-	        ctx.lineTo(80,0);
-	        ctx.closePath();
-
-	        ctx.stroke();     
-	        ctx.fill();
-
-	        // Get the gameBoard to add land canvas and dice image on.
+	       	// Get the gameBoard to add land canvas and dice image on.
 			var gameBoardContainer = document.getElementById("gameBoardContainer");
 	        gameBoardContainer.appendChild(landCanvas);
+
+	        drawLand(landCanvas);
+
+	        function drawLand(landCanvas) {
+	        	// Grab land canvas context text
+		        var ctx = landCanvas.getContext("2d");
+		        ctx.clearRect(0, 0, landCanvas.width, landCanvas.height);
+		        if (landCanvas.isHovering) {
+		        	ctx.lineWidth = 4.0;
+		        } else {
+		        	ctx.lineWidth = 1.0;
+		        }
+		       	
+		        ctx.strokeStyle = "#000000";
+		        ctx.fillStyle = COLOR_LOOKUP[landToDraw.type];
+
+		        // Draw land piece
+		        ctx.beginPath();
+		        ctx.moveTo(80,0);
+		        ctx.lineTo(160,40);
+		        ctx.lineTo(160,120);
+		        ctx.lineTo(80,160);
+		        ctx.lineTo(0,120);
+		        ctx.lineTo(0,40);
+		        ctx.lineTo(80,0);
+		        ctx.closePath();
+
+		        ctx.fill();
+		        ctx.stroke();   
+	        }
+
+	        landCanvas.addEventListener('mouseover', function(event) {
+	        	console.log("moused move detected! X: " + event.clientX + "   Y: " + event.clientY);
+	        	this.isHovering = true;
+	        	drawLand(this);
+	        });
+
+	        landCanvas.addEventListener('mouseout', function(event) {
+	        	console.log("mouse out detected!");
+	        	this.isHovering = false;
+	        	drawLand(this);
+	        })
 
 	        // Event handler for land and dice number clicks
 	        var landClickedEvent = function () {
 	        	scope.$apply(scope.selectedLandWithID(landID));
 	        }
+	        
 	        // Create the Dice Number associated with the land
 	        if (landToDraw.type !== "dessert") {
 	        	var diceNumberImage = document.createElement("img");
