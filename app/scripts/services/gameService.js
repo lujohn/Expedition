@@ -8,15 +8,13 @@
 angular.module('expeditionApp')
 .service('GameService', ['LandFactory', 'PlayerService', 'MapService', 'BuildingFactory', 
     function (LandFactory, PlayerService, MapService, BuildingFactory) {
-
-    //var LAND_TYPES = ["sheep", "ore", "brick", "wood", "wheat", "desert"];
     var LAND_CONSTRUCTION_DICTIONARY = {
         "grain": 4,
         "lumber": 4,
         "wool": 4,
         "ore": 3,
         "brick": 3,
-        "dessert": 1
+        "desert": 1
     };
     this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
 
@@ -113,7 +111,7 @@ angular.module('expeditionApp')
             var numCols = this.NUM_HEXES_IN_ROW[i];
             for (var j = 0; j < numCols; j++) {
                 var land = this.landsMatrix[i][j];
-                if (land.type !== "dessert") {
+                if (land.type !== "desert") {
                     this.landsMatrix[i][j].diceNumber = possibleNumbers[idx++];
                 }
             }

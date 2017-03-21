@@ -1,6 +1,6 @@
 angular.module('expeditionApp')
 .directive('landHex', function () {
-	const COLOR_LOOKUP = {wool : "#2eaa30", ore : "#bbbcb5", brick : "#842121", lumber : "#663f1f", grain : "#c4bb19"};
+	const COLOR_LOOKUP = {wool : "#2eaa30", ore : "#bbbcb5", brick : "#842121", lumber : "#663f1f", grain : "#c4bb19", desert : "#d7f276"};
 	return {
 		link: function (scope, element, attr) {
 
@@ -19,6 +19,7 @@ angular.module('expeditionApp')
 	        landCanvas.style.top = yOffset + "px";
 	        landCanvas.style.zIndex = 1;
 
+	        // This property will be used to bolden the border when user hovers
 	        landCanvas.isHovering = false;
 
 	       	// Get the gameBoard to add land canvas and dice image on.
@@ -37,6 +38,7 @@ angular.module('expeditionApp')
 		        	ctx.lineWidth = 1.0;
 		        }
 		       	
+		       	// Set stroke color and land color
 		        ctx.strokeStyle = "#000000";
 		        ctx.fillStyle = COLOR_LOOKUP[landToDraw.type];
 
@@ -51,10 +53,13 @@ angular.module('expeditionApp')
 		        ctx.lineTo(80,0);
 		        ctx.closePath();
 
+		        // Must fill before stroke or else adjacent land colors will erase
+		        // each other's borders
 		        ctx.fill();
 		        ctx.stroke();   
 	        }
 
+	        // Handle user hovering
 	        landCanvas.addEventListener('mouseover', function(event) {
 	        	console.log("moused move detected! X: " + event.clientX + "   Y: " + event.clientY);
 	        	this.isHovering = true;
@@ -72,8 +77,8 @@ angular.module('expeditionApp')
 	        	scope.$apply(scope.selectedLandWithID(landID));
 	        }
 	        
-	        // Create the Dice Number associated with the land
-	        if (landToDraw.type !== "dessert") {
+	        // Create the Dice Number associated with the land. Desert has no dice number
+	        if (landToDraw.type !== "desert") {
 	        	var diceNumberImage = document.createElement("img");
 		        diceNumberImage.width = 40;
 		        diceNumberImage.height = 40;
