@@ -9,11 +9,11 @@ angular.module('expeditionApp')
 		newPlayer.resourcesForDiceNumber = { 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [] };
 		// This object keeps track of the number of each resource the player has in hand
 		newPlayer.resourcesInHand = {
-			"sheep": 0,
+			"wool": 0,
 			"ore": 0,
 			"brick": 0,
-			"wood": 0,
-			"wheat": 0
+			"lumber": 0,
+			"grain": 0
 		};
 		newPlayer.victoryPoints = 2;
 
