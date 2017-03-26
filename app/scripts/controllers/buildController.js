@@ -30,6 +30,17 @@ angular.module('expeditionApp')
 			// Store player's settlement selection in myBuf
 			myBuf[activePlayer.color].settlements.push(newSettlement);
 		}
+
+		// Draw new Settlment
+		var gameContainer = document.getElementById("gameBoardContainer");
+		var settlementImage = document.createElement("img");
+		settlementImage.src = "images/" + activePlayer.color + "Settlement.png";
+		settlementImage.width = 40;
+		settlementImage.height = 40;
+		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
+		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
+
+		gameContainer.appendChild(settlementImage);
 	}
 
 	$scope.buildRoad = function (edgeString) {
@@ -81,6 +92,21 @@ angular.module('expeditionApp')
 		} else if (GameService.STATE === 1) {
 			
 		}
+
+		// Draw new road
+		var road = document.createElement('canvas');
+		road.style.left = coord1[0] + 'px';
+		road.style.top = coord1[1] + 'px';
+		road.style.zIndex = "2";
+
+		var ctx = road.getContext('2d');
+		var roadImg = new Image();   // Create new img element
+		roadImg.onload = function() {
+	    	ctx.drawImage(roadImg, 0, 0);
+		}
+		roadImg.src = "images/redRoad.svg";
+		ctx.rotate(60 * Math.PI / 180);
+		document.getElementById("gameBoardContainer").appendChild(road);
 	}
 
 	function distributeStartingResources () {

@@ -46,7 +46,6 @@ angular.module('expeditionApp')
 	        diceNumberImage.width = 40;
 	        diceNumberImage.height = 40;
 	        diceNumberImage.src = "images/landNumber" + landToDraw.diceNumber + ".svg";
-	        diceNumberImage.style.position = "absolute";
 	        diceNumberImage.style.left = xOffset + (80 - diceNumberImage.width / 2) + "px" ;  // **Add constants
 	        diceNumberImage.style.top = yOffset + (80 - diceNumberImage.height / 2) + "px";
 	      

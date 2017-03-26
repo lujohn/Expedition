@@ -4,16 +4,26 @@ body {
 }
 
 .container {
+	top: 100px;
+	left: 100px;
     width: 1250px;
+    position: relative;
 }
 
 #gameBoardContainer {
 	height: 650px;
-	position: relative;
+	
 }
 
-div > canvas {
+#gameBoardContainer > canvas {
+	overflow: auto;
 	position: absolute;
+	z-index: 1;
+}
+
+#gameBoardContainer > img {
+	position: absolute;
+	z-index: 100;
 }
 
 .animate-show-hide.ng-hide {
