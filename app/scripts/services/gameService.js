@@ -21,7 +21,7 @@ angular.module('expeditionApp')
     this.landsMatrix = [[],[],[],[],[]];   // Stores the lands in play for this game
     this.landsDictionary = {}   // Stores lands for later lookup
     this.playersDictionary = {};  // Player information as key, value pair <Color, PlayerObject>
-    this.turnsOrder = []  // Array of player colors indicating turn order.
+    this.turnsOrder = []  // Array of players (color only) indicating turn order.
 
     /* STATES:
         0: INITIAL - players choose initial settlements and roads
@@ -54,8 +54,9 @@ angular.module('expeditionApp')
     }
 
     this.setActivePlayer = function (num) {
-        this.activePlayer = this.turnsOrder[num];
-        console.log("active player set to: " + this.turnsOrder[num].color);
+        var playerColor = this.turnsOrder[num];
+        this.activePlayer = this.getPlayerByColor(playerColor);
+        console.log("active player set to: " + this.turnsOrder[num]);
         // Notify all observers
         for (var i = 0; i < activePlayerOberservers.length; i++) {
             activePlayerOberservers[i].updateActivePlayer(this.activePlayer);
@@ -179,10 +180,30 @@ angular.module('expeditionApp')
     /* ============================ Player-related functions ============================= */
     this.diceRolled = function (diceResult) {
         for (var i = 0; i < this.turnsOrder.length; i++) {
-            var player = this.turnsOrder[i];
-            player.diceRolled(diceResult);
+            var playerColor = this.turnsOrder[i];
+
+            this.getPlayerByColor(playerColor).diceRolled(diceResult);
         }
     }
+
+    this.endTurn = function () {
+        // Change active player to next in line
+        this.setActivePlayer(this.getNextPlayerIndex());
+    }
+
+    // This function returns the index of the next player in the turnsOrder array
+    this.getNextPlayerIndex = function () {
+        var idx = this.turnsOrder.indexOf(this.activePlayer.color) 
+        console.log("index of player is: " + idx);
+        if (idx === this.turnsOrder.length - 1) {
+            return 0;
+            //return this.getPlayerByColor(this.turnsOrder[0]);
+        } else {
+            return idx + 1;
+            //return this.getPlayerByColor(this.turnsOrder[idx+1]);
+        }
+    }
+
 
     // Checks if the game has been won. The game is over when any player's "victoryPoints" 
     // is 10 or above. 
@@ -204,7 +225,7 @@ angular.module('expeditionApp')
 
     this.addPlayer = function (playerColor) {
         var newPlayer = PlayerService.createPlayer(playerColor);
-        this.turnsOrder.push(newPlayer); 
+        this.turnsOrder.push(playerColor); 
         this.playersDictionary[playerColor] = newPlayer;
 
         return newPlayer;

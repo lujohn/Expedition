@@ -11,6 +11,7 @@ angular.module('expeditionApp')
     $scope.showMainControls = false;
     $scope.showPlayerPanel = false;
     $scope.showRollDice = false;
+    $scope.showEndTurn = false;
 
     // Control Panels:
     // -1: Show No Panel
@@ -44,7 +45,10 @@ angular.module('expeditionApp')
             $scope.showPlayerPanel = true;
 
             $scope.showMainControls = false;
+
+            // ** DEBUGGING ** 
             $scope.showRollDice = true;
+            $scope.showEndTurn = true;
         }
     }
 
@@ -53,7 +57,7 @@ angular.module('expeditionApp')
     GameService.createRandomGame(1);
 
     // Add players to Game
-    GameService.addPlayers(['red']);
+    GameService.addPlayers(['red', 'blue']);
 
     // Set active player to red
     GameService.setActivePlayer(0);
@@ -80,7 +84,7 @@ angular.module('expeditionApp')
     $scope.rollDice = function () {
         $scope.showMainControls = true;
 
-        // Generate integer in [2, 12]
+        // Generate integer in [2, 12]. ** CHANGE IMPLEMENTATION TO ACCOUNT FOR PROBABILITY **
         var rollResult = Math.floor(Math.random() * 11) + 2;
 
         alert("you rolled: " + rollResult);
@@ -88,18 +92,18 @@ angular.module('expeditionApp')
         GameService.diceRolled(rollResult);
     }
 
-    /* --------------------------------- Helper functions ----------------------------- */
-    function getNextPlayer() {
-        var idx = $scope.turnsOrder.indexOf($scope.activePlayer.color) 
-        console.log("index of player is: " + idx);
-        if (idx === $scope.turnsOrder.length - 1) {
-            return GameService.getPlayerByColor($scope.turnsOrder[0]);
-        } else {
-            return GameService.getPlayerByColor($scope.turnsOrder[idx+1])
-        }
+    $scope.endTurn = function () {
+        // Check for victory
+        if (GameService.gameWon()) {
+            alert("Congrats " + GameService.activePlayer.color + "! You won!");
 
+            // Do something
+        } else {
+            GameService.endTurn();
+        }
     }
 
+    /* --------------------------------- Helper functions ----------------------------- */
     function beginNextTurn() {
     	$scope.activePlayer = GameService.getActivePlayer();
     }									

@@ -15,8 +15,8 @@ angular.module('expeditionApp')
 
  	// initialize myBuf
  	for (var i = 0; i < turnsOrder.length; i++) {
- 		var player = turnsOrder[i];
- 		myBuf[player.color] = { settlements: [], roads: [] };
+ 		var playerColor = turnsOrder[i];
+ 		myBuf[playerColor] = { settlements: [], roads: [] };
  	}
 
 	$scope.buildSettlement = function (corner) {
@@ -62,7 +62,7 @@ angular.module('expeditionApp')
 				drawSettlement(coordOfCorner);
 
 			} else {
-				alert("Not enough resources for new settlement");
+				alert("Not enough resources for new settlement!");
 			}
 		}
 	}
@@ -87,7 +87,7 @@ angular.module('expeditionApp')
 
 		if (GameService.STATE === 0 ) {
 
-			// Add the road to the player and the map
+			// Ahdd the road to the player and the map
 			var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
 
 			// Store in buffer
@@ -137,7 +137,7 @@ angular.module('expeditionApp')
 				drawRoad(coord1, coord2, edgeLabel);
 				
 			} else {
-				alert("Not enough resources for new road");
+				alert("Not enough resources for new road!");
 			}
 		}
 	}
@@ -237,7 +237,7 @@ angular.module('expeditionApp')
 	function drawSettlement(coordOfCorner) {
 		var gameContainer = document.getElementById("gameBoardContainer");
 		var settlementImage = document.createElement("img");
-		settlementImage.src = "images/" + GameService.activePlayer.color + "Settlement.png";
+		settlementImage.src = "images/" + GameService.activePlayer.color + "Settlement.svg";
 		settlementImage.width = 40;
 		settlementImage.height = 40;
 		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
@@ -262,14 +262,14 @@ angular.module('expeditionApp')
 	function distributeStartingResources () {
 
 		for (var i = 0; i < turnsOrder.length; i++) {
-			var player = turnsOrder[i];
-			var myBufEntry = myBuf[player.color];
+			var playerColor = turnsOrder[i];
+			var myBufEntry = myBuf[playerColor];
 			var secondSettlement = myBufEntry.settlements[1];
 			console.log("secondSettlement location: " + secondSettlement.location);
 
 			// Allocate to each player, the resouces corresponding to the lands of his/her second settlement
-			console.log("Lands for Second Settlement of " + player.color + " are: " + secondSettlement.lands);
-			player.incrementResourcesForBuilding(secondSettlement);
+			console.log("Lands for Second Settlement of " + playerColor + " are: " + secondSettlement.lands);
+			GameService.getPlayerByColor(playerColor).incrementResourcesForBuilding(secondSettlement);
 		}
 	}
 }]);
