@@ -85,7 +85,9 @@ angular.module('expeditionApp')
         $scope.showMainControls = true;
 
         // Generate integer in [2, 12]. ** CHANGE IMPLEMENTATION TO ACCOUNT FOR PROBABILITY **
-        var rollResult = Math.floor(Math.random() * 11) + 2;
+        var die1 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
+        var die2 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
+        var rollResult = die1 + die2;
 
         alert("you rolled: " + rollResult);
 
