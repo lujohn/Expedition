@@ -167,6 +167,11 @@ angular.module('expeditionApp')
         MapService.initializeGraph(lands);
     }
 
+    this.getAdjacentBuildings = function(coordinates) {
+        console.log(MapService.getAdjacentBuildings(coordinates));
+        return MapService.getAdjacentBuildings(coordinates);
+    }
+
     /* ============================ Player-related functions ============================= */
     this.diceRolled = function (diceResult) {
         for (var i = 0; i < this.turnsOrder.length; i++) {
@@ -190,7 +195,6 @@ angular.module('expeditionApp')
     this.addPlayers = function (colorsArray) {
         for (var i = 0; i < colorsArray.length; i++) {
             this.addPlayer(colorsArray[i]);
-            console.log("turnsOrder: " + this.turnsOrder);
         }
     }
 

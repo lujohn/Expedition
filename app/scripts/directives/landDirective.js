@@ -61,13 +61,11 @@ angular.module('expeditionApp')
 
 	        // Handle user hovering
 	        landCanvas.addEventListener('mouseover', function(event) {
-	        	console.log("moused move detected! X: " + event.clientX + "   Y: " + event.clientY);
 	        	this.isHovering = true;
 	        	drawLand(this);
 	        });
 
 	        landCanvas.addEventListener('mouseout', function(event) {
-	        	console.log("mouse out detected!");
 	        	this.isHovering = false;
 	        	drawLand(this);
 	        })

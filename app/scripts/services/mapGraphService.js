@@ -27,7 +27,7 @@ angular.module('expeditionApp')
 		if (!this.verticies.hasOwnProperty(coordString)) {
 			var newVertex = new Vertex(coordString);
 			this.verticies[coordString] = newVertex;
-
+			console.log("Vertex Added for coord: " + coordString + this.getVertex(coordinates));
 			// Create entry in edges
 			this.edges[coordString] = {};
 			return true;
@@ -42,7 +42,7 @@ angular.module('expeditionApp')
 			return false;
 		}
 
-		// If either vertex does not exist, add them in. Shouldn't happen, but just in case.
+		// If either vertex does not exist, add them in. Note: Shouldn't happen, but just in case.
 		if (!this.hasVertex(fromCoord)) {
 			var coordString = coordinatesToString(fromCoord);
 			var newVertex = new Vertex(coordString);
@@ -107,6 +107,26 @@ angular.module('expeditionApp')
 		return edges[coordinatesToString(to)];
 	}
 
+	// This function returns the verticies adjacent to the given vertex.
+	// Primary use is for determining valid locations to build settlements.
+	this.getAdjacentVerticies = function (coord) {
+		var vertex = this.getVertex(coord);
+		var coordStr = coordinatesToString(coord);
+		// Grab the edges for this vertex
+		var edgesForCoord = this.edges[coordStr];
+		console.log(edgesForCoord);
+
+		// Find and store all adjacent verticies
+		var adjVerticies = [];
+		for (var toCoordStr in edgesForCoord) {
+			if (edgesForCoord.hasOwnProperty(toCoordStr)) {
+				console.log("(getAdjacentVerticies) getting Vertex at : " + toCoordStr  + this.verticies[toCoordStr]);
+				adjVerticies.push(this.verticies[toCoordStr]);
+			}
+		}
+		return adjVerticies;
+	}
+
 	/* ============================= For Debugging ============================= */
 	this.getNumVerticies = function () {
 		var count = 0;
@@ -136,11 +156,6 @@ angular.module('expeditionApp')
 		var x = coordinates[0];
 		var y = coordinates[1];
 		return  x + ',' + y;
-	}
-
-	// Helper function for marking verticies unavailable after settlement is built 
-	function getNeighbors() {
-		// TO IMPLEMENT...
 	}
 
 });

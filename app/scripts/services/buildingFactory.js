@@ -10,6 +10,7 @@ angular.module('expeditionApp')
 		newRoad.from = coord1;
 		newRoad.to = coord2;
 
+		// ** For Debugging **
 		newRoad.toString = function () {
 			return "from: " + newRoad.from + " to: " + newRoad.to +  " color: " + newRoad.color;
 		}
@@ -24,6 +25,7 @@ angular.module('expeditionApp')
 		newBuilding.type = "settlement";
 		newBuilding.lands = {};  // the lands the building sits on
 
+		// ** For Debugging **
 		newBuilding.toString = function() {
 			return "location: " + newBuilding.location + ", color: " + newBuilding.color + ", type: " + newBuilding.type;
 		}

@@ -18,20 +18,28 @@ angular.module('expeditionApp')
 		var landToBuildOn = $scope.lastLandSelected;   // Inherited from MapController
 		var coordOfCorner = landToBuildOn.coordinates[corner];
 
+		// Check if corner is legal to build on. Only corners that are not
+		// adjacent to any other existing building can be built on
+		if (!cornerIsAvailable(coordOfCorner)) {
+			alert("Corner not available! Pick another!");
+			return;
+		}
+
 		// Get the active player
-		var activePlayer = GameService.activePlayer;  // Inherited from MapController
+		var activePlayer = GameService.activePlayer;
 
 		// This will add the building to the player and the map
 		var newSettlement = GameService.addBuilding(activePlayer.color, coordOfCorner);
 
 		if (GameService.STATE === 0) {
-			$scope.setActivePanel(2);  // Switch to BUILD_ROAD_PANEL
+			// Switch to BUILD_ROAD_PANEL
+			$scope.setActivePanel(2); 
 
-			// Store player's settlement selection in myBuf
+			// Store player's settlement selection in buffer
 			myBuf[activePlayer.color].settlements.push(newSettlement);
 		}
 
-		// Draw new Settlment
+		// Draw new Settlment -- ** NOTE: move drawing code to directive **
 		var gameContainer = document.getElementById("gameBoardContainer");
 		var settlementImage = document.createElement("img");
 		settlementImage.src = "images/" + activePlayer.color + "Settlement.png";
@@ -41,6 +49,13 @@ angular.module('expeditionApp')
 		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
 
 		gameContainer.appendChild(settlementImage);
+	}
+
+	function cornerIsAvailable (cornerCoord) {
+		if (GameService.buildingExists(cornerCoord) || GameService.getAdjacentBuildings(cornerCoord).length !== 0) {
+			return false;
+		}
+		return true;
 	}
 
 	$scope.buildRoad = function (edgeString) {
@@ -63,9 +78,7 @@ angular.module('expeditionApp')
 		myBuf[activePlayer.color].roads.push(newRoad);
 
 		if (GameService.STATE === 0 ) {
-			console.log("turnsIndex: " + turnsIndex);
-			// Store player's road selection in myBuf.
-
+			// Players are selecting initial resources state
 			if (!reverseOrder) {
 				if (turnsIndex === turnsOrder.length -1) {
 					// no need to change index
@@ -90,10 +103,11 @@ angular.module('expeditionApp')
 			// GameController's Scope. Display Build Settlement Panel - after building Road is done
 			$scope.setActivePanel(1);
 		} else if (GameService.STATE === 1) {
-			
+			// Active game play state
+
 		}
 
-		// Draw new road
+		// Draw new road -- ** NOTE: move drawing code to directive **
 		var road = document.createElement('canvas');
 		road.style.left = coord1[0] + 'px';
 		road.style.top = coord1[1] + 'px';

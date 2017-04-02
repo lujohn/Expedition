@@ -32,9 +32,9 @@ angular.module('expeditionApp')
 
                 /* This information is used by the MapGraph algorithms for uniquely identifying 
                 verticies. It aides with retrieving and placing settlements, cities, and roads.
-                This infomration is necessary to make a graph implementation work because verticies
-                are not unique - multiple lands may share the same vertex. Alternamtive implementation 
-                can be to store a mapping from shared points into one vertex id... */
+                This infomration is necessary to make a graph implementation work since verticies
+                are not unique. That is, multiple lands may share the same vertex. 
+                Alternative implementation can be to store a mapping from shared points into one vertex id. */
                 var hexCoordinates = {
                     A: [80 + xOffset, 0 + yOffset],
                     B: [160 + xOffset, 40 + yOffset],
@@ -112,12 +112,23 @@ angular.module('expeditionApp')
         return vertex.type != null;
     }
 
-    // This function returns the lands associated with the given building. Used mainly for 
-    // incrementing the resources in player's hands
-    this.getLandsForCoordinates = function (coordinates) {
-        return MapGraphService.getVertex(coordinates).lands;
+    // This function returns a set of adjacent buildings (just the color) to the given coordinates
+    this.getAdjacentBuildings = function (coord) {
+        var adjVerticies = MapGraphService.getAdjacentVerticies(coord);
+        var adjBuildings = []
+        adjVerticies.forEach( function(vertex) {
+            if (!vertex.available) {
+                adjBuildings.push(vertex.color);
+            }
+        });
+        return adjBuildings;
     }
 
+    // This function returns the lands associated with the given coordinates. Used mainly for 
+    // incrementing the resources in player's hands
+    this.getLandsForCoordinates = function (coord) {
+        return MapGraphService.getVertex(coord).lands;
+    }
 
     this.getNumVerticies = function () {
         return MapGraphService.getNumVerticies();

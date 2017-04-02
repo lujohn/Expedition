@@ -43,7 +43,9 @@ angular.module('expeditionApp')
 			var lands = building.lands;
 			for (var i = 0; i < lands.length; i++) {
 				var land = lands[i];
-				this.resourcesForDiceNumber[land.diceNumber].push(land.type);
+				if (land.type !== "desert") {
+					this.resourcesForDiceNumber[land.diceNumber].push(land.type);
+				}
 			}
 		}
 
