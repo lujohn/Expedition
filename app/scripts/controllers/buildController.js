@@ -1,5 +1,5 @@
 angular.module('expeditionApp')
-.controller('BuildController', ['$scope', 'GameService', function ($scope, GameService) {
+.controller('BuildController', ['$scope', 'LANDHEX', 'GameService', function ($scope, LANDHEX, GameService) {
 
  	var turnsOrder = GameService.turnsOrder;
  	var reverseOrder = false;
@@ -39,16 +39,7 @@ angular.module('expeditionApp')
 			myBuf[activePlayer.color].settlements.push(newSettlement);
 		}
 
-		// Draw new Settlment -- ** NOTE: move drawing code to directive **
-		var gameContainer = document.getElementById("gameBoardContainer");
-		var settlementImage = document.createElement("img");
-		settlementImage.src = "images/" + activePlayer.color + "Settlement.png";
-		settlementImage.width = 40;
-		settlementImage.height = 40;
-		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
-		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
-
-		gameContainer.appendChild(settlementImage);
+		drawSettlement(coordOfCorner);
 	}
 
 	function cornerIsAvailable (cornerCoord) {
@@ -58,10 +49,23 @@ angular.module('expeditionApp')
 		return true;
 	}
 
-	$scope.buildRoad = function (edgeString) {
+	// This function draws a new Settlement -- ** NOTE: move drawing code to directive **
+	function drawSettlement(coordOfCorner) {
+		var gameContainer = document.getElementById("gameBoardContainer");
+		var settlementImage = document.createElement("img");
+		settlementImage.src = "images/" + GameService.activePlayer.color + "Settlement.png";
+		settlementImage.width = 40;
+		settlementImage.height = 40;
+		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
+		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
 
-		// edgeString will be a string of the form 'char-char'. Ex: A-B
-		var corners = edgeString.split('-');
+		gameContainer.appendChild(settlementImage);
+	}
+
+	$scope.buildRoad = function (edgeLabel) {
+
+		// edgeLabel will be a string of the form 'char-char'. Ex: A-B
+		var corners = edgeLabel.split('-');
 
 		// Grab activePlayer and last land clicked.
 		var activePlayer = GameService.activePlayer;
@@ -76,6 +80,9 @@ angular.module('expeditionApp')
 
 		// Store in buffer
 		myBuf[activePlayer.color].roads.push(newRoad);
+
+		// Draw road 
+		drawRoad(coord1, coord2, edgeLabel);
 
 		if (GameService.STATE === 0 ) {
 			// Players are selecting initial resources state
@@ -106,13 +113,64 @@ angular.module('expeditionApp')
 			// Active game play state
 
 		}
+	}
 
-		// Draw new road -- ** NOTE: move drawing code to directive **
+	// This function draws a new road -- ** NOTE: move drawing code to directive **
+	function drawRoad (coord1, coord2, edgeLabel) {
+
 		var road = document.createElement('canvas');
-		road.style.left = coord1[0] + 'px';
-		road.style.top = coord1[1] + 'px';
+		var x1 = coord1[0]; var y1 = coord1[1]; var x2 = coord2[0]; var y2= coord2[1];
+
 		road.style.zIndex = "2";
 
+		var rdCtx = road.getContext('2d');
+
+		// Positioning road canvas depends on which side of the hex the road is being built upon.
+		if (edgeLabel === "A-B" || edgeLabel === "D-E") {
+			road.width = LANDHEX.WIDTH / 2;
+			road.height = LANDHEX.HEIGHT / 4;
+			if (edgeLabel === "A-B") {
+				road.style.left = x1 + 'px';
+				road.style.top = y1 + 'px';
+			} else {   // D-E
+				road.style.left = x2 + 'px';
+				road.style.top = y2 + 'px';
+			}
+			strokeRoad(rdCtx, GameService.activePlayer.color, 0, 0, road.width, road.height);
+
+		} else if (edgeLabel === "B-C" || edgeLabel === "E-F") {
+			// Vertical edge
+			road.width = LANDHEX.WIDTH / 10;
+			road.height = LANDHEX.HEIGHT / 2;
+
+			var xOffset = road.width / 2;
+			if (edgeLabel === "B-C") {
+				road.style.left = x1 - xOffset + 'px';
+				road.style.top = y1 + 'px';
+			} else {  // "E-F"
+				road.style.left = x2 - xOffset + 'px';
+				road.style.top = y2 + 'px';
+			}
+			strokeRoad(rdCtx, GameService.activePlayer.color, xOffset, 0, xOffset, road.height);
+
+		} else {   // "C-D" || "F-A"
+			road.width = LANDHEX.WIDTH / 2;
+			road.height = LANDHEX.HEIGHT / 4;
+
+			var xOffset = road.width;  // Shift top-left corner of canvas element to the left
+			if (edgeLabel === "C-D") {
+				road.style.left = x1 - xOffset + 'px';
+				road.style.top = y1 + 'px';
+			} else {  // "F-A"
+				road.style.left = x2 - xOffset + 'px';
+				road.style.top = y2 + 'px';
+			}
+			strokeRoad(rdCtx, GameService.activePlayer.color, 0, road.height, road.width, 0);
+		}
+
+		document.getElementById("gameBoardContainer").appendChild(road);
+
+		/* 		
 		var ctx = road.getContext('2d');
 		var roadImg = new Image();   // Create new img element
 		roadImg.onload = function() {
@@ -120,7 +178,20 @@ angular.module('expeditionApp')
 		}
 		roadImg.src = "images/redRoad.svg";
 		ctx.rotate(60 * Math.PI / 180);
-		document.getElementById("gameBoardContainer").appendChild(road);
+		document.getElementById("gameBoardContainer").appendChild(road); */
+	}
+
+	function strokeRoad (rdCtx, color, x1, y1, x2, y2) {
+			// Set styles
+			// Create Path
+			rdCtx.beginPath();
+			rdCtx.strokeStyle = color;
+			rdCtx.lineWidth = 10.0;
+
+			rdCtx.moveTo(x1, y1);
+			rdCtx.lineTo(x2, y2);
+			rdCtx.stroke();
+			rdCtx.closePath();
 	}
 
 	function distributeStartingResources () {
