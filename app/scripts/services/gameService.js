@@ -172,6 +172,10 @@ angular.module('expeditionApp')
         return MapService.getAdjacentBuildings(coordinates);
     }
 
+    this.getRoadsWithSource = function (coordinates) {
+        return MapService.getRoadsWithSource(coordinates);
+    }
+
     /* ============================ Player-related functions ============================= */
     this.diceRolled = function (diceResult) {
         for (var i = 0; i < this.turnsOrder.length; i++) {

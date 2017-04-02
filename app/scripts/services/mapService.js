@@ -124,6 +124,20 @@ angular.module('expeditionApp')
         return adjBuildings;
     }
 
+    // This function returns all roads (color only) with the given source
+    this.getRoadsWithSource = function (coord) {
+
+        var edgesForCoord = MapGraphService.getEdges(coord);
+        var roads = [];
+        for (var toCoordStr in edgesForCoord) {
+            if (edgesForCoord.hasOwnProperty(toCoordStr)) {
+                console.log("found road at: " + coord + " with color: " + edgesForCoord[toCoordStr])
+                roads.push(edgesForCoord[toCoordStr]);
+            }
+        }
+        return roads;
+    }
+
     // This function returns the lands associated with the given coordinates. Used mainly for 
     // incrementing the resources in player's hands
     this.getLandsForCoordinates = function (coord) {

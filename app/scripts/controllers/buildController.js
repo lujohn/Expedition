@@ -42,26 +42,6 @@ angular.module('expeditionApp')
 		drawSettlement(coordOfCorner);
 	}
 
-	function cornerIsAvailable (cornerCoord) {
-		if (GameService.buildingExists(cornerCoord) || GameService.getAdjacentBuildings(cornerCoord).length !== 0) {
-			return false;
-		}
-		return true;
-	}
-
-	// This function draws a new Settlement -- ** NOTE: move drawing code to directive **
-	function drawSettlement(coordOfCorner) {
-		var gameContainer = document.getElementById("gameBoardContainer");
-		var settlementImage = document.createElement("img");
-		settlementImage.src = "images/" + GameService.activePlayer.color + "Settlement.png";
-		settlementImage.width = 40;
-		settlementImage.height = 40;
-		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
-		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
-
-		gameContainer.appendChild(settlementImage);
-	}
-
 	$scope.buildRoad = function (edgeLabel) {
 
 		// edgeLabel will be a string of the form 'char-char'. Ex: A-B
@@ -74,6 +54,11 @@ angular.module('expeditionApp')
 		// Create new road
 		var coord1 = landToBuildOn.coordinates[corners[0]];
 		var coord2 = landToBuildOn.coordinates[corners[1]];
+
+		// Check if location is legal to build a road on.
+		if (!edgeIsAvailable(activePlayer.color, coord1, coord2)) {
+			return;
+		}
 
 		// This will add the road to the player and the map
 		var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
@@ -113,6 +98,46 @@ angular.module('expeditionApp')
 			// Active game play state
 
 		}
+	}
+
+	function cornerIsAvailable (cornerCoord) {
+		if (GameService.STATE === 0) {
+			if (GameService.buildingExists(cornerCoord) || GameService.getAdjacentBuildings(cornerCoord).length !== 0) {
+				return false;
+			}
+			return true;
+		} else if (GameService.STATE == 1) {
+
+		}
+	}
+
+	// This function checks if the edge is available for building a road. Roads can only be built 
+	// if there is not already an existing road AND only if it borders another road of the same
+	// color or a building of the same color is on either of the road verticies.
+	function edgeIsAvailable (color, from, to) {
+
+		if (GameService.roadExists(from, to)) {
+			alert("road already exists!");
+			return false;
+		}
+
+		// Find an existing building on "from" or "to"
+		if (GameService.buildingExists(from) || GameService.buildingExists(to)) {
+			return true;
+		}
+
+		// Find a bordering road
+		var borderFrom = GameService.getRoadsWithSource(from);
+		var borderTo = GameService.getRoadsWithSource(to);
+
+		if (borderFrom.includes(color) || borderTo.includes(color)) {
+			return true;
+		}
+
+		// Illegal to build the road at this location
+		alert("cannot build road here!");
+		return false;
+
 	}
 
 	// This function draws a new road -- ** NOTE: move drawing code to directive **
@@ -167,18 +192,20 @@ angular.module('expeditionApp')
 			}
 			strokeRoad(rdCtx, GameService.activePlayer.color, 0, road.height, road.width, 0);
 		}
-
 		document.getElementById("gameBoardContainer").appendChild(road);
+	}
 
-		/* 		
-		var ctx = road.getContext('2d');
-		var roadImg = new Image();   // Create new img element
-		roadImg.onload = function() {
-	    	ctx.drawImage(roadImg, 0, 0);
-		}
-		roadImg.src = "images/redRoad.svg";
-		ctx.rotate(60 * Math.PI / 180);
-		document.getElementById("gameBoardContainer").appendChild(road); */
+	// This function draws a new Settlement -- ** NOTE: move drawing code to directive **
+	function drawSettlement(coordOfCorner) {
+		var gameContainer = document.getElementById("gameBoardContainer");
+		var settlementImage = document.createElement("img");
+		settlementImage.src = "images/" + GameService.activePlayer.color + "Settlement.png";
+		settlementImage.width = 40;
+		settlementImage.height = 40;
+		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
+		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
+
+		gameContainer.appendChild(settlementImage);
 	}
 
 	function strokeRoad (rdCtx, color, x1, y1, x2, y2) {
