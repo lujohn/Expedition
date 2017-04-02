@@ -15,7 +15,5 @@ angular.module('expeditionApp')
 
         // Update Game Service State
         $scope.$parent.lastLandSelected = landSelected;
-
-        $scope.$parent.activeControlPanel = 1;
     }   
 }]);

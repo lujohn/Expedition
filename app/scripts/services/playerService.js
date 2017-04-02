@@ -20,12 +20,15 @@ angular.module('expeditionApp')
 		newPlayer.buildingsOwned = [];  // (key, value) => (location : Coordinates, building : building)
 		newPlayer.roadsOwned = [];
 
-		/*------------------- player function definitions --------------------- */
-		// Insert a land into the player's collection of owned lands
-		newPlayer.addLand = function (land) {
-			this.landsForDiceNumber[land.diceNumber].push(land);
+		// This function increments the player's resources after a dice roll
+		newPlayer.diceRolled = function (diceResult) {
+			var resourcesEarned = this.resourcesForDiceNumber[diceResult];
+			for (var i = 0; i < resourcesEarned.length; i++) {
+				this.incrementResource(resourcesEarned[i]);
+			}
 		}
 
+		/*------------------------ player building functions ------------------------- */
 		newPlayer.addRoad = function (road) {
 			if (this.color != road.color) {
 				return false;
@@ -49,6 +52,11 @@ angular.module('expeditionApp')
 			}
 		}
 
+		/*------------------------ player resource functions ------------------------- */
+		newPlayer.getResources = function () {
+			return this.resourcesInHand;
+		}
+
 		newPlayer.incrementResource = function (type) {
 			this.resourcesInHand[type]++;
 		}
@@ -58,14 +66,6 @@ angular.module('expeditionApp')
 				this.incrementResource(building.lands[i].type);
 			}
 		}
-
-		newPlayer.diceRolled = function (diceResult) {
-			var resourcesEarned = this.resourcesForDiceNumber[diceResult];
-			for (var i = 0; i < resourcesEarned.length; i++) {
-				this.incrementResource(resourcesEarned[i]);
-			}
-		}
-
 
 		newPlayer.toString = function () {
 			return this.color;

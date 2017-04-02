@@ -8,19 +8,20 @@ angular.module('expeditionApp')
     // Initialize Scope
     $scope.activePlayer = null;
     $scope.lastLandSelected = null;
-    $scope.showMainControls = true;
-    $scope.presentPlayerPanel = false;
+    $scope.showMainControls = false;
+    $scope.showPlayerPanel = false;
+    $scope.showRollDice = false;
 
     // Control Panels:
     // -1: Show No Panel
-    // 0: Building Settlment Panel - for building settlements
-    // 1: Building Road Panel - build roads
-    // 2: Trade
-    // 3: Info
-    // 4: Development Card
+    // 1: Building Settlment Panel - for building settlements
+    // 2: Building Road Panel - build roads
+    // 3: Trade
+    // 4: Info
+    // 5: Development Card
 
     // Start at 0 for INITIAL STATE
-    $scope.activeControlPanel = 0;
+    $scope.activeControlPanel = 1;
 
     /* ============================= Observer Registration ========================== */
     // Listen for changes in the active player
@@ -39,11 +40,11 @@ angular.module('expeditionApp')
             // Hide all panels
             $scope.setActivePanel(-1);
 
-            // Hide the main controls and show the dice button
-            $scope.showMainControls = false;
+            // Show player details panel
+            $scope.showPlayerPanel = true;
 
-            // Modal presentation would be nice. Panel should have button for dice roll
-            $scope.presentPlayerPanel = true;
+            $scope.showMainControls = false;
+            $scope.showRollDice = true;
         }
     }
 
@@ -79,7 +80,8 @@ angular.module('expeditionApp')
     $scope.rollDice = function () {
         $scope.showMainControls = true;
 
-        var rollResult = Math.floor(Math.random() * 13);
+        // Generate integer in [2, 12]
+        var rollResult = Math.floor(Math.random() * 11) + 2;
 
         alert("you rolled: " + rollResult);
 
@@ -101,6 +103,5 @@ angular.module('expeditionApp')
     function beginNextTurn() {
     	$scope.activePlayer = GameService.getActivePlayer();
     }									
-
 
 }])

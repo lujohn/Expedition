@@ -1,6 +1,13 @@
 angular.module('expeditionApp')
 .controller('BuildController', ['$scope', 'LANDHEX', 'GameService', function ($scope, LANDHEX, GameService) {
 
+	/* BUILDING COSTS:
+		Settlement -> 1 wool, 1 grain, 1 brick, 1 lumber
+		City -> 3 ores, 2 grain
+		road -> 1 brick, 1 lumber
+		dev. card -> 1 wool, 1 grain, 1 ore
+	*/
+
  	var turnsOrder = GameService.turnsOrder;
  	var reverseOrder = false;
  	var turnsIndex = 0;
@@ -37,9 +44,27 @@ angular.module('expeditionApp')
 
 			// Store player's settlement selection in buffer
 			myBuf[activePlayer.color].settlements.push(newSettlement);
-		}
 
-		drawSettlement(coordOfCorner);
+			// Draw settlement
+			drawSettlement(coordOfCorner);
+
+		} else if (GameService.STATE === 1) {
+			// Check if player has enough resources.
+			var resAvailable = activePlayer.getResources();
+			console.log("Resources available: " + "brick: " + resAvailable['brick'] + " wool: " + resAvailable['wool'] + " lumber: " + resAvailable['lumber'] + " grain: " + resAvailable['grain']);
+			if (resAvailable['wool'] > 0 && resAvailable['grain'] > 0 && resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
+				resAvailable['wool']--; 
+				resAvailable['grain']--; 
+				resAvailable['brick']--; 
+				resAvailable['lumber']--;
+
+				// Draw settlement
+				drawSettlement(coordOfCorner);
+
+			} else {
+				alert("Not enough resources for new settlement");
+			}
+		}
 	}
 
 	$scope.buildRoad = function (edgeLabel) {
@@ -60,17 +85,16 @@ angular.module('expeditionApp')
 			return;
 		}
 
-		// This will add the road to the player and the map
-		var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
-
-		// Store in buffer
-		myBuf[activePlayer.color].roads.push(newRoad);
-
-		// Draw road 
-		drawRoad(coord1, coord2, edgeLabel);
-
 		if (GameService.STATE === 0 ) {
-			// Players are selecting initial resources state
+
+			// Add the road to the player and the map
+			var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
+
+			// Store in buffer
+			myBuf[activePlayer.color].roads.push(newRoad);
+
+			// Draw road 
+			drawRoad(coord1, coord2, edgeLabel);
 			if (!reverseOrder) {
 				if (turnsIndex === turnsOrder.length -1) {
 					// no need to change index
@@ -92,23 +116,37 @@ angular.module('expeditionApp')
 				}
 			}
 			GameService.setActivePlayer(turnsIndex);
+
 			// GameController's Scope. Display Build Settlement Panel - after building Road is done
 			$scope.setActivePanel(1);
-		} else if (GameService.STATE === 1) {
-			// Active game play state
 
+		} else if (GameService.STATE === 1) {
+			// Check if player has enough resources.
+			var resAvailable = activePlayer.getResources();
+			console.log("Resources available: " + "brick: " + resAvailable['brick'] + " wool: " + resAvailable['wool'] + " lumber: " + resAvailable['lumber'] + " grain: " + resAvailable['grain']);
+			if (resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
+				
+				// Decrement resources
+				resAvailable['brick']--; 
+				resAvailable['lumber']--;
+
+				// Add the road to the player and the map
+				var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
+
+				// Draw road 
+				drawRoad(coord1, coord2, edgeLabel);
+				
+			} else {
+				alert("Not enough resources for new road");
+			}
 		}
 	}
 
 	function cornerIsAvailable (cornerCoord) {
-		if (GameService.STATE === 0) {
-			if (GameService.buildingExists(cornerCoord) || GameService.getAdjacentBuildings(cornerCoord).length !== 0) {
-				return false;
-			}
-			return true;
-		} else if (GameService.STATE == 1) {
-
+		if (GameService.buildingExists(cornerCoord) || GameService.getAdjacentBuildings(cornerCoord).length !== 0) {
+			return false;
 		}
+		return true;
 	}
 
 	// This function checks if the edge is available for building a road. Roads can only be built 
