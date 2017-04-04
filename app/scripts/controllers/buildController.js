@@ -51,7 +51,6 @@ angular.module('expeditionApp')
 		} else if (GameService.STATE === 1) {
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
-			console.log("Resources available: " + "brick: " + resAvailable['brick'] + " wool: " + resAvailable['wool'] + " lumber: " + resAvailable['lumber'] + " grain: " + resAvailable['grain']);
 			if (resAvailable['wool'] > 0 && resAvailable['grain'] > 0 && resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
 				resAvailable['wool']--; 
 				resAvailable['grain']--; 
@@ -123,7 +122,6 @@ angular.module('expeditionApp')
 		} else if (GameService.STATE === 1) {
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
-			console.log("Resources available: " + "brick: " + resAvailable['brick'] + " wool: " + resAvailable['wool'] + " lumber: " + resAvailable['lumber'] + " grain: " + resAvailable['grain']);
 			if (resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
 				
 				// Decrement resources
@@ -265,10 +263,8 @@ angular.module('expeditionApp')
 			var playerColor = turnsOrder[i];
 			var myBufEntry = myBuf[playerColor];
 			var secondSettlement = myBufEntry.settlements[1];
-			console.log("secondSettlement location: " + secondSettlement.location);
 
 			// Allocate to each player, the resouces corresponding to the lands of his/her second settlement
-			console.log("Lands for Second Settlement of " + playerColor + " are: " + secondSettlement.lands);
 			GameService.getPlayerByColor(playerColor).incrementResourcesForBuilding(secondSettlement);
 		}
 	}

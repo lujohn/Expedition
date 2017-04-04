@@ -7,9 +7,11 @@ angular.module('expeditionApp')
 
     // Initialize Scope
     $scope.activePlayer = null;
+    $scope.players = null;
     $scope.lastLandSelected = null;
     $scope.showMainControls = false;
     $scope.showPlayerPanel = false;
+    $scope.showTradePanel = false;
     $scope.showRollDice = false;
     $scope.showEndTurn = false;
 
@@ -35,7 +37,6 @@ angular.module('expeditionApp')
     GameService.registerGameStateObserver(this);
     this.gameStateChanged = function (newState) {
         if (newState === 1) {
-            console.log("Game State changed to 1");
             GameService.setActivePlayer(0);
 
             // Hide all panels
@@ -66,9 +67,10 @@ angular.module('expeditionApp')
     // 2 settlements and roads.
     GameService.setGameState(0);
 
+    $scope.players = GameService.getAllPlayers();
+
     /* ================================ Display Panels =============================== */
     $scope.setActivePanel = function (num) {
-        console.log("active Panel set to " + num);
         $scope.activeControlPanel = num;
     }
 
@@ -79,7 +81,6 @@ angular.module('expeditionApp')
     $scope.setActivePlayer = function(num) {
         $scope.activePlayer = GameService.turnsOrder[num];
     }
-
     /* ================================== Game Flow  ================================== */
     $scope.rollDice = function () {
         $scope.showMainControls = true;
@@ -103,11 +104,46 @@ angular.module('expeditionApp')
         } else {
             GameService.endTurn();
         }
-    }
-
-    /* --------------------------------- Helper functions ----------------------------- */
-    function beginNextTurn() {
-    	$scope.activePlayer = GameService.getActivePlayer();
-    }									
+    }						
 
 }])
+.controller('MainControlsController', ['$scope', function ($scope) {
+
+
+    $scope.showBuildSettlement = function () {
+        console.log("showBuildSettlement called");
+        $scope.setActivePanel(1);  // inherited scope property from GameController
+    }
+
+    $scope.showBuildRoad = function () {
+        $scope.setActivePanel(2);  // inherited scope property from GameController
+    }
+
+    $scope.showTradePanel = function () {
+        $scope.setActivePanel(3)
+    }
+
+    $scope.showPlayerInfo = function () {
+        console.log("showInfo called (from MainControlsController");
+        $scope.setActivePanel(4);
+    }
+
+    $scope.showDevCard = function () {
+        console.log("developementCard button clicked (from MainControlsController");
+        $scope.setActivePanel(5);
+    }
+
+}])
+.controller('TradeController', ['$scope', function ($scope) {
+
+    $scope.tradeRequest = {
+        player: "",
+        offer: { wool: 0, lumber: 0, wheat: 0, ore: 0, brick: 0},
+        demand: { wool: 0, lumber: 0, wheat: 0, ore: 0, brick: 0}
+    };
+
+    $scope.submitTradeRequest = function () {
+        console.log($scope.tradeRequest);
+    }
+}])
+;

@@ -56,7 +56,7 @@ angular.module('expeditionApp')
     this.setActivePlayer = function (num) {
         var playerColor = this.turnsOrder[num];
         this.activePlayer = this.getPlayerByColor(playerColor);
-        console.log("active player set to: " + this.turnsOrder[num]);
+        
         // Notify all observers
         for (var i = 0; i < activePlayerOberservers.length; i++) {
             activePlayerOberservers[i].updateActivePlayer(this.activePlayer);
@@ -169,7 +169,6 @@ angular.module('expeditionApp')
     }
 
     this.getAdjacentBuildings = function(coordinates) {
-        console.log(MapService.getAdjacentBuildings(coordinates));
         return MapService.getAdjacentBuildings(coordinates);
     }
 
@@ -194,7 +193,6 @@ angular.module('expeditionApp')
     // This function returns the index of the next player in the turnsOrder array
     this.getNextPlayerIndex = function () {
         var idx = this.turnsOrder.indexOf(this.activePlayer.color) 
-        console.log("index of player is: " + idx);
         if (idx === this.turnsOrder.length - 1) {
             return 0;
             //return this.getPlayerByColor(this.turnsOrder[0]);
@@ -229,6 +227,14 @@ angular.module('expeditionApp')
         this.playersDictionary[playerColor] = newPlayer;
 
         return newPlayer;
+    }
+
+    this.getAllPlayers = function () {
+        var allPlayers = [];
+        for (var i = 0; i < this.turnsOrder.length; i++) {
+            allPlayers.push(this.getPlayerByColor(this.turnsOrder[i]));
+        }
+        return allPlayers;
     }
 
     this.getPlayerByColor = function (playerColor) {
