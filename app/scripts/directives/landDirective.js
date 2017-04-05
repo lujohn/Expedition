@@ -43,7 +43,7 @@ angular.module('expeditionApp')
 		        }
 
 		        if (landCanvas.isLastClicked) {
-		        	ctx.strokeStyle = "#ffffff";
+		        	ctx.strokeStyle = "#96fff9";
 		        } else {
 		        	ctx.strokeStyle = "#000000";
 		        }
@@ -107,13 +107,26 @@ angular.module('expeditionApp')
 		        diceNumberImage.style.top = yOffset + (80 - diceNumberImage.height / 2) + "px";
 
 		        // So dice will display on top of land
-		        diceNumberImage.style.zIndex = 2;
+		        diceNumberImage.style.zIndex = 101;
 
 		        // Register event handler with dice number
     	        diceNumberImage.addEventListener('click', landClickedEvent);
 
     	        // Add dice number to game board
 		        gameBoardContainer.appendChild(diceNumberImage);
+	        } else {
+	        	// Start with Robber on Desert
+		        var robberImg = document.createElement('img');
+		        robberImg.width = 60;
+		        robberImg.height = 60;
+		        robberImg.src = "images/robber.svg";
+		        robberImg.style.position = "absolute";
+		        robberImg.style.left = xOffset + (80 - robberImg.width / 2) + "px" ;  // **Add constants
+		        robberImg.style.top = yOffset + (80 - robberImg.height / 2) + "px";
+
+		        robberImg.style.zIndex = 201;
+
+		        gameBoardContainer.appendChild(robberImg);
 	        }
 
 	        // Add event listener

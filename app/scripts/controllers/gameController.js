@@ -10,6 +10,8 @@ angular.module('expeditionApp')
     $scope.players = null;
     $scope.lastLandSelected = null;
     $scope.showMainControls = false;
+
+    // DEBUGGING //
     $scope.showPlayerPanel = false;
     $scope.showTradePanel = false;
     $scope.showRollDice = false;
@@ -23,7 +25,7 @@ angular.module('expeditionApp')
     // 4: Info
     // 5: Development Card
 
-    // Start at 0 for INITIAL STATE
+    // Start at 1 for INITIAL STATE
     $scope.activeControlPanel = 1;
 
     /* ============================= Observer Registration ========================== */
@@ -104,8 +106,24 @@ angular.module('expeditionApp')
         } else {
             GameService.endTurn();
         }
-    }						
+    }
 
+    // ** Drawing code should not be here **
+    $scope.placeRobber = function (landID) {
+
+        var landCanvas = document.getElementById(landID + 'canvas');
+
+        var robberImg = document.createElement('img');
+        robberImg.src = "images/robber.svg";
+        robberImg.width = 40; 
+        robberImg.height = 40;
+        robberImg.style.left = landCanvas.width / 2 - robberImg.width / 2 + 'px';
+        robberImg.style.top = landCanvas.height / 2 - robberImg.height/ 2 + 'px';
+        robberImg.position = 'absolute';
+
+        landCanvas.appendChild(robberImg);
+    }
+						
 }])
 .controller('MainControlsController', ['$scope', function ($scope) {
 
