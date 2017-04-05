@@ -21,59 +21,59 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div ng-controller="MainControlsController" class="col-xs-4">
-                    <p style="padding: 20px"></p>
-                    <div ng-show="showMainControls" class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Main Controls</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="btn-group-vertical">
-                                        <span class="btn btn-lg btn-danger" ng-click="showBuildSettlement()">Build Settlement</span>
-                                        <span class="btn btn-lg btn-danger" ng-click="showBuildRoad()">Build Road</span>
-                                        <span class="btn btn-lg btn-warning" data-toggle="modal" data-target="#tradeModal">Trade</span>
-                                        <span class="btn btn-lg btn-info" ng-click="showPlayerInfo()">Info</span>
-                                        <span class="btn btn-lg btn-success" ng-click="showDevCardMenu()">Development Card</span>
-                                    </div>
+            <div ng-controller="MainControlsController" class="col-xs-4">
+                <p style="padding: 20px"></p>
+                <div ng-show="true" class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Main Controls</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row row-content">
+                            <div class="col-xs-6">
+                                <div class="btn-group-vertical">
+                                    <span class="btn btn-lg btn-danger" ng-click="showBuildSettlement()">Build Settlement</span>
+                                    <span class="btn btn-lg btn-danger" ng-click="showBuildRoad()">Build Road</span>
+                                    <span class="btn btn-lg btn-warning" data-toggle="modal" data-target="#tradeModal">Trade</span>
+                                    <span class="btn btn-lg btn-info" ng-click="showPlayerInfo()">Info</span>
+                                    <span class="btn btn-lg btn-success" ng-click="showDevCardMenu()">Development Card</span>
                                 </div>
-                                <div class="col-xs-6">
-                                    Information about the specifics of clicking each button goes here upon
-                                    hovering over the buttons...
-                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                Information about the specifics of clicking each button goes here upon
+                                hovering over the buttons...
                             </div>
                         </div>
                     </div>
-                    <div ng-show="showRollDice" ng-click="rollDice()" class="btn btn-default">Roll Dice</div>
-                    <div ng-show="showEndTurn" ng-click="endTurn()" class="btn btn-default">End Turn</div>
-                 </div>
+                </div>
+                <div ng-show="showRollDice" ng-click="rollDice()" class="btn btn-default">Roll Dice</div>
+                <div ng-show="showEndTurn" ng-click="endTurn()" class="btn btn-default">End Turn</div>
+            </div>
 
-                <!-- Build Settlement Panel -->
-                <div class="row row-content animate-show-hide fade" ng-show="isActivePanel(1)">
-                    <div class="col-xs-12" ng-controller="BuildController">
-                        <div class="panel panel-danger">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Build Settlement: {{activePlayer.color | uppercase}}</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-xs-9">
-                                        <div class="row">
-                                            <div class="col-xs-4">
-                                                <p>Land Selected: {{lastLandSelected.type}}</p>
-                                            </div>
-                                            <div class="col-xs-8">
-                                                <h3>Choose the corner to place your settlement on</h3>
-                                                <div class="btn-group">
-                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('A')">A</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('B')">B</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('C')">C</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('D')">D</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('E')">E</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('F')">F</span>
-                                                </div>
+            <!-- Build Settlement Panel -->
+            <div class="row row-content animate-show-hide fade" ng-show="isActivePanel(1)">
+                <div class="col-xs-12" ng-controller="BuildController">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Build Settlement: {{activePlayer.color | uppercase}}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <p>Land Selected: {{lastLandSelected.type}}</p>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <h3>Choose the corner to place your settlement on</h3>
+                                            <div class="btn-group">
+                                                <span class="btn btn-default btn-sm" ng-click="buildSettlement('A')">A</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildSettlement('B')">B</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildSettlement('C')">C</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildSettlement('D')">D</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildSettlement('E')">E</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildSettlement('F')">F</span>
                                             </div>
                                         </div>
                                     </div>
@@ -82,28 +82,28 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Build Road Panel --> 
-                <div class="row row-content animate-show-hide fade" ng-show="isActivePanel(2)">
-                    <div class="col-xs-12" ng-controller="BuildController">
-                        <div class="panel panel-warning">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Build Road: {{activePlayer.color | uppercase}}</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-xs-9">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <h3>Choose The Edge!</h3>
-                                                <div class="btn-group">
-                                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('A-B')">A-B</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('B-C')">B-C</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('C-D')">C-D</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('D-E')">D-E</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('E-F')">E-F</span>
-                                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('F-A')">F-A</span>
-                                                </div>
+            <!-- Build Road Panel --> 
+            <div class="row row-content animate-show-hide fade" ng-show="isActivePanel(2)">
+                <div class="col-xs-12" ng-controller="BuildController">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Build Road: {{activePlayer.color | uppercase}}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            <h3>Choose The Edge!</h3>
+                                            <div class="btn-group">
+                                                <span class="btn btn-default btn-sm" ng-click="buildRoad('A-B')">A-B</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildRoad('B-C')">B-C</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildRoad('C-D')">C-D</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildRoad('D-E')">D-E</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildRoad('E-F')">E-F</span>
+                                                <span class="btn btn-default btn-sm" ng-click="buildRoad('F-A')">F-A</span>
                                             </div>
                                         </div>
                                     </div>
@@ -122,13 +122,14 @@
                             <h3 class="panel-title">Trade</h3>
                         </div>
                         <div class="panel-body">
-                            <form>
+                            <form class="form-horizontal" name="tradeForm">
                                 <div class="form-group row">
-                                    <label class="control-label col-xs-1" for="playerTrade">Trade with: </label>
+                                    <label class="control-label col-xs-1" for="tradePartner">Trade with: </label>
                                     <div class="col-xs-11">
                                         <label ng-repeat="player in players" class="radio-inline form-check-label">
-                                            <input ng-model="tradeRequest.player" class="form-check-input" name="playerTrade" type="radio" value="{{player.color}}"> {{player.color}}
+                                            <input ng-model="tradeRequest.tradePartner" class="form-check-input" name="tradePartner" type="radio" value="{{player.color}}" required> {{player.color}}
                                         </label>
+                                        <span ng-show="tradeForm.tradePartner.$error.required" class="help-block">Must Selected a Player</span>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -140,8 +141,8 @@
                                         <input ng-model="tradeRequest.offer.lumber" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
                                         <label for="example-number-input" class="control-label">Ore</label>
                                         <input ng-model="tradeRequest.offer.ore" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
-                                        <label for="example-number-input" class="control-label">Wheat</label>
-                                        <input ng-model="tradeRequest.offer.wheat" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
+                                        <label for="example-number-input" class="control-label">Grain</label>
+                                        <input ng-model="tradeRequest.offer.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
                                         <label for="example-number-input" class="control-label">Brick</label>
                                         <input ng-model="tradeRequest.offer.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
                                     </div>
@@ -155,15 +156,40 @@
                                         <input ng-model="tradeRequest.demand.lumber" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
                                         <label for="example-number-input" class="control-label">Ore</label>
                                         <input ng-model="tradeRequest.demand.ore" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
-                                        <label for="example-number-input" class="control-label">Wheat</label>
-                                        <input ng-model="tradeRequest.demand.wheat" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
+                                        <label for="example-number-input" class="control-label">Grain</label>
+                                        <input ng-model="tradeRequest.demand.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
                                         <label for="example-number-input" class="control-label">Brick</label>
                                         <input ng-model="tradeRequest.demand.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" id="example-number-input">
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary" ng-click="submitTradeRequest()">Submit</button>
+                                <button type="submit" class="btn btn-primary" ng-disabled="tradeForm.$invalid" ng-click="submitTradeRequest()">Submit</button>
                             </form>
                         </div>
+                    </div>
+                    <div>
+                        <div class="modal fade" id="tradeAcceptModal">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h4 class="modal-title">{{activePlayer.color | uppercase}} wants to trade with you!</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row row-content">
+                                            <h5 style="padding: 10px;">Offering:</h5>
+                                            <p style="float: left; padding-left: 10px;" ng-repeat="(type, count) in tradeRequest.offer"> {{type}}: {{count}} </p>
+                                        </div>
+                                        <div class="row row-content">
+                                            <h5 style="padding: 10px;">Demanding:</h5>
+                                            <p style="float: left; padding-left: 10px;" ng-repeat="(type, count) in tradeRequest.demand"> {{type}}: {{count}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button ng-click="acceptTrade()" class="btn btn-primary" data-dismiss="modal">Accept</button>
+                                        <button ng-click="rejectTrade()" class="btn btn-secondary" data-dismiss="modal">Reject</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
                     </div>
                 </div>
             </div>
@@ -176,7 +202,7 @@
                             <h1 class="panel-title">Player Details </h1>
                         </div>
                         <div class="panel-body">
-                            <div class="row">
+                            <div class="row row-content">
                                 <div class="col-xs-3">
                                     <h1> Victory Points: {{activePlayer.victoryPoints}}</h1>
                                     <h5> Number of Buildings: {{activePlayer.buildingsOwned.length}}</h5>

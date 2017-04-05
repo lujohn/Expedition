@@ -134,16 +134,70 @@ angular.module('expeditionApp')
     }
 
 }])
-.controller('TradeController', ['$scope', function ($scope) {
+.controller('TradeController', ['$scope', 'GameService', function ($scope, GameService) {
 
     $scope.tradeRequest = {
-        player: "",
-        offer: { wool: 0, lumber: 0, wheat: 0, ore: 0, brick: 0},
-        demand: { wool: 0, lumber: 0, wheat: 0, ore: 0, brick: 0}
+        tradePartner: "",
+        offer: { wool: 0, lumber: 0, grain: 0, ore: 0, brick: 0},
+        demand: { wool: 0, lumber: 0, grain: 0, ore: 0, brick: 0}
     };
 
     $scope.submitTradeRequest = function () {
+        console.log("Your Trade Request: ");
         console.log($scope.tradeRequest);
+
+        // present trade modal to other party
+        $('#tradeAcceptModal').modal('show');
+    }
+
+    $scope.acceptTrade = function () {
+        console.log("Accepted Trade");
+
+        // Get the player and check if he/she has sufficient resources
+        var tradePartner = GameService.getPlayerByColor($scope.tradeRequest.tradePartner);
+        var offer = $scope.tradeRequest.offer;
+        var demand = $scope.tradeRequest.demand;
+
+        // Vertify that tradePartner has enough resources to accept
+        var tpResources = tradePartner.getResources();
+        for (var type in demand) {
+            if (demand.hasOwnProperty(type)) {
+                if (tpResources[type] < demand[type]) {
+                    alert("Not enough " + type + " resources for this trade!");
+                    console.log(type);
+                    console.log("tp has: " + tpResources[type]);
+                    console.log("demanded: " + demand[type]);
+                } else {
+                    console.log(type);
+                    console.log("tp has: " + tpResources[type]);
+                    console.log("demanded: " + demand[type]);
+                }
+            }
+        }
+
+        // tradePartner has adequate resources for trade. Execute trade.
+        executeTrade($scope.activePlayer, tradePartner, offer, demand);
+    }
+
+    function executeTrade(player1, player2, offer, demand) {
+
+        var player1Res = player1.getResources();
+        var player2Res = player2.getResources();
+
+        for (var type in offer) {
+            if (offer.hasOwnProperty(type)) {
+                // Decrement each type by specified amount in player1 and increment in player2
+                player1Res[type] -= offer[type];
+                player1Res[type] += demand[type];
+
+                player2Res[type] -= demand[type];
+                player2Res[type] += offer[type];
+            }
+        }
+    }
+
+    $scope.rejectTrade = function () {
+        console.log("Rejected Trade!");
     }
 }])
 ;

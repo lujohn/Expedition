@@ -24,7 +24,7 @@ angular.module('expeditionApp')
 		newPlayer.diceRolled = function (diceResult) {
 			var resourcesEarned = this.resourcesForDiceNumber[diceResult];
 			for (var i = 0; i < resourcesEarned.length; i++) {
-				this.incrementResource(resourcesEarned[i]);
+				this.incrementResource(resourcesEarned[i], 1);
 			}
 		}
 
@@ -57,13 +57,18 @@ angular.module('expeditionApp')
 			return this.resourcesInHand;
 		}
 
-		newPlayer.incrementResource = function (type) {
-			this.resourcesInHand[type]++;
+		newPlayer.incrementResource = function (type, amount) {
+			this.resourcesInHand[type] += amount;
 		}
+
+		newPlayer.decrementResource = function (type, amount) {
+			this.resourcesInHand[type] -= amount;
+		}
+
 
 		newPlayer.incrementResourcesForBuilding = function (building) {
 			for (var i = 0; i < building.lands.length; i++) {
-				this.incrementResource(building.lands[i].type);
+				this.incrementResource(building.lands[i].type, 1);
 			}
 		}
 

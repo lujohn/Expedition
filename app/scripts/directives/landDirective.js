@@ -18,9 +18,12 @@ angular.module('expeditionApp')
 	        landCanvas.style.left = xOffset + "px";
 	        landCanvas.style.top = yOffset + "px";
 	        landCanvas.style.zIndex = 1;
+	        landCanvas.id = landID + "canvas";
 
 	        // This property will be used to bolden the border when user hovers
 	        landCanvas.isHovering = false;
+
+	        landCanvas.isLastClicked = false;
 
 	       	// Get the gameBoard to add land canvas and dice image on.
 			var gameBoardContainer = document.getElementById("gameBoardContainer");
@@ -32,14 +35,19 @@ angular.module('expeditionApp')
 	        	// Grab land canvas context text
 		        var ctx = landCanvas.getContext("2d");
 		        ctx.clearRect(0, 0, landCanvas.width, landCanvas.height);
-		        if (landCanvas.isHovering) {
+		        if (landCanvas.isHovering || landCanvas.isLastClicked) {
 		        	ctx.lineWidth = 4.0;
 		        } else {
 		        	ctx.lineWidth = 1.0;
 		        }
+
+		        if (landCanvas.isLastClicked) {
+		        	ctx.strokeStyle = "#ffffff";
+		        } else {
+		        	ctx.strokeStyle = "#000000";
+		        }
 		       	
 		       	// Set stroke color and land color
-		        ctx.strokeStyle = "#000000";
 		        ctx.fillStyle = COLOR_LOOKUP[landToDraw.type];
 
 		        // Draw land piece
@@ -71,7 +79,18 @@ angular.module('expeditionApp')
 	        })
 
 	        // Event handler for land and dice number clicks
-	        var landClickedEvent = function () {
+	        var landClickedEvent = function (event) {
+
+	        	if (scope.lastLandSelected !== null) {
+	        		// removes the 'selected' bordering from previous selected land
+	        		landCanvas.isLastClicked = false;
+	        		drawLand(landCanvas);
+	        	}
+
+	        	// Apply 'selected' bordering to currently selected land
+	        	event.target.isLastClicked = true;
+	        	drawLand(event.target);
+	        	
 	        	scope.$apply(scope.selectedLandWithID(landID));
 	        }
 	        
@@ -82,7 +101,7 @@ angular.module('expeditionApp')
 		        diceNumberImage.height = 40;
 		        diceNumberImage.src = "images/landNumber" + landToDraw.diceNumber + ".svg";
 		        diceNumberImage.style.position = "absolute";
-		        diceNumberImage.style.left = xOffset + (80 - diceNumberImage.width / 2) + "px" ;  // **Add constants
+		        diceNumberImage.style.left = xOffset + (80 - diceNumberImage.width / 2) + "px" ;  // ** Add constants **
 		        diceNumberImage.style.top = yOffset + (80 - diceNumberImage.height / 2) + "px";
 
 		        // So dice will display on top of land
