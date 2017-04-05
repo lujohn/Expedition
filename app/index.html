@@ -17,7 +17,7 @@
                 <div id="gameBoardContainer">
                     <div ng-repeat="landRow in landsArray">
                         <div ng-repeat="land in landRow">
-                            <land-hex id="{{land.landID}}"></land-hex>
+                            <land-hex data-land-type="{{land.type}}" id="{{land.landID}}"></land-hex>
                         </div>
                     </div>
                 </div>
