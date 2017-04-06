@@ -33,6 +33,9 @@ angular.module('expeditionApp')
     // Pointer to active player
     this.activePlayer = null;
 
+    // landID that robber is on
+    this.landWithRobber = null;
+
     /* ================================ Observers ================================ */
     // Observers for activePlayer change.
     var activePlayerOberservers = [];
@@ -69,10 +72,14 @@ angular.module('expeditionApp')
         // Assign dice numbers to land
         this.assignLandDiceNumbersRandom();
         // Create players
+
+        // Assign robber(s) 
+
     };
 
     this.generateLandsRandom = function () {
-        // construct an array of lands
+
+        // Construct an array of land types.
         var arrangement = [];
         for (var prop in LAND_CONSTRUCTION_DICTIONARY) {
             if (LAND_CONSTRUCTION_DICTIONARY.hasOwnProperty(prop)) {
@@ -82,8 +89,11 @@ angular.module('expeditionApp')
                 }
             }
         }
-        // Arrange Lands Randomly. Get a number randomly between 0 and 4 (inclusive)
+
+        // Arrange land types Randomly.
         shuffle(arrangement);
+
+        // Create and store lands
         var idx = 0;
         var numRows = this.landsMatrix.length;
         for (var row = 0; row < numRows; row++) {
@@ -91,7 +101,14 @@ angular.module('expeditionApp')
             for (var col = 0; col < numCols; col++, idx++) {
                 // Use Land Factory to create a land
                 var newLand = LandFactory.createLand(arrangement[idx]);
-                newLand.landID = "land" + idx.toString(); 
+                var landID = "land" + idx.toString();
+                newLand.landID = landID;
+
+                // Add the robber to the desert land
+                if (arrangement[idx] === "desert") {
+                    newLand.hasRobber = true;
+                    this.landWithRobber = newLand;
+                }
 
                 // Store new land
                 this.landsMatrix[row].push(newLand);
@@ -114,7 +131,7 @@ angular.module('expeditionApp')
                 var land = this.landsMatrix[i][j];
                 if (land.type !== "desert") {
                     this.landsMatrix[i][j].diceNumber = possibleNumbers[idx++];
-                }
+                } 
             }
         }
     }
@@ -175,6 +192,7 @@ angular.module('expeditionApp')
     this.getRoadsWithSource = function (coordinates) {
         return MapService.getRoadsWithSource(coordinates);
     }
+
 
     /* ============================ Player-related functions ============================= */
     this.diceRolled = function (diceResult) {

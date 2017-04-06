@@ -45,6 +45,8 @@ angular.module('expeditionApp')
                 };
                 var land = lands[i][j];
                 land.coordinates = hexCoordinates;
+
+                // Set up the MapGraph for use
                 this.addAllVerticiesInHexToGraph(hexCoordinates);
                 this.addAllEdgesFromHexToGraph(hexCoordinates);
                 this.registerLandWithVerticies(land);

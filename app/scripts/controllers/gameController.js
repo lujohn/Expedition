@@ -11,11 +11,16 @@ angular.module('expeditionApp')
     $scope.lastLandSelected = null;
     $scope.showMainControls = false;
 
+    $scope.landWithRobber = "";
+
     // DEBUGGING //
     $scope.showPlayerPanel = false;
     $scope.showTradePanel = false;
-    $scope.showRollDice = false;
-    $scope.showEndTurn = false;
+    
+    // ** Debugging **
+    $scope.showRollDice = true;
+    $scope.showEndTurn = true;
+    $scope.showMoveRobber = true;
 
     // Control Panels:
     // -1: Show No Panel
@@ -48,10 +53,6 @@ angular.module('expeditionApp')
             $scope.showPlayerPanel = true;
 
             $scope.showMainControls = false;
-
-            // ** DEBUGGING ** 
-            $scope.showRollDice = true;
-            $scope.showEndTurn = true;
         }
     }
 
@@ -70,6 +71,8 @@ angular.module('expeditionApp')
     GameService.setGameState(0);
 
     $scope.players = GameService.getAllPlayers();
+
+    $scope.landWithRobber = GameService.landWithRobber;
 
     /* ================================ Display Panels =============================== */
     $scope.setActivePanel = function (num) {
@@ -108,20 +111,15 @@ angular.module('expeditionApp')
         }
     }
 
-    // ** Drawing code should not be here **
-    $scope.placeRobber = function (landID) {
+    $scope.placeRobber = function () {
+        var oldRobberLand = GameService.landWithRobber;
+        oldRobberLand.hasRobber = false;
 
-        var landCanvas = document.getElementById(landID + 'canvas');
+        var newRobberLand = $scope.lastLandSelected;
+        newRobberLand.hasRobber = true;
 
-        var robberImg = document.createElement('img');
-        robberImg.src = "images/robber.svg";
-        robberImg.width = 40; 
-        robberImg.height = 40;
-        robberImg.style.left = landCanvas.width / 2 - robberImg.width / 2 + 'px';
-        robberImg.style.top = landCanvas.height / 2 - robberImg.height/ 2 + 'px';
-        robberImg.position = 'absolute';
-
-        landCanvas.appendChild(robberImg);
+        GameService.landWithRobber = newRobberLand;
+        $scope.landWithRobber = newRobberLand;
     }
 						
 }])

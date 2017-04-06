@@ -114,19 +114,7 @@ angular.module('expeditionApp')
 
     	        // Add dice number to game board
 		        gameBoardContainer.appendChild(diceNumberImage);
-	        } else {
-	        	// Start with Robber on Desert
-		        var robberImg = document.createElement('img');
-		        robberImg.width = 60;
-		        robberImg.height = 60;
-		        robberImg.src = "images/robber.svg";
-		        robberImg.style.position = "absolute";
-		        robberImg.style.left = xOffset + (80 - robberImg.width / 2) + "px" ;  // **Add constants
-		        robberImg.style.top = yOffset + (80 - robberImg.height / 2) + "px";
 
-		        robberImg.style.zIndex = 201;
-
-		        gameBoardContainer.appendChild(robberImg);
 	        }
 
 	        // Add event listener

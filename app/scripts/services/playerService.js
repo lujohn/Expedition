@@ -1,6 +1,7 @@
 
 angular.module('expeditionApp')
 .service('PlayerService', function() {
+
 	this.createPlayer = function (playerColor) {
 		var newPlayer = {};
 		newPlayer.color = playerColor;
@@ -15,9 +16,9 @@ angular.module('expeditionApp')
 			"lumber": 0,
 			"grain": 0
 		};
-		newPlayer.victoryPoints = 2;
+		newPlayer.victoryPoints = 0;
 
-		newPlayer.buildingsOwned = [];  // (key, value) => (location : Coordinates, building : building)
+		newPlayer.buildingsOwned = [];
 		newPlayer.roadsOwned = [];
 
 		// This function increments the player's resources after a dice roll
@@ -50,6 +51,8 @@ angular.module('expeditionApp')
 					this.resourcesForDiceNumber[land.diceNumber].push(land.type);
 				}
 			}
+
+			this.victoryPoints++;
 		}
 
 		/*------------------------ player resource functions ------------------------- */

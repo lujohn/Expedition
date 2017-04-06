@@ -20,6 +20,7 @@
                             <land-hex data-land-type="{{land.type}}" id="{{land.landID}}"></land-hex>
                         </div>
                     </div>
+                    <robber data-land="landWithRobber"></robber>
                 </div>
             </div>
 
@@ -49,6 +50,7 @@
                 </div>
                 <div ng-show="showRollDice" ng-click="rollDice()" class="btn btn-default">Roll Dice</div>
                 <div ng-show="showEndTurn" ng-click="endTurn()" class="btn btn-default">End Turn</div>
+                <div ng-show="showEndTurn" ng-click="placeRobber()" class="btn btn-default">Move Robber</div>
             </div>
 
             <!-- Build Settlement Panel -->
@@ -236,6 +238,7 @@
 <script src="scripts/app.js"></script>
 <script src="scripts/constants/landConstants.js"></script>
 <script src="scripts/directives/landDirective.js"></script>
+<script src="scripts/directives/robberDirective.js"></script>
 
 <script src="scripts/controllers/gameController.js"></script>
 <script src="scripts/controllers/mapController.js"></script>
