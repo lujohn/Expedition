@@ -5,9 +5,7 @@ angular.module('expeditionApp')
 	this.createPlayer = function (playerColor) {
 		var newPlayer = {};
 		newPlayer.color = playerColor;
-		// This object keeps track of which resources the player controls for each diceNumber
-		// Note: duplicates must be allowed here.
-		newPlayer.resourcesForDiceNumber = { 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [], 11: [], 12: [] };
+
 		// This object keeps track of the number of each resource the player has in hand
 		newPlayer.resourcesInHand = {
 			"wool": 0,
@@ -16,16 +14,31 @@ angular.module('expeditionApp')
 			"lumber": 0,
 			"grain": 0
 		};
-		newPlayer.victoryPoints = 0;
 
+		newPlayer.victoryPoints = 0;
 		newPlayer.buildingsOwned = [];
 		newPlayer.roadsOwned = [];
 
 		// This function increments the player's resources after a dice roll
 		newPlayer.diceRolled = function (diceResult) {
-			var resourcesEarned = this.resourcesForDiceNumber[diceResult];
-			for (var i = 0; i < resourcesEarned.length; i++) {
-				this.incrementResource(resourcesEarned[i], 1);
+
+			// Go through all of the players' buildings
+			for (var i = 0; i < this.buildingsOwned.length; i++) {
+				var building = this.buildingsOwned[i];
+				var landsOfBuilding = building.lands;
+				console.log(landsOfBuilding);
+				for (var j = 0; j < landsOfBuilding.length; j++) {
+					// Only increment resource if there isn't a robber on the land
+					var land = landsOfBuilding[j];
+					if (land.diceNumber === diceResult && !land.hasRobber && ) {
+						if (building.type === "settlement") {
+							this.incrementResource(land.type, 1);
+						} else if (building.type === "city") {
+							this.incrementResource(land.type, 2);
+						}
+					}
+				}
+
 			}
 		}
 
@@ -41,17 +54,6 @@ angular.module('expeditionApp')
 
 		newPlayer.addBuilding = function (building) {
 			this.buildingsOwned.push(building);
-			
-			// Associate each of the buildings' lands with a dice number for easier distributing
-			// of resources later.
-			var lands = building.lands;
-			for (var i = 0; i < lands.length; i++) {
-				var land = lands[i];
-				if (land.type !== "desert") {
-					this.resourcesForDiceNumber[land.diceNumber].push(land.type);
-				}
-			}
-
 			this.victoryPoints++;
 		}
 
@@ -78,6 +80,7 @@ angular.module('expeditionApp')
 		newPlayer.toString = function () {
 			return this.color;
 		}
+		
 		return newPlayer;
 	}
 });
