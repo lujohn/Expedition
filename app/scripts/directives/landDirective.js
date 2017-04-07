@@ -67,34 +67,6 @@ angular.module('expeditionApp')
 		        ctx.fill();
 		        ctx.stroke();   
 	        }
-
-	        // Handle user hovering
-	        landCanvas.addEventListener('mouseover', function(event) {
-	        	this.isHovering = true;
-	        	drawLand(this);
-	        });
-
-	        landCanvas.addEventListener('mouseout', function(event) {
-	        	this.isHovering = false;
-	        	drawLand(this);
-	        })
-
-	        // Event handler for land and dice number clicks
-	        var landClickedEvent = function (event) {
-	        	console.log(scope.lastLandSelected);
-	        	console.log("from directive");
-
-	        	if (scope.lastLandSelected !== null) {
-	        		var landCanvas = document.getElementById(scope.lastLandSelected.landID + "canvas");
-
-	        		// removes the 'selected' bordering from previous selected land 
-	        		landCanvas.isLastClicked = false;
-	        		drawLand(landCanvas);
-	        	}
-	        	event.target.isLastClicked = true;
-	        	drawLand(event.target);
-	        	scope.$apply(scope.selectedLandWithID(landID));
-	        }
 	        
 	        // Create the Dice Number associated with the land. Desert has no dice number
 	        if (landToDraw.type !== "desert") {
@@ -109,12 +81,35 @@ angular.module('expeditionApp')
 		        // So dice will display on top of land
 		        diceNumberImage.style.zIndex = 101;
 
-		        // Register event handler with dice number
-    	        diceNumberImage.addEventListener('click', landClickedEvent);
-
     	        // Add dice number to game board
 		        gameBoardContainer.appendChild(diceNumberImage);
 
+	        }
+
+	        // Handle user hovering
+	        landCanvas.addEventListener('mouseover', function(event) {
+	        	this.isHovering = true;
+	        	drawLand(this);
+	        });
+
+	        landCanvas.addEventListener('mouseout', function(event) {
+	        	this.isHovering = false;
+	        	drawLand(this);
+	        })
+
+	        // Event handler for land click
+	        var landClickedEvent = function (event) {
+
+	        	if (scope.lastLandSelected !== null) {
+	        		var landCanvas = document.getElementById(scope.lastLandSelected.landID + "canvas");
+
+	        		// removes thick bordering from previous selected land 
+	        		landCanvas.isLastClicked = false;
+	        		drawLand(landCanvas);
+	        	}
+	        	event.target.isLastClicked = true;
+	        	drawLand(event.target);
+	        	scope.$apply(scope.selectedLandWithID(landID));
 	        }
 
 	        // Add event listener

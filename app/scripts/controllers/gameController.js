@@ -16,6 +16,8 @@ angular.module('expeditionApp')
     // DEBUGGING //
     $scope.showPlayerPanel = false;
     $scope.showTradePanel = false;
+    $scope.showBuildSettlement = true;
+    $scope.showBuildRoad = true;
     
     // ** Debugging **
     $scope.showRollDice = true;
@@ -126,16 +128,18 @@ angular.module('expeditionApp')
 .controller('MainControlsController', ['$scope', function ($scope) {
 
 
-    $scope.showBuildSettlement = function () {
-        console.log("showBuildSettlement called");
-        $scope.setActivePanel(1);  // inherited scope property from GameController
+    $scope.toggleBuildSettlementMenu = function () {
+        console.log("toggleShowBuildSettlement called");
+        /*$scope.setActivePanel(1); */ // inherited scope property from GameController
+        $scope.$parent.showBuildSettlement = !$scope.showBuildSettlement;
     }
 
-    $scope.showBuildRoad = function () {
-        $scope.setActivePanel(2);  // inherited scope property from GameController
+    $scope.toggleBuildRoadMenu = function () {
+        //$scope.setActivePanel(2);  // inherited scope property from GameController
+        $scope.$parent.showBuildRoad = !$scope.showBuildRoad;
     }
 
-    $scope.showTradePanel = function () {
+    /*$scope.showTradePanel = function () {
         $scope.setActivePanel(3)
     }
 
@@ -147,7 +151,7 @@ angular.module('expeditionApp')
     $scope.showDevCard = function () {
         console.log("developementCard button clicked (from MainControlsController");
         $scope.setActivePanel(5);
-    }
+    }*/
 
 }])
 .controller('TradeController', ['$scope', 'GameService', function ($scope, GameService) {

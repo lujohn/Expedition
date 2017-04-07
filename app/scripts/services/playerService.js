@@ -30,7 +30,7 @@ angular.module('expeditionApp')
 				for (var j = 0; j < landsOfBuilding.length; j++) {
 					// Only increment resource if there isn't a robber on the land
 					var land = landsOfBuilding[j];
-					if (land.diceNumber === diceResult && !land.hasRobber && ) {
+					if (land.diceNumber === diceResult && !land.hasRobber) {
 						if (building.type === "settlement") {
 							this.incrementResource(land.type, 1);
 						} else if (building.type === "city") {
