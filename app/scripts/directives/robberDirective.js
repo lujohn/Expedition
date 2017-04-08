@@ -10,10 +10,7 @@ angular.module('expeditionApp')
 	        	var landWithRobber = attr.land;
         		// Remove robber from old location
         		if (document.getElementById("robber") !== null) {
-        			console.log("entered here...")
         			gameBoardContainer.removeChild(document.getElementById("robber"));
-        		} else {
-        			console.log("did not enter");
         		}
 
         		var landCoordA = land.coordinates["A"];

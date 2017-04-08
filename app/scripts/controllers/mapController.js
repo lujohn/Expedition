@@ -10,10 +10,9 @@ angular.module('expeditionApp')
     $scope.landsDictionary = GameService.landsDictionary;
 
 	$scope.selectedLandWithID = function (landID) {
-        console.log(landID + "selected (from MapController)");
         var landSelected = $scope.landsDictionary[landID];
 
         // Update Game Service State
         $scope.$parent.lastLandSelected = landSelected;
-    }   
+    };   
 }]);

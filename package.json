@@ -8,15 +8,25 @@
   },
   "author": "John Lu",
   "license": "ISC",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "angular-animate": "^1.6.3",
+    "bower": "^1.8.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-jshint": "^2.0.4",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rev": "^7.1.2",
+    "gulp-uglify": "^2.1.2",
+    "gulp-usemin": "^0.3.28",
+    "gulp-zip": "^4.0.0",
     "install": "^0.8.7",
     "jasmine-core": "^2.5.2",
+    "jshint": "^2.9.4",
+    "jshint-stylish": "^2.2.1",
     "karma": "^1.5.0",
     "karma-chrome-launcher": "^2.0.0",
-    "bower": "^1.8.0",
     "karma-jasmine": "^1.1.0"
   }
 }

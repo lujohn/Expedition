@@ -13,7 +13,7 @@ angular.module('expeditionApp')
 		// ** For Debugging **
 		newRoad.toString = function () {
 			return "from: " + newRoad.from + " to: " + newRoad.to +  " color: " + newRoad.color;
-		}
+		};
 		return newRoad;
 	};
 
@@ -28,7 +28,7 @@ angular.module('expeditionApp')
 		// ** For Debugging **
 		newBuilding.toString = function() {
 			return "location: " + newBuilding.location + ", color: " + newBuilding.color + ", type: " + newBuilding.type;
-		}
+		};
 
 		return newBuilding;
 	};

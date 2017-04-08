@@ -27,7 +27,6 @@ angular.module('expeditionApp')
 		if (!this.verticies.hasOwnProperty(coordString)) {
 			var newVertex = new Vertex(coordString);
 			this.verticies[coordString] = newVertex;
-			console.log("Vertex Added for coord: " + coordString + this.getVertex(coordinates));
 			// Create entry in edges
 			this.edges[coordString] = {};
 			return true;
@@ -114,13 +113,11 @@ angular.module('expeditionApp')
 		var coordStr = coordinatesToString(coord);
 		// Grab the edges for this vertex
 		var edgesForCoord = this.edges[coordStr];
-		console.log(edgesForCoord);
 
 		// Find and store all adjacent verticies
 		var adjVerticies = [];
 		for (var toCoordStr in edgesForCoord) {
 			if (edgesForCoord.hasOwnProperty(toCoordStr)) {
-				console.log("(getAdjacentVerticies) getting Vertex at : " + toCoordStr  + this.verticies[toCoordStr]);
 				adjVerticies.push(this.verticies[toCoordStr]);
 			}
 		}
