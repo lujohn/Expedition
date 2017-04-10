@@ -114,11 +114,16 @@ angular.module('expeditionApp')
         return vertex.type != null;
     }
 
+    this.getBuildingColor = function (coord) {
+        var vertex = MapGraphService.getVertex(coord);
+        return vertex.color;
+    }
+
     // This function returns a set of adjacent buildings (just the color) to the given coordinates
     this.getAdjacentBuildings = function (coord) {
         var adjVerticies = MapGraphService.getAdjacentVerticies(coord);
         var adjBuildings = []
-        adjVerticies.forEach( function(vertex) {
+        adjVerticies.forEach( function (vertex) {
             if (!vertex.available) {
                 adjBuildings.push(vertex.color);
             }

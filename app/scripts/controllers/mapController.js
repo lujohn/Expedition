@@ -12,7 +12,14 @@ angular.module('expeditionApp')
 	$scope.selectedLandWithID = function (landID) {
         var landSelected = $scope.landsDictionary[landID];
 
-        // Update Game Service State
+        if (GameService.STATE === 0) {
+        	// Show build-sett menu only if build road is not already showing
+        	if (!$scope.$parent.showBuildRoad) {
+        		$scope.showBuildSettlementMenu(true);
+        	}
+        }
+        // ** Update Game Service State **
+
         $scope.$parent.lastLandSelected = landSelected;
     };   
 }]);

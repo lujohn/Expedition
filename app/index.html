@@ -12,6 +12,86 @@
 
 <body>
     <div class="container" ng-controller="GameController">
+        <!-- - - - - - - - - - - - - - - Instruction Modals - - - - - - - - - - - - - - - -->
+        <!-- Place-Settlement Modal -->
+        <div class="modal fade" id="placeSettlementModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h4 class="modal-title">{{activePlayer.color | uppercase}}, Place a Settlement!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>To place a settlement, first choose the land you would like to place the settlement on.
+                        Next, simply choose the corner. 'A' is the top corner, 'B' is the next corner on the right
+                        and so on ('F' is the corner immediately to the left of 'A').</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <!-- Place-Road Modal -->
+        <div class="modal fade" id="placeRoadModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h4 class="modal-title">{{activePlayer.color | uppercase}}, Place a Road!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Choose a road that is adjacent to one of your existing buildings.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <!-- Begin-Turn Modal -->
+        <div class="modal fade" id="beginTurnModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h4 class="modal-title">{{activePlayer.color | uppercase}}, Roll the Dice!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Hit the roll dice button and collect resources!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <div ng-click="rollDice()" data-dismiss="modal" class="btn btn-default">Roll Dice</div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <!-- Robber modal -->
+        <div class="modal fade" id="robberModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h4 class="modal-title">Rob Somebody!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Selected a land to put the robber</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <!-- Game Alerts
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="alert-heading">{{activePLayer.color}}, Place your first settlement!</h4>
+            <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+        </div>  -->
+
         <div class="row row-content">
             <div ng-controller="MapController" class="col-xs-8">
                 <div id="gameBoardContainer">
@@ -25,77 +105,96 @@
             </div>
 
             <div ng-controller="MainControlsController" class="col-xs-4">
-                <p style="padding: 20px"></p>
-                <div ng-show="true" class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Main Controls (&nbsp{{activePlayer.color | uppercase}}'s Turn &nbsp)</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="btn-group-vertical">
-                            <span class="btn btn-lg btn-danger" ng-click="toggleBuildSettlementMenu()">Build Settlement</span>
-                            <span class="btn btn-lg btn-info" ng-click="toggleBuildRoadMenu()">Build Road</span>
-                            <span class="btn btn-lg btn-warning" data-toggle="modal" data-target="#tradeRequestModal">Trade</span>
-                            <span class="btn btn-lg btn-success" ng-click="showDevCardMenu()">Development Card</span>
+                <div class="row row-content">
+                    <p style="padding: 20px"></p>
+                    <div ng-show="true" class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Main Controls (&nbsp{{activePlayer.color | uppercase}}'s Turn &nbsp)</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="btn-group-vertical" ng-hide="isPlacingRobber">
+                                <span class="btn btn-lg btn-danger" ng-click="toggleBuildSettlementMenu()">Build Settlement</span>
+                                <span class="btn btn-lg btn-info" ng-click="toggleBuildRoadMenu()">Build Road</span>
+                                <span class="btn btn-lg btn-warning" data-toggle="modal" data-target="#tradeRequestModal">Trade</span>
+                                <span class="btn btn-lg btn-success" ng-click="showDevCardMenu()">Development Card</span>
+                                <span ng-click="endTurn()" class="btn btn-lg btn-default">End Turn</span>
+                            </div>
+                            <div class="btn btn-lg btn-primary" ng-click="placeRobber()" ng-show="isPlacingRobber">Place Robber</div>
                         </div>
                     </div>
-                </div>
-                <div ng-show="showRollDice" ng-click="rollDice()" class="btn btn-default">Roll Dice</div>
-                <div ng-show="showEndTurn" ng-click="endTurn()" class="btn btn-default">End Turn</div>
-                <div ng-show="showEndTurn" ng-click="placeRobber()" class="btn btn-default">Move Robber</div>
-            </div>
-        </div>
-
-        <!-- Build Menus -->
-        <div class="row row-content" ng-controller="BuildController">
-            <div class="col-xs-5 animate-show-hide fade" ng-show="showBuildSettlement">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Build Settlement: {{activePlayer.color | uppercase}}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-9">
-                                <div class="row">
-                                    <div class="col-xs-4">
-                                        <p>Land Selected: {{lastLandSelected.type}}</p>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <h3>Choose a corner for your settlement</h3>
-                                        <div class="btn-group">
-                                            <span class="btn btn-default btn-sm" ng-click="buildSettlement('A')">A</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildSettlement('B')">B</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildSettlement('C')">C</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildSettlement('D')">D</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildSettlement('E')">E</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildSettlement('F')">F</span>
-                                        </div>
-                                    </div>
+                </div> 
+                <!-- Player Information Menu -->
+                <div class="row row-content">
+                    <div class="panel panel-warning" ng-show="showPlayerInfo">
+                        <div class="panel-heading">
+                            <h1 class="panel-title">Player Details </h1>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row row-content">
+                                <div class="col-xs-6">
+                                    <h3> Victory Points: {{activePlayer.victoryPoints}}</h3>
+                                    <h5> Number of Buildings: {{activePlayer.buildingsOwned.length}}</h5>
+                                    <h5> Number of Roads: {{activePlayer.roadsOwned.length}}</h5>
+                                </div>
+                                <div class="col-xs-6">
+                                    <h3>Player: {{activePlayer.color | uppercase }}</h3>
+                                    <h3>Resources In Hand</h3>
+                                    <h5>Wool: {{activePlayer.resourcesInHand.wool}}</h5>
+                                    <h5>Ore: {{activePlayer.resourcesInHand.ore}}</h5>
+                                    <h5>Brick: {{activePlayer.resourcesInHand.brick}}</h5>
+                                    <h5>Lumber: {{activePlayer.resourcesInHand.lumber}}</h5>
+                                    <h5>Grain: {{activePlayer.resourcesInHand.grain}}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xs-5 animate-show-hide fade" ng-show="showBuildRoad">
-                <div class="panel panel-warning">
+        </div>
+
+        <!-- Build Menus -->
+        <div class="row row-content" ng-controller="BuildController">
+            <div class="col-xs-5 animate-show-hide fade">
+                <div class="panel panel-danger" ng-show="showBuildSettlement">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Build Settlement: {{activePlayer.color | uppercase}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <p>Land Selected: {{lastLandSelected.type}}</p>
+                            </div>
+                            <div class="col-xs-9">
+                                <h3>Choose a corner for your settlement</h3>
+                                <div class="btn-group">
+                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('A')">A</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('B')">B</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('C')">C</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('D')">D</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('E')">E</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildSettlement('F')">F</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-5 animate-show-hide fade">
+                <div class="panel panel-warning" ng-show="showBuildRoad">
                     <div class="panel-heading">
                         <h3 class="panel-title">Build Road: {{activePlayer.color | uppercase}}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-xs-9">
-                                <div class="row">
-                                    <div class="col-xs-8">
-                                        <h3>Choose The Edge!</h3>
-                                        <div class="btn-group">
-                                            <span class="btn btn-default btn-sm" ng-click="buildRoad('A-B')">A-B</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildRoad('B-C')">B-C</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildRoad('C-D')">C-D</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildRoad('D-E')">D-E</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildRoad('E-F')">E-F</span>
-                                            <span class="btn btn-default btn-sm" ng-click="buildRoad('F-A')">F-A</span>
-                                        </div>
-                                    </div>
+                            <div class="col-xs-12">
+                                <h3>Choose The Edge!</h3>
+                                <div class="btn-group">
+                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('A-B')">A-B</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('B-C')">B-C</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('C-D')">C-D</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('D-E')">D-E</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('E-F')">E-F</span>
+                                    <span class="btn btn-default btn-sm" ng-click="buildRoad('F-A')">F-A</span>
                                 </div>
                             </div>
                         </div>
@@ -192,52 +291,6 @@
                 </div>
             </div>
         </div> <!-- End Trade -->
-
-        <!-- Player Details -->
-        <div class="row row-content">
-            <div class="col-xs-6 col-xs-offset-2">
-                <div class="panel panel-warning">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">Player Details </h1>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row row-content">
-                            <div class="col-xs-6">
-                                <h3> Victory Points: {{activePlayer.victoryPoints}}</h3>
-                                <h5> Number of Buildings: {{activePlayer.buildingsOwned.length}}</h5>
-                                <h5> Number of Roads: {{activePlayer.roadsOwned.length}}</h5>
-                            </div>
-                            <div class="col-xs-6">
-                                <h3>Player: {{activePlayer.color | uppercase }}</h3>
-                                <h3>Resources In Hand</h3>
-                                <h5>Wool: {{activePlayer.resourcesInHand.wool}}</h5>
-                                <h5>Ore: {{activePlayer.resourcesInHand.ore}}</h5>
-                                <h5>Brick: {{activePlayer.resourcesInHand.brick}}</h5>
-                                <h5>Lumber: {{activePlayer.resourcesInHand.lumber}}</h5>
-                                <h5>Grain: {{activePlayer.resourcesInHand.grain}}</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Robber modal -->
-        <div class="modal fade" id="robberModal">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h4 class="modal-title">Rob Somebody!</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Selected a land to put the robber</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button ng-click="acceptTrade()" class="btn btn-primary" data-dismiss="modal">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div> 
 
     </div> <!-- End Container -->
 

@@ -39,11 +39,14 @@ angular.module('expeditionApp')
 		var newSettlement = GameService.addBuilding(activePlayer.color, coordOfCorner);
 
 		if (GameService.STATE === 0) {
-			// Switch to BUILD_ROAD_PANEL
-			$scope.setActivePanel(2); 
 
 			// Store player's settlement selection in buffer
 			myBuf[activePlayer.color].settlements.push(newSettlement);
+
+			// Prompt player to build a road
+			$scope.showBuildSettlementMenu(false);
+			$scope.showBuildRoadMenu(true);
+			$('#placeRoadModal').modal('show');
 
 			// Draw settlement
 			drawSettlement(coordOfCorner);
@@ -52,14 +55,10 @@ angular.module('expeditionApp')
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
 			if (resAvailable['wool'] > 0 && resAvailable['grain'] > 0 && resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
-				/*activePlayer.decrementResource('wool', 1);
+				activePlayer.decrementResource('wool', 1);
 				activePlayer.decrementResource('grain', 1);
 				activePlayer.decrementResource('brick', 1);
-				activePlayer.decrementResource('lumber', 1); */
-				resAvailable['wool']--; 
-				resAvailable['grain']--; 
-				resAvailable['brick']--; 
-				resAvailable['lumber']--;
+				activePlayer.decrementResource('lumber', 1);
 
 				// Draw settlement
 				drawSettlement(coordOfCorner);
@@ -85,6 +84,7 @@ angular.module('expeditionApp')
 
 		// Check if location is legal to build a road on.
 		if (!edgeIsAvailable(activePlayer.color, coord1, coord2)) {
+			alert("illegal to build road there");
 			return;
 		}
 
@@ -110,18 +110,22 @@ angular.module('expeditionApp')
 					// If every player has 2 roads and 2 settlements, end INITIAL STATE
 					GameService.setGameState(1);
 
-					// Allocate Starting Resources to players --> players begin with the 1 resources per land
+					// Allocate Starting Resources to players. Players begin with the 1 resources per land
 					// bordering his/her second settlment.
 					distributeStartingResources();
 					return;
+					
 				} else {
 					turnsIndex--;
 				}
 			}
 			GameService.setActivePlayer(turnsIndex);
 
-			// GameController's Scope. Display Build Settlement Panel - after building Road is done
-			$scope.setActivePanel(1);
+			// Display Build-Settlement Modal for next player
+			$scope.showBuildRoadMenu(false);
+			$scope.showBuildSettlementMenu(true);
+			$('#placeSettlementModal').modal('show');
+
 
 		} else if (GameService.STATE === 1) {
 			// Check if player has enough resources.
@@ -156,28 +160,24 @@ angular.module('expeditionApp')
 	// color or a building of the same color is on either of the road verticies.
 	function edgeIsAvailable (color, from, to) {
 
-		if (GameService.roadExists(from, to)) {
-			alert("road already exists!");
-			return false;
+		if (!GameService.roadExists(from, to)) {
+			
+			// Find an existing building on "from" or "to" that is the proper color
+			if ( (GameService.buildingExists(from) && GameService.getBuildingColor(from) === color) 
+				|| GameService.buildingExists(to) && GameService.getBuildingColor(to) === color) {
+				return true;
+			}
+
+			// Find a bordering road
+			var borderFrom = GameService.getRoadsWithSource(from);
+			var borderTo = GameService.getRoadsWithSource(to);
+
+			if (borderFrom.includes(color) || borderTo.includes(color)) {
+				return true;
+			}
 		}
 
-		// Find an existing building on "from" or "to"
-		if (GameService.buildingExists(from) || GameService.buildingExists(to)) {
-			return true;
-		}
-
-		// Find a bordering road
-		var borderFrom = GameService.getRoadsWithSource(from);
-		var borderTo = GameService.getRoadsWithSource(to);
-
-		if (borderFrom.includes(color) || borderTo.includes(color)) {
-			return true;
-		}
-
-		// Illegal to build the road at this location
-		alert("cannot build road here!");
 		return false;
-
 	}
 
 	// This function draws a new road -- ** NOTE: move drawing code to directive **

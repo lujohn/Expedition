@@ -181,8 +181,8 @@ angular.module('expeditionApp')
         return MapService.buildingExistsAt(coordinates);
     }
 
-    this.initializeMap = function (lands) {
-        MapService.initializeGraph(lands);
+    this.getBuildingColor = function (coordinates) {
+        return MapService.getBuildingColor(coordinates);
     }
 
     this.getAdjacentBuildings = function(coordinates) {
@@ -193,6 +193,10 @@ angular.module('expeditionApp')
         return MapService.getRoadsWithSource(coordinates);
     }
 
+
+    this.initializeMap = function (lands) {
+        MapService.initializeGraph(lands);
+    }
 
     /* ============================ Player-related functions ============================= */
     this.diceRolled = function (diceResult) {

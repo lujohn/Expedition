@@ -12,7 +12,6 @@ body {
 
 #gameBoardContainer {
 	height: 650px;
-	
 }
 
 #gameBoardContainer > canvas {

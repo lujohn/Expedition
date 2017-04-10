@@ -5,24 +5,24 @@ angular.module('expeditionApp')
 .controller('GameController', ['$scope', 'GameService',
     function ($scope, GameService) {
 
-    // Initialize Scope
+    // ---------------------------- Initialize Scope --------------------------------
+    // State information
     $scope.activePlayer = null;
     $scope.players = null;
     $scope.lastLandSelected = null;
-    $scope.showMainControls = false;
-
-
+    $scope.isPlacingRobber = false;
     $scope.landWithRobber = "";
 
-    // ** Debugging **
-    $scope.showBuildSettlement = true;
-    $scope.showBuildRoad = true;
-    $scope.showRollDice = true;
-    $scope.showEndTurn = true;
-    $scope.showMoveRobber = true;
+    // Control Menus
+    $scope.showMainControls = false;
+    $scope.showBuildSettlement = false;
+    $scope.showBuildRoad = false;
+    $scope.showPlayerInfo = false;
 
-
-    var activeMenus = new Set();
+    // Control Buttons
+    $scope.showRollDice = false;
+    $scope.showEndTurn = false;
+    
     /* ============================= Observer Registration ========================== */
     // Listen for changes in the active player
     GameService.registerActivePlayerObserver(this);
@@ -35,16 +35,20 @@ angular.module('expeditionApp')
     this.gameStateChanged = function (newState) {
         if (newState === 1) {
             GameService.setActivePlayer(0);
-            $scope.showMainControls = false;
+            $scope.showBuildRoad = false;
+
+            $('#beginTurnModal').modal('show');
+
+            $scope.showPlayerInfo = true;
         }
     };
 
     /* =============================== Game Creation ================================ */
     // Initialize Game with 2 players. Will generate lands
-    GameService.createRandomGame(1);
+    GameService.createRandomGame(1);  // ** needs modification **
 
     // Add players to Game
-    GameService.addPlayers(['red', 'blue']);
+    GameService.addPlayers(['red']);
 
     // Set active player to red
     GameService.setActivePlayer(0);
@@ -54,21 +58,37 @@ angular.module('expeditionApp')
     GameService.setGameState(0);
 
     $scope.players = GameService.getAllPlayers();
-
     $scope.landWithRobber = GameService.landWithRobber;
 
-    /* ================================ Display Panels =============================== */
-    $scope.setActivePanel = function (num) {
-        $scope.activeControlPanel = num;
-    };
+    // Display instruction to first player to place a settlement
+    $('#placeSettlementModal').modal('show');
 
-    $scope.isActivePanel = function(num) {
-        return $scope.activeControlPanel === num;
-    };
+    /* ================================ Displaying Menus =============================== */
+    $scope.showBuildSettlementMenu = function (bool) {
+        $scope.showBuildSettlement = bool;
+    }    
+    
+    $scope.showBuildRoadMenu = function (bool) {
+        $scope.showBuildRoad = bool;
+    }
 
     $scope.setActivePlayer = function(num) {
         $scope.activePlayer = GameService.turnsOrder[num];
     };
+
+    function hideAllControlMenus() {
+        // Control Menus
+        $scope.showMainControls = false;
+        $scope.showBuildSettlement = false;
+        $scope.showBuildRoad = false;
+        $scope.showPlayerInfo = false;
+    }
+
+    function hideAllControlButtons() {
+        // Control Buttons
+        $scope.showRollDice = false;
+        $scope.showEndTurn = false;
+    }
     /* ================================== Game Flow  ================================== */
     $scope.rollDice = function () {
         $scope.showMainControls = true;
@@ -76,11 +96,18 @@ angular.module('expeditionApp')
         // Generate integer in [2, 12].
         var die1 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var die2 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
-        var rollResult = die1 + die2;
+        //var rollResult = die1 + die2;
+        var rollResult = 7;
 
         alert("you rolled: " + rollResult);
-
-        GameService.diceRolled(rollResult);
+        if (rollResult === 7) {
+            hideAllControlMenus();
+            hideAllControlButtons();
+            $scope.isPlacingRobber = true;
+            $('#robberModal').modal('show');
+        } else {
+            GameService.diceRolled(rollResult);
+        }
     };
 
     $scope.endTurn = function () {
@@ -95,7 +122,6 @@ angular.module('expeditionApp')
     };
 
     $scope.placeRobber = function () {
-        $('#robberModal').modal('show');
         var oldRobberLand = GameService.landWithRobber;
         oldRobberLand.hasRobber = false;
 
