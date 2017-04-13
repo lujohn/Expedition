@@ -35,11 +35,7 @@ angular.module('expeditionApp')
     this.gameStateChanged = function (newState) {
         if (newState === 1) {
             GameService.setActivePlayer(0);
-            $scope.showBuildRoad = false;
-
-            $('#beginTurnModal').modal('show');
-
-            $scope.showPlayerInfo = true;
+            showBeginTurnModal();
         }
     };
 
@@ -63,14 +59,26 @@ angular.module('expeditionApp')
     // Display instruction to first player to place a settlement
     $('#placeSettlementModal').modal('show');
 
+    function showBeginTurnModal() {
+        hideAllControlMenus(); 
+        hideAllControlButtons();
+
+        $scope.showPlayerInfo = true;
+        $('#beginTurnModal').modal('show');
+    }
+
     /* ================================ Displaying Menus =============================== */
     $scope.showBuildSettlementMenu = function (bool) {
         $scope.showBuildSettlement = bool;
-    }    
+    };   
     
     $scope.showBuildRoadMenu = function (bool) {
         $scope.showBuildRoad = bool;
-    }
+    };
+
+    $scope.showMainControlsMenu = function (bool) {
+        $scope.showMainControls = bool;
+    };
 
     $scope.setActivePlayer = function(num) {
         $scope.activePlayer = GameService.turnsOrder[num];
@@ -82,13 +90,12 @@ angular.module('expeditionApp')
         $scope.showBuildSettlement = false;
         $scope.showBuildRoad = false;
         $scope.showPlayerInfo = false;
-    }
+    };
 
     function hideAllControlButtons() {
         // Control Buttons
-        $scope.showRollDice = false;
         $scope.showEndTurn = false;
-    }
+    };
     /* ================================== Game Flow  ================================== */
     $scope.rollDice = function () {
         $scope.showMainControls = true;
@@ -96,8 +103,7 @@ angular.module('expeditionApp')
         // Generate integer in [2, 12].
         var die1 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var die2 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
-        //var rollResult = die1 + die2;
-        var rollResult = 7;
+        var rollResult = die1 + die2;
 
         alert("you rolled: " + rollResult);
         if (rollResult === 7) {
@@ -118,6 +124,7 @@ angular.module('expeditionApp')
             // Do something
         } else {
             GameService.endTurn();
+            showBeginTurnModal();
         }
     };
 
@@ -130,12 +137,15 @@ angular.module('expeditionApp')
 
         GameService.landWithRobber = newRobberLand;
         $scope.landWithRobber = newRobberLand;
+
+        // Once robber has been placed, display the main controls
+        $scope.isPlacingRobber = false;
+        $scope.showMainControls = true;
     };
 						
 }])
 
 .controller('MainControlsController', ['$scope', function ($scope) {
-
 
     $scope.toggleBuildSettlementMenu = function () {
         console.log("toggleShowBuildSettlement called");

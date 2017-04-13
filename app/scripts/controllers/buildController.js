@@ -35,11 +35,12 @@ angular.module('expeditionApp')
 		// Get the active player
 		var activePlayer = GameService.activePlayer;
 
-		// This will add the building to the player and the map
-		var newSettlement = GameService.addBuilding(activePlayer.color, coordOfCorner);
-
+		// ------------------------ Game STATE: 0 ---------------------------
 		if (GameService.STATE === 0) {
 
+			// Add settlement
+		    var newSettlement = GameService.addBuilding(activePlayer.color, coordOfCorner);
+		    
 			// Store player's settlement selection in buffer
 			myBuf[activePlayer.color].settlements.push(newSettlement);
 
@@ -51,7 +52,9 @@ angular.module('expeditionApp')
 			// Draw settlement
 			drawSettlement(coordOfCorner);
 
-		} else if (GameService.STATE === 1) {
+		} 
+		// ------------------------ Game STATE: 1 ---------------------------
+		else if (GameService.STATE === 1) {
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
 			if (resAvailable['wool'] > 0 && resAvailable['grain'] > 0 && resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
@@ -59,6 +62,9 @@ angular.module('expeditionApp')
 				activePlayer.decrementResource('grain', 1);
 				activePlayer.decrementResource('brick', 1);
 				activePlayer.decrementResource('lumber', 1);
+
+				// Add settlement
+				GameService.addBuilding(activePlayer.color, coordOfCorner);
 
 				// Draw settlement
 				drawSettlement(coordOfCorner);
@@ -88,8 +94,8 @@ angular.module('expeditionApp')
 			return;
 		}
 
+		// ------------------------ Game STATE: 0 ---------------------------
 		if (GameService.STATE === 0 ) {
-
 			// Ahdd the road to the player and the map
 			var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
 
@@ -126,8 +132,9 @@ angular.module('expeditionApp')
 			$scope.showBuildSettlementMenu(true);
 			$('#placeSettlementModal').modal('show');
 
-
-		} else if (GameService.STATE === 1) {
+		} 
+		// ------------------------ Game STATE: 1 ---------------------------
+		else if (GameService.STATE === 1) {
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
 			if (resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
