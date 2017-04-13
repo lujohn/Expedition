@@ -70,7 +70,6 @@ angular.module('expeditionApp')
 			this.resourcesInHand[type] -= amount;
 		}
 
-
 		newPlayer.incrementResourcesForBuilding = function (building) {
 			for (var i = 0; i < building.lands.length; i++) {
 				this.incrementResource(building.lands[i].type, 1);

@@ -74,7 +74,7 @@
                     <h4 class="modal-title">Rob Somebody!</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Selected a land to put the robber</p>
+                        <p>Select a land to put the robber</p>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" data-dismiss="modal">OK</button>
@@ -83,14 +83,27 @@
             </div>
         </div> 
 
-        <!-- Game Alerts
-        <div class="alert alert-success" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="alert-heading">{{activePLayer.color}}, Place your first settlement!</h4>
-            <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
-        </div>  -->
+        <!-- - - - - - - - - - - - - - - - - Alerts - - - - - - - - - - - - - - - - - - -->
+        <div class="modal fade" id="InsufficientResourceAlert">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h4 class="modal-title">Not Enough Resources</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissable" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p>You do not have enough resources for current action!</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
 
         <div class="row row-content">
             <div ng-controller="MapController" class="col-xs-8">
@@ -218,43 +231,71 @@
                                     <div class="form-group row">
                                         <label class="control-label col-xs-1" for="tradePartner">Trade with: </label>
                                         <div class="col-xs-11">
+                                            <label class="radio-inline form-check-label">
+                                            <input ng-model="tradeRequest.tradePartner" class="form-check-input" name="tradePartner" type="radio" value="bank" required> bank
+                                            </label>
                                             <label ng-repeat="player in players" class="radio-inline form-check-label">
                                                 <input ng-model="tradeRequest.tradePartner" class="form-check-input" name="tradePartner" type="radio" value="{{player.color}}" required> {{player.color}}
                                             </label>
-                                            <span ng-show="tradeForm.tradePartner.$error.required" class="help-block">Must Selected a Player</span>
+                                            <span ng-show="tradeForm.tradePartner.$error.required" class="help-block">Must Select a Player</span>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="control-label col-xs-1">Offer:</label>
-                                        <div class="form-inline">            
-                                            <label for="trade-offer-wool" class="control-label">Wool</label>
-                                            <input ng-model="tradeRequest.offer.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-wool">
-                                            <label for="trade-offer-lumber" class="control-label">Lumber</label>
-                                            <input ng-model="tradeRequest.offer.lumber" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-lumber">
-                                            <label for="trade-offer-ore" class="control-label">Ore</label>
-                                            <input ng-model="tradeRequest.offer.ore" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-ore">
-                                            <label for="trade-offer-grain" class="control-label">Grain</label>
-                                            <input ng-model="tradeRequest.offer.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-grain">
-                                            <label for="trade-offer-brick" class="control-label">Brick</label>
-                                            <input ng-model="tradeRequest.offer.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-brick">
+                                    <!-- Trade with bank -->
+                                    <div ng-show="tradeRequest.tradePartner === 'bank'">
+                                        <div class="form-group row">
+                                            <label class="control-label col-xs-1">Offer: </label>
+                                            <div class="col-xs-11">
+                                                <div class="btn-group">
+                                                    <div ng-repeat="(resType, rate) in bankExchangeRate" ng-click="selectOffer(resType)" ng-class="{ active: bankOfferType === resType }" class="btn btn-md btn-default"> {{rate}} {{resType}}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="control-label col-xs-1">Demand:</label>
-                                        <div class="form-inline">            
-                                            <label for="trade-demand-wool" class="control-label">Wool</label>
-                                            <input ng-model="tradeRequest.demand.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-wool">
-                                            <label for="trade-demand-lumber" class="control-label">Lumber</label>
-                                            <input ng-model="tradeRequest.demand.lumber" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-lumber">
-                                            <label for="trade-demand-ore" class="control-label">Ore</label>
-                                            <input ng-model="tradeRequest.demand.ore" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-ore">
-                                            <label for="trade-demand-grain" class="control-label">Grain</label>
-                                            <input ng-model="tradeRequest.demand.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-grain">
-                                            <label for="trade-demand-brick" class="control-label">Brick</label>
-                                            <input ng-model="tradeRequest.demand.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-brick">
+                                        <div class="form-group row">
+                                            <label class="control-label col-xs-1">Demand: </label>
+                                            <div class="col-xs-11">
+                                                <div class="btn-group">
+                                                    <div ng-repeat="(resType, rate) in bankExchangeRate" ng-click="selectDemand(resType)" ng-class="{ active: bankDemandType === resType }" class="btn btn-md btn-default"> 1 {{resType}}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <button type="submit" class="btn btn-primary" ng-disabled="selectedDemand === '' || selectedOffer === ''" data-dismiss="modal" ng-click="submitBankTrade()">Submit</button>
                                     </div>
-                                    <button type="submit" class="btn btn-primary" ng-disabled="tradeForm.$invalid" data-dismiss="modal" ng-click="submitTradeRequest()">Submit</button>
+                                    <!-- Trade with another player -->
+                                    <div ng-hide="tradeRequest.tradePartner === 'bank'">
+                                        <div class="form-group row">
+                                            <label class="control-label col-xs-1">Offer:</label>
+                                            <div class="form-inline">            
+                                                <label for="trade-offer-wool" class="control-label">Wool</label>
+                                                <input ng-model="tradeRequest.offer.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-wool">
+                                                <label for="trade-offer-lumber" class="control-label">Lumber</label>
+                                                <input ng-model="tradeRequest.offer.lumber" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-lumber">
+                                                <label for="trade-offer-ore" class="control-label">Ore</label>
+                                                <input ng-model="tradeRequest.offer.ore" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-ore">
+                                                <label for="trade-offer-grain" class="control-label">Grain</label>
+                                                <input ng-model="tradeRequest.offer.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-grain">
+                                                <label for="trade-offer-brick" class="control-label">Brick</label>
+                                                <input ng-model="tradeRequest.offer.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-brick">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="control-label col-xs-1">Demand:</label>
+                                            <div class="form-inline">            
+                                                <label for="trade-demand-wool" class="control-label">Wool</label>
+                                                <input ng-model="tradeRequest.demand.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-wool">
+                                                <label for="trade-demand-lumber" class="control-label">Lumber</label>
+                                                <input ng-model="tradeRequest.demand.lumber" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-lumber">
+                                                <label for="trade-demand-ore" class="control-label">Ore</label>
+                                                <input ng-model="tradeRequest.demand.ore" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-ore">
+                                                <label for="trade-demand-grain" class="control-label">Grain</label>
+                                                <input ng-model="tradeRequest.demand.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-grain">
+                                                <label for="trade-demand-brick" class="control-label">Brick</label>
+                                                <input ng-model="tradeRequest.demand.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-brick">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" ng-disabled="tradeForm.$invalid" data-dismiss="modal" ng-click="submitTradeRequest()">Submit</button>
+                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -311,6 +352,7 @@
 <script src="scripts/controllers/gameController.js"></script>
 <script src="scripts/controllers/mapController.js"></script>
 <script src="scripts/controllers/buildController.js"></script>
+<script src="scripts/controllers/tradeController.js"></script>
 
 <script src="scripts/services/gameService.js"></script>
 <script src="scripts/services/playerService.js"></script>
