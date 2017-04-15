@@ -50,7 +50,7 @@
         </div> 
 
         <!-- Begin-Turn Modal -->
-        <div class="modal fade" id="beginTurnModal">
+        <div class="modal fade" id="beginTurnModal" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -61,6 +61,27 @@
                     </div>
                     <div class="modal-footer">
                         <div ng-click="rollDice()" data-dismiss="modal" class="btn btn-default">Roll Dice</div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+         <!-- Roll Result Modal -->
+        <div class="modal fade" id="rollResultModal">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h4 class="modal-title">Roll Result</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-1 col-xs-offset-5">
+                                <h1>{{rollResult}}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal">OK</button>
                     </div>
                 </div>
             </div>
@@ -86,7 +107,7 @@
             </div> 
 
             <!-- Discard Cards Modal -->
-            <div class="modal fade" id="discardModal">
+            <div class="modal fade" id="discardModal" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -181,7 +202,7 @@
                 </div>
             </div>
 
-            <div ng-controller="MainControlsController" ng-show="true"  class="col-xs-4">
+            <div ng-controller="MainControlsController" ng-show="showMainControls"  class="col-xs-4">
                 <div class="row row-content">
                     <p style="padding: 20px"></p>
                     <div class="panel panel-primary">
@@ -278,6 +299,27 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Build City Modal -->
+            <div class="modal fade" id="buildCityModal">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title">Upgrade to a city!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <span class="help-block">Use 3 ores and 2 grains to build a city and earn another victory point.</span> 
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" ng-disabled="!enableBuildCityButton" ng-click="buildCity()" data-dismiss="modal">Build City</button>
+                            <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+
+
         </div> <!-- End Build Menus -->
 
         <!-- Trade Modals - use angular form -->

@@ -12,6 +12,7 @@ angular.module('expeditionApp')
     $scope.lastLandSelected = null;
     $scope.isPlacingRobber = false;
     $scope.landWithRobber = "";
+    $scope.rollResult = null;
 
     // Control Menus
     $scope.showMainControls = false;
@@ -103,9 +104,8 @@ angular.module('expeditionApp')
         var die1 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var die2 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var rollResult = die1 + die2;
+        $scope.rollResult = rollResult;
 
-        rollResult = 7;
-        alert("you rolled: " + rollResult);
         if (rollResult === 7) {
             hideAllControlMenus();
             hideAllControlButtons();
@@ -117,6 +117,7 @@ angular.module('expeditionApp')
 
         } else {
             GameService.diceRolled(rollResult);
+            $('#rollResultModal').modal('show');
         }
     };
 

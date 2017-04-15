@@ -8,11 +8,11 @@ angular.module('expeditionApp')
 
 		// This object keeps track of the number of each resource the player has in hand
 		newPlayer.resourcesInHand = {
-			"wool": 4,
-			"ore": 3,
-			"brick": 3,
-			"lumber": 5,
-			"grain": 2
+			"wool": 0,
+			"ore": 0,
+			"brick": 0,
+			"lumber": 0,
+			"grain": 0
 		};
 
 		newPlayer.victoryPoints = 0;
@@ -34,6 +34,7 @@ angular.module('expeditionApp')
 							this.incrementResource(land.type, 1);
 						} else if (building.type === "city") {
 							this.incrementResource(land.type, 2);
+							console.log("double " + land.type + " for city!");
 						}
 					}
 				}
@@ -55,6 +56,19 @@ angular.module('expeditionApp')
 			this.buildingsOwned.push(building);
 			this.victoryPoints++;
 		};
+
+		newPlayer.addCity = function (coord) {
+			var builds = this.buildingsOwned;
+			for (var i = 0; i < builds.length; i++) {
+				var build = builds[i];
+				var buildLoc = build.location;
+				if (buildLoc[0] === coord[0] && buildLoc[1] === coord[1]) {
+					build.type = "city";
+					this.victoryPoints++;
+					break;
+				}
+			}
+		}
 
 		/*------------------------ player resource functions ------------------------- */
 		newPlayer.getResources = function () {

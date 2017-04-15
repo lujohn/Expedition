@@ -8,6 +8,18 @@ angular.module('expeditionApp')
 		dev. card -> 1 wool, 1 grain, 1 ore
 	*/
 
+	$scope.lastSettlementSelected = { coordOfCorner: null, img: null};
+	$scope.enableBuildCityButton = false;
+
+	$scope.setEnableBuildCityButton = function (bool) {
+		$scope.enableBuildCityButton = bool;
+	}
+
+	$scope.setLastSettlementSelected = function (coordOfCorner, img) {
+		$scope.lastSettlementSelected.coordOfCorner = coordOfCorner;
+		$scope.lastSettlementSelected.img = img;
+	}
+
  	var turnsOrder = GameService.turnsOrder;
  	var reverseOrder = false;
  	var turnsIndex = 0;
@@ -19,6 +31,7 @@ angular.module('expeditionApp')
  		myBuf[playerColor] = { settlements: [], roads: [] };
  	}
 
+ 	// =========================== buildSettlement function =========================
 	$scope.buildSettlement = function (corner) {
 
 		// Get the active player
@@ -75,6 +88,7 @@ angular.module('expeditionApp')
 		}
 	}
 
+	// =========================== buildRoad function =========================
 	$scope.buildRoad = function (edgeLabel) {
 
 		// edgeLabel will be a string of the form 'char-char'. Ex: A-B
@@ -153,6 +167,27 @@ angular.module('expeditionApp')
 				alert("Not enough resources for new road!");
 			}
 		}
+	}
+
+	// =========================== buildCity function =========================
+	$scope.buildCity = function () {
+		
+		var cityImg = document.createElement('img');
+		var settImg = $scope.lastSettlementSelected.img;
+
+		cityImg.src = "images/" + GameService.activePlayer.color + "City.svg";
+		cityImg.width = settImg.width;
+		cityImg.height = settImg.height;
+		cityImg.style.left = settImg.style.left;
+		cityImg.style.top = settImg.style.top;
+
+		// Remove settlement image from board and add city image
+		var gameBoard = document.getElementById('gameBoardContainer');
+		gameBoard.removeChild($scope.lastSettlementSelected.img);
+		gameBoard.appendChild(cityImg);
+
+		// modify player state
+		GameService.addCity(GameService.activePlayer.color, $scope.lastSettlementSelected.coordOfCorner);
 	}
 
 	// This function checks if the corner is available for building a settlement. In all 
@@ -270,8 +305,25 @@ angular.module('expeditionApp')
 		settlementImage.height = 40;
 		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
 		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
+		settlementImage.corner = coordOfCorner;
 
+		settlementImage.addEventListener('click', function (e) {
+			var coordOfCorner = e.target.corner;
+			var resAvail = GameService.activePlayer.getResources();
+			if (resAvail.ore >= 3 && resAvail.grain >= 2) {
+				$scope.$apply($scope.setEnableBuildCityButton(true));
+			} else {
+				$scope.$apply($scope.setEnableBuildCityButton(false));
+			}
+			$('#buildCityModal').modal('show');
+
+			$scope.$apply($scope.setLastSettlementSelected(coordOfCorner, settlementImage));
+		});
 		gameContainer.appendChild(settlementImage);
+	}
+
+	function aFunction(e) {
+		console.log(e.target.corner);
 	}
 
 	function strokeRoad (rdCtx, color, x1, y1, x2, y2) {

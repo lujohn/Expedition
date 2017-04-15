@@ -18,9 +18,9 @@ angular.module('expeditionApp')
 	};
 
 	// Create a new Settlement
-	buildingFactory.createBuilding = function (color, vertex) {
+	buildingFactory.createBuilding = function (color, coordinates) {
 		var newBuilding = {};
-		newBuilding.location = vertex;
+		newBuilding.location = coordinates;
 		newBuilding.color = color;
 		newBuilding.type = "settlement";
 		newBuilding.lands = {};  // the lands the building sits on

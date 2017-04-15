@@ -65,6 +65,7 @@ angular.module('expeditionApp')
             activePlayerOberservers[i].updateActivePlayer(this.activePlayer);
         }
     }
+
     /* ============================== Game Creation ============================== */
     this.createRandomGame = function (numPlayers) {
         // Generate lands randomly for now. MODIFY
@@ -171,6 +172,10 @@ angular.module('expeditionApp')
 
 
         return newBuilding;  // return the building created
+    }
+
+    this.addCity = function (color, coordinates) {
+        this.playersDictionary[color].addCity(coordinates);
     }
 
     this.roadExists = function (from, to) {
