@@ -45,7 +45,7 @@ angular.module('expeditionApp')
         var offer = $scope.tradeRequest.offer;
         var activePlayer = GameService.activePlayer;
 
-        if (hasSufficientResources(activePlayer, offer)) {
+        if (activePlayer.hasSufficientResources(offer)) {
             // present trade modal to other party
             $('#tradeAcceptModal').modal('show');
         } else {
@@ -60,25 +60,13 @@ angular.module('expeditionApp')
         var offer = $scope.tradeRequest.offer;
         var demand = $scope.tradeRequest.demand;
 
-        if (hasSufficientResources(tradePartner, demand)) {
+        if (tradePartner.hasSufficientResources(demand)) {
             // tradePartner has adequate resources for trade. Execute trade.
             executeTrade(GameService.activePlayer, tradePartner, offer, demand);
         } else {
             $('#InsufficientResourceAlert').modal('show');
         }
     };
-
-    function hasSufficientResources(player, resources) {
-        var resAvail = player.getResources();
-        for (var type in resources) {
-            if (resources.hasOwnProperty(type)) {
-                if (resAvail[type] < resources[type]) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     function executeTrade(player1, player2, offer, demand) {
 

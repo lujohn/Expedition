@@ -15,7 +15,7 @@
         <!-- - - - - - - - - - - - - - - Instruction Modals - - - - - - - - - - - - - - - -->
         <!-- Place-Settlement Modal -->
         <div class="modal fade" id="placeSettlementModal">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
                     <h4 class="modal-title">{{activePlayer.color | uppercase}}, Place a Settlement!</h4>
@@ -34,7 +34,7 @@
 
         <!-- Place-Road Modal -->
         <div class="modal fade" id="placeRoadModal">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
                     <h4 class="modal-title">{{activePlayer.color | uppercase}}, Place a Road!</h4>
@@ -51,7 +51,7 @@
 
         <!-- Begin-Turn Modal -->
         <div class="modal fade" id="beginTurnModal">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
                     <h4 class="modal-title">{{activePlayer.color | uppercase}}, Roll the Dice!</h4>
@@ -66,22 +66,86 @@
             </div>
         </div> 
 
-        <!-- Robber modal -->
-        <div class="modal fade" id="robberModal">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h4 class="modal-title">Rob Somebody!</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Select a land to put the robber</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" data-dismiss="modal">OK</button>
+        <div ng-controller="RobberController">
+            <!-- Robber Information Modal -->
+            <div class="modal fade" id="robberInfoModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title">Uh Oh!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>You rolled a 7, so it's time to commit a crime - rob someone! But before
+                            that. Everyone with more than 7 resources in hand must discard half of them! Ouch!</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" ng-click="prepareForDiscard()" data-dismiss="modal">OK</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div> 
+            </div> 
+
+            <!-- Discard Cards Modal -->
+            <div class="modal fade" id="discardModal">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title">{{playerDiscarding.color | uppercase}}, Discard Cards!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Since you have {{playerDiscarding.numResources}} resources, <strong>you must discard {{playerDiscarding.numCardsToDiscard}} of them!</strong></h5>
+                            <h3> Your Hand </h3>
+                            <span> Wool: {{playerDiscarding.resourcesInHand.wool}}</span>
+                            <span> Lumber: {{playerDiscarding.resourcesInHand.lumber}}</span>
+                            <span> Ore: {{playerDiscarding.resourcesInHand.ore}}</span>
+                            <span> Grain: {{playerDiscarding.resourcesInHand.grain}}</span>
+                            <span> Brick: {{playerDiscarding.resourcesInHand.brick}}</span>
+                            <hr>
+                            <form class="form-horizontal" name="discardForm">
+                                <div class="row row-content">
+                                    <label class="control-label col-xs-1">Discard:</label>
+                                    <div class="form-inline col-xs-11">            
+                                        <label for="discard-wool" class="control-label">Wool</label>
+                                        <input ng-model="discardBuffer.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" max="{{playerDiscarding.getResources().wool}}" id="discard-wool">
+                                        <label for="discard-lumber" class="control-label">Lumber</label>
+                                        <input ng-model="discardBuffer.lumber" class="form-control" style="width: 60px" type="number" value="0" min="0" max="{{playerDiscarding.getResources().lumber}}" id="discard-lumber">
+                                        <label for="discard-ore" class="control-label">Ore</label>
+                                        <input ng-model="discardBuffer.ore" class="form-control" style="width: 60px" type="number" value="0" min="0" max="{{playerDiscarding.getResources().ore}}" id="discard-ore">
+                                        <label for="discard-grain" class="control-label">Grain</label>
+                                        <input ng-model="discardBuffer.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" max="{{playerDiscarding.getResources().grain}}" id="discard-grain">
+                                        <label for="discard-brick" class="control-label">Brick</label>
+                                        <input ng-model="discardBuffer.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" max="{{playerDiscarding.getResources().brick}}" id="discard-brick">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <h4 style="margin-left: 10px">Count: {{count}}</h4>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" ng-disabled="count !== playerDiscarding.numCardsToDiscard" ng-click="discard()">Discard</button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+            <!-- Place Robber modal -->
+            <div class="modal fade" id="placeRobberModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h4 class="modal-title">{{activePlayer.color | uppercase}}, Time to Rob Somebody!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Select a land to place the robber on - this land will not produce an resources
+                            for as long as the robber remains there. Doesn't it feel great to be a criminal?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+        </div>
 
         <!-- - - - - - - - - - - - - - - - - Alerts - - - - - - - - - - - - - - - - - - -->
         <div class="modal fade" id="InsufficientResourceAlert">
@@ -117,10 +181,10 @@
                 </div>
             </div>
 
-            <div ng-controller="MainControlsController" class="col-xs-4">
+            <div ng-controller="MainControlsController" ng-show="true"  class="col-xs-4">
                 <div class="row row-content">
                     <p style="padding: 20px"></p>
-                    <div ng-show="true" class="panel panel-primary">
+                    <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">Main Controls (&nbsp{{activePlayer.color | uppercase}}'s Turn &nbsp)</h3>
                         </div>
@@ -167,7 +231,7 @@
 
         <!-- Build Menus -->
         <div class="row row-content" ng-controller="BuildController">
-            <div class="col-xs-5 animate-show-hide fade">
+            <div class="col-xs-5">
                 <div class="panel panel-danger" ng-show="showBuildSettlement">
                     <div class="panel-heading">
                         <h3 class="panel-title">Build Settlement: {{activePlayer.color | uppercase}}</h3>
@@ -192,7 +256,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-5 animate-show-hide fade">
+            <div class="col-xs-5">
                 <div class="panel panel-warning" ng-show="showBuildRoad">
                     <div class="panel-heading">
                         <h3 class="panel-title">Build Road: {{activePlayer.color | uppercase}}</h3>
@@ -266,7 +330,7 @@
                                     <div ng-hide="tradeRequest.tradePartner === 'bank'">
                                         <div class="form-group row">
                                             <label class="control-label col-xs-1">Offer:</label>
-                                            <div class="form-inline">            
+                                            <div class="form-inline col-xs-11">            
                                                 <label for="trade-offer-wool" class="control-label">Wool</label>
                                                 <input ng-model="tradeRequest.offer.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-wool">
                                                 <label for="trade-offer-lumber" class="control-label">Lumber</label>
@@ -281,7 +345,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="control-label col-xs-1">Demand:</label>
-                                            <div class="form-inline">            
+                                            <div class="form-inline col-xs-11">            
                                                 <label for="trade-demand-wool" class="control-label">Wool</label>
                                                 <input ng-model="tradeRequest.demand.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-wool">
                                                 <label for="trade-demand-lumber" class="control-label">Lumber</label>

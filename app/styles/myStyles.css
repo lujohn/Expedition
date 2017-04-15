@@ -37,3 +37,8 @@ body {
 .fade {
 	opacity: 1;
 }
+
+.ng-hide:not(.ng-hide-animate) {
+	display: inline-block!important;
+	visibility: hidden;
+}

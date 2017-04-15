@@ -89,7 +89,6 @@ angular.module('expeditionApp')
         $scope.showMainControls = false;
         $scope.showBuildSettlement = false;
         $scope.showBuildRoad = false;
-        $scope.showPlayerInfo = false;
     };
 
     function hideAllControlButtons() {
@@ -105,12 +104,17 @@ angular.module('expeditionApp')
         var die2 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var rollResult = die1 + die2;
 
+        rollResult = 7;
         alert("you rolled: " + rollResult);
         if (rollResult === 7) {
             hideAllControlMenus();
             hideAllControlButtons();
+
+            // Players with more than 7 cards must discard half (rounding down)
+
+            $('#robberInfoModal').modal('show');
             $scope.isPlacingRobber = true;
-            $('#robberModal').modal('show');
+
         } else {
             GameService.diceRolled(rollResult);
         }
@@ -148,16 +152,87 @@ angular.module('expeditionApp')
 .controller('MainControlsController', ['$scope', function ($scope) {
 
     $scope.toggleBuildSettlementMenu = function () {
-        console.log("toggleShowBuildSettlement called");
-        /*$scope.setActivePanel(1); */ // inherited scope property from GameController
         $scope.$parent.showBuildSettlement = !$scope.showBuildSettlement;
     };
 
     $scope.toggleBuildRoadMenu = function () {
-        //$scope.setActivePanel(2);  // inherited scope property from GameController
         $scope.$parent.showBuildRoad = !$scope.showBuildRoad;
     };
 
 }])
 
+.controller('RobberController', ['$scope', 'GameService', function($scope, GameService) {
+
+    $scope.playerDiscarding = null;
+    $scope.discardBuffer = new discardBuffer();
+    $scope.count = 0;
+
+    $scope.$watch('discardBuffer', function (newVal, oldVal) {
+        updateCount();
+    }, true);
+
+    var queue = [];
+    var allPlayers = GameService.getAllPlayers();
+    $scope.prepareForDiscard = function () {
+        for (var i = 0; i < allPlayers.length; i++) {
+            var player = allPlayers[i];
+            var numRes = player.getNumResources();
+            if (numRes > 7) {
+                player.numCardsToDiscard = (numRes - 7);  // Create property
+                player.numResources = numRes;  // Make visible to Modal
+                queue.push(player);
+            }
+        }
+
+        // Present first player's discard modal if queue is not empty
+        if (queue.length > 0) {
+            $scope.playerDiscarding = queue.shift();
+            $('#discardModal').modal('show');
+        } 
+    }
+
+    $scope.discard = function () {
+        // Decrement resources
+        var buf = $scope.discardBuffer;
+        var player = $scope.playerDiscarding;
+        
+        player.decrementResource('wool', buf.wool);
+        player.decrementResource('lumber', buf.lumber);
+        player.decrementResource('grain', buf.grain);
+        player.decrementResource('ore', buf.ore);
+        player.decrementResource('brick', buf.brick);
+
+        if (queue.length > 0) {
+            // Present next player's discard modal
+            $scope.playerDiscarding = queue.shift();
+            $('#discardModal').modal('show');
+        } else {
+            $('#discardModal').modal('hide');
+            $('#placeRobberModal').modal('show');
+            $scope.showMainControlsMenu(true);
+        }
+
+        // provide clean buffer for next player
+        $scope.discardBuffer = new discardBuffer();
+    };
+
+    function updateCount () {
+        var count = 0;
+        for (var type in $scope.discardBuffer) {
+            if ($scope.discardBuffer.hasOwnProperty(type)) {
+                count += $scope.discardBuffer[type];
+            }
+        }
+        $scope.count = count;
+    };
+
+    function discardBuffer () {
+        this.wool = 0;
+        this.lumber = 0;
+        this.grain = 0;
+        this.ore = 0;
+        this.brick = 0;
+    };
+
+}])
 ;
