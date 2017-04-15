@@ -21,19 +21,19 @@ angular.module('expeditionApp')
 
 	$scope.buildSettlement = function (corner) {
 
+		// Get the active player
+		var activePlayer = GameService.activePlayer;
+
 		// Get information about land to add land to map graph
 		var landToBuildOn = $scope.lastLandSelected;   // Inherited from MapController
 		var coordOfCorner = landToBuildOn.coordinates[corner];
 
 		// Check if corner is legal to build on. Only corners that are not
 		// adjacent to any other existing building can be built on
-		if (!cornerIsAvailable(coordOfCorner)) {
+		if (!cornerIsAvailable(activePlayer.color, coordOfCorner)) {
 			alert("Corner not available! Pick another!");
 			return;
 		}
-
-		// Get the active player
-		var activePlayer = GameService.activePlayer;
 
 		// ------------------------ Game STATE: 0 ---------------------------
 		if (GameService.STATE === 0) {
@@ -155,10 +155,28 @@ angular.module('expeditionApp')
 		}
 	}
 
-	function cornerIsAvailable (cornerCoord) {
+	// This function checks if the corner is available for building a settlement. In all 
+	// Game States, settlements cannot be built on occupied corners, or adjacent to any corner
+	// with an existing settlement.
+	//
+	// Additional Restrictions:
+	// Game State 1: Settlements can be built only on corners that are reachable by at least one
+	// of the player's roads. 
+	function cornerIsAvailable (color, cornerCoord) {
 		if (GameService.buildingExists(cornerCoord) || GameService.getAdjacentBuildings(cornerCoord).length !== 0) {
 			return false;
 		}
+
+		if (GameService.STATE === 1) {
+			// Find a bordering road. getRoadsWithSource() returns an array of colors
+			// representing which players have a road that connects to the passed in corner
+			var roadsForCorner = GameService.getRoadsWithSource(cornerCoord);
+			if (!roadsForCorner.includes(color)) {
+				alert("can't build settlement there because no roads are bordering");
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -175,7 +193,8 @@ angular.module('expeditionApp')
 				return true;
 			}
 
-			// Find a bordering road
+			// Find a bordering road. getRoadsWithSource() returns an array of colors
+			// representing which players have a road that connects to the passed in corner
 			var borderFrom = GameService.getRoadsWithSource(from);
 			var borderTo = GameService.getRoadsWithSource(to);
 
