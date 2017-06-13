@@ -11,5 +11,3 @@ A live version of this game can be found at http://tinyurl.com/kk8hk3n
 Game is still missing support for the following:
 - trading ports
 - development cards
-- cities 
-
