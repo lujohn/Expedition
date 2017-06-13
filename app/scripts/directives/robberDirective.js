@@ -13,15 +13,15 @@ angular.module('expeditionApp')
         			gameBoardContainer.removeChild(document.getElementById("robber"));
         		}
 
+        		// Add robber to new location
         		var landCoordA = land.coordinates["A"];
-
         		var xOffset = landCoordA[0] - 80;
 	       		var yOffset = landCoordA[1];
 
 		        var robberImg = document.createElement('img');
-		        robberImg.width = 60;
-		        robberImg.height = 60;
-		        robberImg.src = "images/robber.svg";
+		        robberImg.width = 100;
+		        robberImg.height = 100;
+		        robberImg.src = "images/robber2.png";
 		        robberImg.style.position = "absolute";
 		        robberImg.style.left = xOffset + (80 - robberImg.width / 2) + "px" ;  // **Add constants
 		        robberImg.style.top = yOffset + (80 - robberImg.height / 2) + "px";

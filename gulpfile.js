@@ -10,7 +10,7 @@ var zip = require('gulp-zip');
 
 gulp.task('default', ['clean'], function () {
 	console.log("Doing Something...");
-	gulp.start('jshint', 'usemin', 'copyimage', 'zip');
+	gulp.start('jshint', 'usemin', 'copyimage');
 });
 
 gulp.task('jshint', function () {
@@ -39,10 +39,10 @@ gulp.task('copyimage', function() {
 	return stream;
 });
 
-gulp.task('zip', function() {
+gulp.task('zip', ['default'], function() {
 	return gulp.src('dist/**')
 	.pipe(zip('dist.zip'))
-	.pipe(gulp.dest('dist/'));
+	.pipe(gulp.dest('/'));
 });
 
 gulp.task('clean', function () {

@@ -15,10 +15,10 @@ angular.module('expeditionApp')
     $scope.rollResult = null;
 
     // Control Menus
-    $scope.showMainControls = false;
-    $scope.showBuildSettlement = false;
-    $scope.showBuildRoad = false;
-    $scope.showPlayerInfo = false;
+    $scope.showMainControls = true;
+    $scope.showBuildSettlement = true;
+    $scope.showBuildRoad = true;
+    $scope.showPlayerInfo = true;
 
     // Control Buttons
     $scope.showRollDice = false;
@@ -61,8 +61,8 @@ angular.module('expeditionApp')
     $('#placeSettlementModal').modal('show');
 
     function showBeginTurnModal() {
-        hideAllControlMenus(); 
-        hideAllControlButtons();
+        //hideAllControlMenus(); 
+        //hideAllControlButtons();
 
         $scope.showPlayerInfo = true;
         $('#beginTurnModal').modal('show');
@@ -100,15 +100,15 @@ angular.module('expeditionApp')
     $scope.rollDice = function () {
         $scope.showMainControls = true;
 
-        // Generate integer in [2, 12].
+        // Generate integer in range [2, 12].
         var die1 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var die2 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var rollResult = die1 + die2;
         $scope.rollResult = rollResult;
 
         if (rollResult === 7) {
-            hideAllControlMenus();
-            hideAllControlButtons();
+            //hideAllControlMenus();
+            //hideAllControlButtons();
 
             // Players with more than 7 cards must discard half (rounding down)
 
@@ -145,7 +145,7 @@ angular.module('expeditionApp')
 
         // Once robber has been placed, display the main controls
         $scope.isPlacingRobber = false;
-        $scope.showMainControls = true;
+        //$scope.showMainControls = true;
     };
 						
 }])
@@ -180,7 +180,7 @@ angular.module('expeditionApp')
             var numRes = player.getNumResources();
             if (numRes > 7) {
                 player.numCardsToDiscard = (numRes - 7);  // Create property
-                player.numResources = numRes;  // Make visible to Modal
+                player.numResources = numRes;  // To make visible to Modal
                 queue.push(player);
             }
         }

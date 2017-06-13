@@ -8,6 +8,15 @@ angular.module('expeditionApp')
 		dev. card -> 1 wool, 1 grain, 1 ore
 	*/
 
+	var turnsOrder = GameService.turnsOrder;
+ 	var reverseOrder = false;
+ 	var canBuildSettlement = true;
+ 	var canBuildRoad = false;
+ 	var turnsIndex = 0;
+
+ 	// For distributing resources in initialization phase (Game State 0)
+ 	myBuf = {};
+
 	$scope.lastSettlementSelected = { coordOfCorner: null, img: null};
 	$scope.enableBuildCityButton = false;
 
@@ -20,11 +29,6 @@ angular.module('expeditionApp')
 		$scope.lastSettlementSelected.img = img;
 	}
 
- 	var turnsOrder = GameService.turnsOrder;
- 	var reverseOrder = false;
- 	var turnsIndex = 0;
- 	myBuf = {};
-
  	// initialize myBuf
  	for (var i = 0; i < turnsOrder.length; i++) {
  		var playerColor = turnsOrder[i];
@@ -33,6 +37,11 @@ angular.module('expeditionApp')
 
  	// =========================== buildSettlement function =========================
 	$scope.buildSettlement = function (corner) {
+
+		if (!canBuildSettlement) {
+			alert("Cannot build road at this time...");
+			return;
+		}
 
 		// Get the active player
 		var activePlayer = GameService.activePlayer;
@@ -58,8 +67,12 @@ angular.module('expeditionApp')
 			myBuf[activePlayer.color].settlements.push(newSettlement);
 
 			// Prompt player to build a road
-			$scope.showBuildSettlementMenu(false);
-			$scope.showBuildRoadMenu(true);
+			//$scope.showBuildSettlementMenu(false);
+			//$scope.showBuildRoadMenu(true);
+
+			canBuildSettlement = false;
+			canBuildRoad = true;
+
 			$('#placeRoadModal').modal('show');
 
 			// Draw settlement
@@ -91,6 +104,11 @@ angular.module('expeditionApp')
 	// =========================== buildRoad function =========================
 	$scope.buildRoad = function (edgeLabel) {
 
+		if (!canBuildRoad) {
+			alert("Cannot build road at this time...");
+			return; 
+		}
+
 		// edgeLabel will be a string of the form 'char-char'. Ex: A-B
 		var corners = edgeLabel.split('-');
 
@@ -110,7 +128,7 @@ angular.module('expeditionApp')
 
 		// ------------------------ Game STATE: 0 ---------------------------
 		if (GameService.STATE === 0 ) {
-			// Ahdd the road to the player and the map
+			// add the road to the player and the map
 			var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
 
 			// Store in buffer
@@ -129,6 +147,8 @@ angular.module('expeditionApp')
 				if (turnsIndex === 0) {
 					// If every player has 2 roads and 2 settlements, end INITIAL STATE
 					GameService.setGameState(1);
+					canBuildSettlement = true;
+					canBuildRoad = true;
 
 					// Allocate Starting Resources to players. Players begin with the 1 resources per land
 					// bordering his/her second settlment.
@@ -142,7 +162,11 @@ angular.module('expeditionApp')
 			GameService.setActivePlayer(turnsIndex);
 
 			// Display Build-Settlement Modal for next player
-			$scope.showBuildRoadMenu(false);
+			//$scope.showBuildRoadMenu(false);
+
+			canBuildSettlement = true;
+			canBuildRoad = false;
+
 			$scope.showBuildSettlementMenu(true);
 			$('#placeSettlementModal').modal('show');
 
@@ -306,18 +330,22 @@ angular.module('expeditionApp')
 		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
 		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
 		settlementImage.corner = coordOfCorner;
+		settlementImage.color = GameService.activePlayer.color;
 
+		// If user clicks on settlement, give user the option to build a city if user
+		// has sufficient resources. 
 		settlementImage.addEventListener('click', function (e) {
-			var coordOfCorner = e.target.corner;
+			console.log(this.color);
+			console.log(this.corner);
 			var resAvail = GameService.activePlayer.getResources();
-			if (resAvail.ore >= 3 && resAvail.grain >= 2) {
+			if (resAvail.ore >= 3 && resAvail.grain >= 2 && GameService.activePlayer.color === this.color) {
 				$scope.$apply($scope.setEnableBuildCityButton(true));
 			} else {
 				$scope.$apply($scope.setEnableBuildCityButton(false));
 			}
 			$('#buildCityModal').modal('show');
 
-			$scope.$apply($scope.setLastSettlementSelected(coordOfCorner, settlementImage));
+			$scope.$apply($scope.setLastSettlementSelected(this.corner, settlementImage));
 		});
 		gameContainer.appendChild(settlementImage);
 	}
