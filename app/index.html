@@ -87,13 +87,76 @@
             </div>
         </div> 
 
+        <!-- - - - - - - - - - - - Developement Card - - - - - - - - - - - - - -->
+        <div ng-controller="DevCardController">
+            <div class="modal fade" id="devCardInfoModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Developement Card Menu</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p> So you want to buy a development card... (Put some more info here). </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-toggle="modal" data-target="#useDevCardModal">Use Dev. Card</button>
+                            <button class="btn btn-default" data-toggle="modal" data-target="#buyDevCardModal">Buy Dev. Card</button>
+                            <button class="btn btn-primary" data-dismiss="modal">Done</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="modal fade" id="buyDevCardModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Buy Developement Card!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Cost of one development card:</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">1 Wool</li>
+                                <li class="list-group-item">1 Wheat</li>
+                                <li class="list-group-item">1 Ore</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-toggle=""
+                            <button class="btn btn-default" ng-disabled="false" ng-click="buyDevCard()" data-dismiss="modal">Buy!</button>
+                            <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="useDevCardModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Use Developement Card!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5>You Have: </h5>
+                            <li ng-repeat="(cardType, count) in activePlayer.devCards">{{cardType}}: {{count}}</li>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-toggle=""
+                            <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- - - - - - - - - - - - - Robber Controller - - - - - - - - - - - - - - - -->
         <div ng-controller="RobberController">
             <!-- Robber Information Modal -->
             <div class="modal fade" id="robberInfoModal">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h4 class="modal-title">Uh Oh!</h4>
+                            <h4 class="modal-title">Uh Oh!</h4>
                         </div>
                         <div class="modal-body">
                             <p>You rolled a 7, so it's time to commit a crime - rob someone! But before
@@ -165,10 +228,9 @@
                     </div>
                 </div>
             </div> 
-
         </div>
 
-        <!-- - - - - - - - - - - - - - - - - Alerts - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - Custom Alerts - - - - - - - - - - - - - - - - - - -->
         <div class="modal fade" id="InsufficientResourceAlert">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -190,6 +252,7 @@
             </div>
         </div> 
 
+        <!-- - - - - - - - - - - - -  Map and Main Controls - - - - - - - - - - - - - - -->
         <div class="row row-content">
             <div ng-controller="MapController" class="col-xs-8">
                 <div id="gameBoardContainer">
@@ -214,7 +277,7 @@
                                 <span class="btn btn-lg btn-danger" ng-click="toggleBuildSettlementMenu()">Build Settlement</span>
                                 <span class="btn btn-lg btn-info" ng-click="toggleBuildRoadMenu()">Build Road</span>
                                 <span class="btn btn-lg btn-warning" data-toggle="modal" data-target="#tradeRequestModal">Trade</span>
-                                <span class="btn btn-lg btn-success" ng-click="showDevCardMenu()">Development Card</span>
+                                <span class="btn btn-lg btn-success" data-toggle="modal" data-target="#devCardInfoModal">Development Card</span>
                                 <span ng-click="endTurn()" class="btn btn-lg btn-default">End Turn</span>
                             </div>
                             <div class="btn btn-lg btn-primary" ng-click="placeRobber()" ng-show="isPlacingRobber">Place Robber</div>
@@ -317,9 +380,6 @@
                     </div>
                 </div>
             </div> 
-
-
-
         </div> <!-- End Build Menus -->
 
         <!-- Trade Modals - use angular form -->
@@ -459,6 +519,7 @@
 <script src="scripts/controllers/mapController.js"></script>
 <script src="scripts/controllers/buildController.js"></script>
 <script src="scripts/controllers/tradeController.js"></script>
+<script src="scripts/controllers/devCardController.js"></script>
 
 <script src="scripts/services/gameService.js"></script>
 <script src="scripts/services/playerService.js"></script>

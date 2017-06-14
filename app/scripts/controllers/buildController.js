@@ -10,8 +10,6 @@ angular.module('expeditionApp')
 
 	var turnsOrder = GameService.turnsOrder;
  	var reverseOrder = false;
- 	var canBuildSettlement = true;
- 	var canBuildRoad = false;
  	var turnsIndex = 0;
 
  	// For distributing resources in initialization phase (Game State 0)
@@ -38,8 +36,8 @@ angular.module('expeditionApp')
  	// =========================== buildSettlement function =========================
 	$scope.buildSettlement = function (corner) {
 
-		if (!canBuildSettlement) {
-			alert("Cannot build road at this time...");
+		if (!GameService.canBuildSettlement) {
+			alert("Cannot build settlement at this time...");
 			return;
 		}
 
@@ -70,8 +68,8 @@ angular.module('expeditionApp')
 			//$scope.showBuildSettlementMenu(false);
 			//$scope.showBuildRoadMenu(true);
 
-			canBuildSettlement = false;
-			canBuildRoad = true;
+			GameService.canBuildSettlement = false;
+			GameService.canBuildRoad = true;
 
 			$('#placeRoadModal').modal('show');
 
@@ -104,7 +102,7 @@ angular.module('expeditionApp')
 	// =========================== buildRoad function =========================
 	$scope.buildRoad = function (edgeLabel) {
 
-		if (!canBuildRoad) {
+		if (!GameService.canBuildRoad) {
 			alert("Cannot build road at this time...");
 			return; 
 		}
@@ -147,8 +145,8 @@ angular.module('expeditionApp')
 				if (turnsIndex === 0) {
 					// If every player has 2 roads and 2 settlements, end INITIAL STATE
 					GameService.setGameState(1);
-					canBuildSettlement = true;
-					canBuildRoad = true;
+					GameService.canBuildSettlement = true;
+					GameService.canBuildRoad = true;
 
 					// Allocate Starting Resources to players. Players begin with the 1 resources per land
 					// bordering his/her second settlment.
@@ -164,8 +162,8 @@ angular.module('expeditionApp')
 			// Display Build-Settlement Modal for next player
 			//$scope.showBuildRoadMenu(false);
 
-			canBuildSettlement = true;
-			canBuildRoad = false;
+			GameService.canBuildSettlement = true;
+			GameService.canBuildRoad = false;
 
 			$scope.showBuildSettlementMenu(true);
 			$('#placeSettlementModal').modal('show');

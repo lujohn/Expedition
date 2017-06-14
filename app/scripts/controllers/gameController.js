@@ -122,6 +122,12 @@ angular.module('expeditionApp')
     };
 
     $scope.endTurn = function () {
+
+        if (GameService.STATE == 0) {
+            alert("Cannot end turn at this time...");
+            return;
+        }
+
         // Check for victory
         if (GameService.gameWon()) {
             alert("Congrats " + GameService.activePlayer.color + "! You won!");

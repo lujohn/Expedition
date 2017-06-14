@@ -18,6 +18,9 @@ angular.module('expeditionApp')
 		newPlayer.victoryPoints = 0;
 		newPlayer.buildingsOwned = [];
 		newPlayer.roadsOwned = [];
+		newPlayer.devCards = {
+			"knight": 0, "victoryPts": 0, "roadBuilding": 0, "monopoly": 0, "yearOfPlenty": 0
+		};
 
 		// This function increments the player's resources after a dice roll
 		newPlayer.diceRolled = function (diceResult) {
@@ -38,7 +41,6 @@ angular.module('expeditionApp')
 						}
 					}
 				}
-
 			}
 		};
 
@@ -70,6 +72,11 @@ angular.module('expeditionApp')
 			}
 		}
 
+		/*----------------------- developement card functions ------------------------ */
+		newPlayer.addDevCard = function(devCard) {
+			this.devCards[devCard]++;
+		}
+
 		/*------------------------ player resource functions ------------------------- */
 		newPlayer.getResources = function () {
 			return this.resourcesInHand;
@@ -93,6 +100,14 @@ angular.module('expeditionApp')
 		newPlayer.decrementResource = function (type, amount) {
 			this.resourcesInHand[type] -= amount;
 		};
+
+		newPlayer.decrementResources = function(resourceObj) {
+			for (var type in resourceObj) {
+				if (resourceObj.hasOwnProperty(type)) {
+					this.resourcesInHand[type] -= resourceObj[type];
+				}
+			}
+		}
 
 		newPlayer.incrementResourcesForBuilding = function (building) {
 			for (var i = 0; i < building.lands.length; i++) {

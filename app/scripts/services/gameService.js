@@ -6,8 +6,7 @@
     the game */
 
 angular.module('expeditionApp')
-.service('GameService', ['LandFactory', 'PlayerService', 'MapService', 'BuildingFactory', 
-    function (LandFactory, PlayerService, MapService, BuildingFactory) {
+.service('GameService', ['LandFactory', 'PlayerService', 'MapService', 'BuildingFactory', function (LandFactory, PlayerService, MapService, BuildingFactory) {
     var LAND_CONSTRUCTION_DICTIONARY = {
         "grain": 4,
         "lumber": 4,
@@ -16,25 +15,33 @@ angular.module('expeditionApp')
         "brick": 3,
         "desert": 1
     };
-    this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
 
+    var DEV_CARD_CONSTURCTION_DICTIONARY = {
+        "knight": 14,
+        "victoryPts": 5,
+        "roadBuilding": 2,
+        "monopoly": 2,
+        "yearOfPlenty": 2
+    }
+
+    this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
     this.landsMatrix = [[],[],[],[],[]];   // Stores the lands in play for this game
     this.landsDictionary = {}   // Stores lands for later lookup
     this.playersDictionary = {};  // Player information as key, value pair <Color, PlayerObject>
     this.turnsOrder = []  // Array of players (color only) indicating turn order.
+    this.devCardsDeck = []  // Stores development cards
 
     /* STATES:
         0: INITIAL - players choose initial settlements and roads
         1: ACTIVE - Game is in session
-        2: END 
-    */
+        2: END  */
     this.STATE = -1;
 
-    // Pointer to active player
-    this.activePlayer = null;
+    this.activePlayer = null;   // Pointer to active player
+    this.landWithRobber = null;  // landID that robber is on
 
-    // landID that robber is on
-    this.landWithRobber = null;
+    this.canBuildSettlement = true;
+    this.canBuildRoad = false;
 
     /* ================================ Observers ================================ */
     // Observers for activePlayer change.
@@ -74,7 +81,8 @@ angular.module('expeditionApp')
         this.assignLandDiceNumbersRandom();
         // Create players
 
-        // Assign robber(s) 
+        // Generate Development Cards
+        this.generateDevCards();
 
     };
 
@@ -141,15 +149,20 @@ angular.module('expeditionApp')
         return this.landsDictionary[landID];
     }
 
-    /* Helper - Shuffle function */
-    function shuffle(array) {
-        for (var i = 0; i < array.length; i++) {
-            var randIndex = Math.floor(Math.random() * array.length);
-            temp = array[randIndex];
-            array[randIndex] = array[i];
-            array[i] = temp;
+    /* ========================== Development cards functions ============================ */
+    this.generateDevCards = function() {
+        for (cardType in DEV_CARD_CONSTURCTION_DICTIONARY) {
+            for (var i = 0; i < DEV_CARD_CONSTURCTION_DICTIONARY[cardType]; i++) {
+                this.devCardsDeck.push(cardType);
+            }
         }
+        shuffle(this.devCardsDeck);
     }
+
+    this.drawDevCard = function() {
+        return this.devCardsDeck.pop();
+    }
+
     /* ============================== Map-related functions ============================== */
     this.addRoad = function (color, from, to) {
         var newRoad = BuildingFactory.createRoad(color, from, to);
@@ -275,6 +288,16 @@ angular.module('expeditionApp')
 
     this.getNumPlayers = function () {
         return this.turnsOrder.length;
+    }
+
+    /* Helper - Shuffle function */
+    function shuffle(array) {
+        for (var i = 0; i < array.length; i++) {
+            var randIndex = Math.floor(Math.random() * array.length);
+            temp = array[randIndex];
+            array[randIndex] = array[i];
+            array[i] = temp;
+        }
     }
 
 }]);
