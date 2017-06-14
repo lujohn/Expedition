@@ -21,4 +21,34 @@ angular.module('expeditionApp')
 		activePlayer.addDevCard(newDevCard);
 	};
 
+	$scope.useDevCard = function(devCard) {
+		if (!GameService.activePlayer.hasDevCard(devCard) && GameService.canPlayDevCard) {
+			alert('Cannot play a' + ' "' + devCard + '"' + ' right now.');
+			return;
+		}
+
+		switch (devCard) {
+			case 'knight':
+				console.log('knight');
+
+				break;
+			case 'vp':
+				console.log('vp');
+				break;
+			case 'roads':
+				console.log('roads');
+				break;
+			case 'monopoly':
+				console.log('monopoly');
+				break;
+			case 'harvest':
+				console.log('harvest');
+				break;
+			default:
+				console.log('invalid dev. card');
+		}
+
+
+	}
+
 }]);

@@ -40,8 +40,12 @@ angular.module('expeditionApp')
     this.activePlayer = null;   // Pointer to active player
     this.landWithRobber = null;  // landID that robber is on
 
+    // These control restrict the actions of the active player. For instance, canPlayDevCard
+    // is true when the player begins his/her turn and false after a card has been played during
+    // the turn.
     this.canBuildSettlement = true;
     this.canBuildRoad = false;
+    this.canPlayDevCard = false;
 
     /* ================================ Observers ================================ */
     // Observers for activePlayer change.
@@ -58,16 +62,33 @@ angular.module('expeditionApp')
 
     this.setGameState = function (state) {
         this.STATE = state;
+
+        if (state === 1) {
+            this.canBuildSettlement = true;
+            this.canBuildRoad = true;
+            this.canPlayDevCard = true;
+        }
+
         for (var i = 0; i < gameStateObservers.length; i++) {
             gameStateObservers[i].gameStateChanged(state);
         }
     }
 
+    this.getGameState = function () {
+        return this.STATE;
+    }
+
     this.setActivePlayer = function (num) {
+
+        // Set active player to next player
         var playerColor = this.turnsOrder[num];
         this.activePlayer = this.getPlayerByColor(playerColor);
+
+        // Setup for new turn. 
+        this.activePlayer.flushDevCardsBuffer();
+        this.canPlayDevCard = true;
         
-        // Notify all observers
+        // Notify all observers that active player has changed
         for (var i = 0; i < activePlayerOberservers.length; i++) {
             activePlayerOberservers[i].updateActivePlayer(this.activePlayer);
         }

@@ -56,7 +56,7 @@ angular.module('expeditionApp')
 		}
 
 		// ------------------------ Game STATE: 0 ---------------------------
-		if (GameService.STATE === 0) {
+		if (GameService.getGameState() === 0) {
 
 			// Add settlement
 		    var newSettlement = GameService.addBuilding(activePlayer.color, coordOfCorner);
@@ -78,7 +78,7 @@ angular.module('expeditionApp')
 
 		} 
 		// ------------------------ Game STATE: 1 ---------------------------
-		else if (GameService.STATE === 1) {
+		else if (GameService.getGameState() === 1) {
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
 			if (resAvailable['wool'] > 0 && resAvailable['grain'] > 0 && resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
@@ -101,7 +101,6 @@ angular.module('expeditionApp')
 
 	// =========================== buildRoad function =========================
 	$scope.buildRoad = function (edgeLabel) {
-
 		if (!GameService.canBuildRoad) {
 			alert("Cannot build road at this time...");
 			return; 
@@ -125,7 +124,7 @@ angular.module('expeditionApp')
 		}
 
 		// ------------------------ Game STATE: 0 ---------------------------
-		if (GameService.STATE === 0 ) {
+		if (GameService.getGameState() === 0 ) {
 			// add the road to the player and the map
 			var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
 
@@ -145,8 +144,6 @@ angular.module('expeditionApp')
 				if (turnsIndex === 0) {
 					// If every player has 2 roads and 2 settlements, end INITIAL STATE
 					GameService.setGameState(1);
-					GameService.canBuildSettlement = true;
-					GameService.canBuildRoad = true;
 
 					// Allocate Starting Resources to players. Players begin with the 1 resources per land
 					// bordering his/her second settlment.
@@ -170,7 +167,7 @@ angular.module('expeditionApp')
 
 		} 
 		// ------------------------ Game STATE: 1 ---------------------------
-		else if (GameService.STATE === 1) {
+		else if (GameService.getGameState() === 1) {
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
 			if (resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
@@ -224,7 +221,7 @@ angular.module('expeditionApp')
 			return false;
 		}
 
-		if (GameService.STATE === 1) {
+		if (GameService.getGameState() === 1) {
 			// Find a bordering road. getRoadsWithSource() returns an array of colors
 			// representing which players have a road that connects to the passed in corner
 			var roadsForCorner = GameService.getRoadsWithSource(cornerCoord);

@@ -7,20 +7,16 @@ angular.module('expeditionApp')
 		newPlayer.color = playerColor;
 
 		// This object keeps track of the number of each resource the player has in hand
-		newPlayer.resourcesInHand = {
-			"wool": 0,
-			"ore": 0,
-			"brick": 0,
-			"lumber": 0,
-			"grain": 0
-		};
+		newPlayer.resourcesInHand = { "wool": 0, "ore": 0, "brick": 0, "lumber": 0, "grain": 0 };
 
 		newPlayer.victoryPoints = 0;
 		newPlayer.buildingsOwned = [];
 		newPlayer.roadsOwned = [];
-		newPlayer.devCards = {
-			"knight": 0, "victoryPts": 0, "roadBuilding": 0, "monopoly": 0, "yearOfPlenty": 0
-		};
+
+		// This buffer keeps track of all developement cards purchased in player's current turn. 
+		// Player must wait a turn before these can be played.
+		newPlayer.newDevCardsBuffer = [];
+		newPlayer.devCards = { "knight": 0, "vp": 0, "roads": 0, "monopoly": 0, "harvest": 0 };
 
 		// This function increments the player's resources after a dice roll
 		newPlayer.diceRolled = function (diceResult) {
@@ -74,7 +70,28 @@ angular.module('expeditionApp')
 
 		/*----------------------- developement card functions ------------------------ */
 		newPlayer.addDevCard = function(devCard) {
-			this.devCards[devCard]++;
+			this.newDevCardsBuffer.push(devCard);
+		}
+
+		newPlayer.hasDevCard = function(devCard) {
+			return this.devCards[devCard] > 0;
+		}
+
+		newPlayer.removeDevCard = function (devCard) {
+			if (this.devCards[devCard] > 0) {
+				this.devCards[devCard]--;
+				return true;
+			}
+			return false;
+		}
+
+		// This function should be called at the beginning of player's turn to move all
+		// development cards purchased the previous turn to the player's playable collection
+		// of dev. cards.
+		newPlayer.flushDevCardsBuffer = function () {
+			while (this.newDevCardsBuffer.length > 0) {
+				this.devCards[this.newDevCardsBuffer.pop()]++;
+			}
 		}
 
 		/*------------------------ player resource functions ------------------------- */
