@@ -89,6 +89,7 @@ angular.module('expeditionApp')
 		for (var i = 0; i < $scope.harvestSelection.length; i++) {
 			ap.incrementResource($scope.harvestSelection[i], 1);
 		}
+		GameService.setGameState('NORMAL');
 	};
 
 }]);

@@ -38,6 +38,7 @@ angular.module('expeditionApp')
     // Listen for change in Game State
     GameService.registerGameStateObserver(this);
     this.gameStateChanged = function (newState) {
+        console.log('Game State changed to ' + newState);
         if (newState === 'PREP_TO_START') {
             GameService.setActivePlayer(0);
             $scope.showPlayerInfo = true;

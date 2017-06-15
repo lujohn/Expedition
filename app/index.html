@@ -313,7 +313,7 @@
 
         <!-- - - - - - - - - - - - -  Map and Main Controls - - - - - - - - - - - - - - -->
         <div class="row row-content">
-            <div ng-controller="MapController" class="col-xs-8">
+            <div ng-controller="MapController" class="col-xs-7">
                 <div id="gameBoardContainer">
                     <div ng-repeat="landRow in landsArray">
                         <div ng-repeat="land in landRow">
@@ -342,12 +342,12 @@
                             <div class="btn btn-lg btn-primary" ng-click="placeRobber()" ng-show="isPlacingRobber">Place Robber</div>
                         </div>
                     </div>
-                </div> 
+                </div>   
                 <!-- Player Information Menu -->
                 <div class="row row-content">
                     <div class="panel panel-warning" ng-show="showPlayerInfo">
                         <div class="panel-heading">
-                            <h1 class="panel-title">Player Details </h1>
+                            <h1 class="panel-title">Player details for {{activePlayer.color | uppercase }} </h1>
                         </div>
                         <div class="panel-body">
                             <div class="row row-content">
@@ -355,15 +355,21 @@
                                     <h3> Victory Points: {{activePlayer.victoryPoints}}</h3>
                                     <h5> Number of Buildings: {{activePlayer.buildingsOwned.length}}</h5>
                                     <h5> Number of Roads: {{activePlayer.roadsOwned.length}}</h5>
+                                    <hr>
+                                    <div>
+                                        <h5>Knights: {{activePlayer.knightsShowing}}</h5> 
+                                    </div>
+                                    <div>
+                                        <h5>Victory Point Cards: {{activePlayer.vpCardsShowing}}</h5>
+                                    </div>
+
                                 </div>
                                 <div class="col-xs-6">
-                                    <h3>Player: {{activePlayer.color | uppercase }}</h3>
                                     <h3>Resources In Hand</h3>
-                                    <h5>Wool: {{activePlayer.resourcesInHand.wool}}</h5>
-                                    <h5>Ore: {{activePlayer.resourcesInHand.ore}}</h5>
-                                    <h5>Brick: {{activePlayer.resourcesInHand.brick}}</h5>
-                                    <h5>Lumber: {{activePlayer.resourcesInHand.lumber}}</h5>
-                                    <h5>Grain: {{activePlayer.resourcesInHand.grain}}</h5>
+                                    <hr>
+                                    <ul class="list-group">
+                                        <h5 class="list-group-item" ng-repeat="landtype in landtypes">{{landtype}}:&nbsp {{activePlayer.resourcesInHand[landtype]}} </h5>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
