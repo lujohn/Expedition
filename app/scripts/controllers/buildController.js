@@ -55,8 +55,8 @@ angular.module('expeditionApp')
 			return;
 		}
 
-		// ------------------------ Game STATE: 0 ---------------------------
-		if (GameService.getGameState() === 0) {
+		// ------------------------ Game STATE: INITIAL ---------------------------
+		if (GameService.getGameState() === 'INITIAL') {
 
 			// Add settlement
 		    var newSettlement = GameService.addBuilding(activePlayer.color, coordOfCorner);
@@ -77,8 +77,8 @@ angular.module('expeditionApp')
 			drawSettlement(coordOfCorner);
 
 		} 
-		// ------------------------ Game STATE: 1 ---------------------------
-		else if (GameService.getGameState() === 1) {
+		// ------------------------ Game STATE: NORMAL ---------------------------
+		else if (GameService.getGameState() === 'NORMAL') {
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
 			if (resAvailable['wool'] > 0 && resAvailable['grain'] > 0 && resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
@@ -119,12 +119,12 @@ angular.module('expeditionApp')
 
 		// Check if location is legal to build a road on.
 		if (!edgeIsAvailable(activePlayer.color, coord1, coord2)) {
-			alert("illegal to build road there");
+			alert("ILLEGAL to build road there");
 			return;
 		}
 
 		// ------------------------ Game STATE: 0 ---------------------------
-		if (GameService.getGameState() === 0 ) {
+		if (GameService.getGameState() === 'INITIAL' ) {
 			// add the road to the player and the map
 			var newRoad = GameService.addRoad(activePlayer.color, coord1, coord2);
 
@@ -142,12 +142,12 @@ angular.module('expeditionApp')
 				}
 			} else {
 				if (turnsIndex === 0) {
-					// If every player has 2 roads and 2 settlements, end INITIAL STATE
-					GameService.setGameState(1);
-
 					// Allocate Starting Resources to players. Players begin with the 1 resources per land
 					// bordering his/her second settlment.
 					distributeStartingResources();
+
+					// End INITIAL State
+					GameService.setGameState('PREP_TO_START');
 					return;
 					
 				} else {
@@ -156,18 +156,16 @@ angular.module('expeditionApp')
 			}
 			GameService.setActivePlayer(turnsIndex);
 
-			// Display Build-Settlement Modal for next player
-			//$scope.showBuildRoadMenu(false);
-
 			GameService.canBuildSettlement = true;
 			GameService.canBuildRoad = false;
 
 			$scope.showBuildSettlementMenu(true);
 			$('#placeSettlementModal').modal('show');
-
+			return ;
 		} 
-		// ------------------------ Game STATE: 1 ---------------------------
-		else if (GameService.getGameState() === 1) {
+
+		// ------------------------ Game STATE: NORMAL ---------------------------
+		if (GameService.getGameState() === 'NORMAL') {
 			// Check if player has enough resources.
 			var resAvailable = activePlayer.getResources();
 			if (resAvailable['brick'] > 0 && resAvailable['lumber'] > 0) {
@@ -185,6 +183,17 @@ angular.module('expeditionApp')
 			} else {
 				alert("Not enough resources for new road!");
 			}
+		} 
+		// ------------------------ Game STATE: 'ROADSCARD' ---------------------------
+		else if (GameService.getGameState() === 'ROADSCARD') {
+			if (GameService.bonusRoads == 0) {
+				// Return to NORMAL game state
+				GameService.setGameState('NORMAL');
+				return;
+			}
+			GameService.addRoad(activePlayer.color, coord1, coord2); 
+			drawRoad(coord1, coord2, edgeLabel);
+			GameService.bonusRoads--;
 		}
 	}
 
@@ -214,14 +223,14 @@ angular.module('expeditionApp')
 	// with an existing settlement.
 	//
 	// Additional Restrictions:
-	// Game State 1: Settlements can be built only on corners that are reachable by at least one
+	// Game State NORMAL: Settlements can be built only on corners that are reachable by at least one
 	// of the player's roads. 
 	function cornerIsAvailable (color, cornerCoord) {
 		if (GameService.buildingExists(cornerCoord) || GameService.getAdjacentBuildings(cornerCoord).length !== 0) {
 			return false;
 		}
 
-		if (GameService.getGameState() === 1) {
+		if (GameService.getGameState() === 'NORMAL') {
 			// Find a bordering road. getRoadsWithSource() returns an array of colors
 			// representing which players have a road that connects to the passed in corner
 			var roadsForCorner = GameService.getRoadsWithSource(cornerCoord);
@@ -343,10 +352,6 @@ angular.module('expeditionApp')
 			$scope.$apply($scope.setLastSettlementSelected(this.corner, settlementImage));
 		});
 		gameContainer.appendChild(settlementImage);
-	}
-
-	function aFunction(e) {
-		console.log(e.target.corner);
 	}
 
 	function strokeRoad (rdCtx, color, x1, y1, x2, y2) {

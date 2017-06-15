@@ -16,7 +16,12 @@ angular.module('expeditionApp')
 		// This buffer keeps track of all developement cards purchased in player's current turn. 
 		// Player must wait a turn before these can be played.
 		newPlayer.newDevCardsBuffer = [];
+		// The counts of unplayed developement cards. These cards are not also in the newDevCardsBuffer.
 		newPlayer.devCards = { "knight": 0, "vp": 0, "roads": 0, "monopoly": 0, "harvest": 0 };
+		// The number of vp cards showing
+		newPlayer.vpCardsShowing = 0;
+		// The number of knight cards showing
+		newPlayer.knightsShowing = 0;
 
 		// This function increments the player's resources after a dice roll
 		newPlayer.diceRolled = function (diceResult) {
@@ -92,6 +97,15 @@ angular.module('expeditionApp')
 			while (this.newDevCardsBuffer.length > 0) {
 				this.devCards[this.newDevCardsBuffer.pop()]++;
 			}
+		}
+
+		newPlayer.revealVPCard = function () {
+			this.vpCardsShowing++;
+			this.victoryPoints++;
+		}
+
+		newPlayer.revealKnightCard = function () {
+			this.knightsShowing++;
 		}
 
 		/*------------------------ player resource functions ------------------------- */

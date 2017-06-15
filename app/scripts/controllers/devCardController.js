@@ -22,33 +22,40 @@ angular.module('expeditionApp')
 	};
 
 	$scope.useDevCard = function(devCard) {
-		if (!GameService.activePlayer.hasDevCard(devCard) && GameService.canPlayDevCard) {
+		$('#buyDevCardModal').modal('hide');
+		$('#devCardInfoModal').modal('hide');
+		$('#useDevCardModal').modal('hide');
+		var ap = GameService.activePlayer;
+		if (!ap.hasDevCard(devCard) && GameService.canPlayDevCard) {
 			alert('Cannot play a' + ' "' + devCard + '"' + ' right now.');
-			return;
+			//return;
 		}
 
 		switch (devCard) {
 			case 'knight':
-				console.log('knight');
-
+				GameService.setGameState('ROBBER');
+				ap.revealKnightCard();
+				// *** Card must remain face up on the player's side (Add to player info panel) ***
 				break;
 			case 'vp':
-				console.log('vp');
+				ap.revealVPCard();
+				// *** Card must remain face up on the player's side ***
 				break;
 			case 'roads':
-				console.log('roads');
+				GameService.setGameState('ROADSCARD');
 				break;
 			case 'monopoly':
-				console.log('monopoly');
+				console.log('monopoly has no implementation yet!');
 				break;
 			case 'harvest':
-				console.log('harvest');
+				console.log('harvest has no implementation yet!');
 				break;
 			default:
-				console.log('invalid dev. card');
+				alert('(Error): invalid dev. card');
+
 		}
-
-
+		ap.removeDevCard(devCard);
+		GameService.canPlayDevCard = false;
 	}
 
 }]);

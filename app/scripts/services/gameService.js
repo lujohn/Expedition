@@ -32,10 +32,15 @@ angular.module('expeditionApp')
     this.devCardsDeck = []  // Stores development cards
 
     /* STATES:
-        0: INITIAL - players choose initial settlements and roads
-        1: ACTIVE - Game is in session
-        2: END  */
-    this.STATE = -1;
+        INITIAL - players choose initial settlements and roads
+        PREP_TO_BEGIN - Transition phase to do any necessary setup before starting.
+        NORMAL - Game is in session
+        ROBBER - 7 rolled or Knight card played
+        TRADE - ***
+        ROADSCARD - When "roads" develeopment card is played
+        END GAME */
+
+    this.STATE = "";
 
     this.activePlayer = null;   // Pointer to active player
     this.landWithRobber = null;  // landID that robber is on
@@ -63,12 +68,8 @@ angular.module('expeditionApp')
     this.setGameState = function (state) {
         this.STATE = state;
 
-        if (state === 1) {
-            this.canBuildSettlement = true;
-            this.canBuildRoad = true;
-            this.canPlayDevCard = true;
-        }
-
+        // Notify observers that game state has changed. Mainly, used by gameController to
+        // present robber modal.
         for (var i = 0; i < gameStateObservers.length; i++) {
             gameStateObservers[i].gameStateChanged(state);
         }

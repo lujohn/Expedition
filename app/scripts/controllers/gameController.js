@@ -10,9 +10,11 @@ angular.module('expeditionApp')
     $scope.activePlayer = null;
     $scope.players = null;
     $scope.lastLandSelected = null;
-    $scope.isPlacingRobber = false;
     $scope.landWithRobber = "";
     $scope.rollResult = null;
+
+    // For Special Events
+    $scope.isPlacingRobber = false;
 
     // Control Menus
     $scope.showMainControls = true;
@@ -34,9 +36,27 @@ angular.module('expeditionApp')
     // Listen for change in Game State
     GameService.registerGameStateObserver(this);
     this.gameStateChanged = function (newState) {
-        if (newState === 1) {
+        if (newState === 'PREP_TO_START') {
             GameService.setActivePlayer(0);
-            showBeginTurnModal();
+            $scope.showPlayerInfo = true;
+            $('#beginTurnModal').modal('show');
+
+            // Begin!!
+            GameService.setGameState('NORMAL');
+        } else if (newState === 'NORMAL') {
+            GameService.canBuildSettlement = true;
+            GameService.canBuildRoad = true;
+            GameService.canEndTurn = true;
+        } else if (newState === 'ROBBER') {
+            $('#robberInfoModal').modal('show');
+            $scope.isPlacingRobber = true;
+        } else if (newState === 'ROADSCARD') {
+            // If player uses the 'roads' development card
+            $('#roadsCardUsedModal').modal('show');
+            GameService.bonusRoads = 2;
+            // Restrict player's actions until both bonus roads are placed.
+            GameService.canBuildSettlement = false;
+            GameService.canEndTurn = false;
         }
     };
 
@@ -52,21 +72,13 @@ angular.module('expeditionApp')
 
     // Set game state to INITAL STATE - which is the state for picking the initial
     // 2 settlements and roads.
-    GameService.setGameState(0);
+    GameService.setGameState('INITIAL');
 
     $scope.players = GameService.getAllPlayers();
     $scope.landWithRobber = GameService.landWithRobber;
 
     // Display instruction to first player to place a settlement
     $('#placeSettlementModal').modal('show');
-
-    function showBeginTurnModal() {
-        //hideAllControlMenus(); 
-        //hideAllControlButtons();
-
-        $scope.showPlayerInfo = true;
-        $('#beginTurnModal').modal('show');
-    }
 
     /* ================================ Displaying Menus =============================== */
     $scope.showBuildSettlementMenu = function (bool) {
@@ -105,16 +117,9 @@ angular.module('expeditionApp')
         var die2 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var rollResult = die1 + die2;
         $scope.rollResult = rollResult;
-
         if (rollResult === 7) {
-            //hideAllControlMenus();
-            //hideAllControlButtons();
-
             // Players with more than 7 cards must discard half (rounding down)
-
-            $('#robberInfoModal').modal('show');
-            $scope.isPlacingRobber = true;
-
+            GameService.setGameState('ROBBER');
         } else {
             GameService.diceRolled(rollResult);
             $('#rollResultModal').modal('show');
@@ -123,37 +128,33 @@ angular.module('expeditionApp')
 
     $scope.endTurn = function () {
 
-        if (GameService.STATE == 0) {
-            alert("Cannot end turn at this time...");
+        if (GameService.STATE === 'INITIAL') {
+            alert("Cannot end turn during INITIAL phase!");
             return;
         }
 
         // Check for victory
         if (GameService.gameWon()) {
             alert("Congrats " + GameService.activePlayer.color + "! You won!");
-
-            // Do something
         } else {
             GameService.endTurn();
-            showBeginTurnModal();
+            $('#beginTurnModal').modal('show');
         }
     };
 
     $scope.placeRobber = function () {
+
+        // Remove robber from old position
         var oldRobberLand = GameService.landWithRobber;
         oldRobberLand.hasRobber = false;
 
+        // Put robber on new position
         var newRobberLand = $scope.lastLandSelected;
         newRobberLand.hasRobber = true;
+        GameService.landWithRobber = $scope.landWithRobber = newRobberLand;
 
-        GameService.landWithRobber = newRobberLand;
-        $scope.landWithRobber = newRobberLand;
-
-        // Once robber has been placed, display the main controls
         $scope.isPlacingRobber = false;
-        //$scope.showMainControls = true;
-    };
-						
+    };					
 }])
 
 .controller('MainControlsController', ['$scope', function ($scope) {

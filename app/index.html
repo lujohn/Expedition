@@ -96,7 +96,7 @@
                             <h4 class="modal-title">Developement Card Menu</h4>
                         </div>
                         <div class="modal-body">
-                            <p> So you want to buy a developement card... (Put some more info here). </p>
+                            <p> So you want to buy a development card... (Put some more info here). </p>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-default" data-toggle="modal" data-target="#useDevCardModal">Use Dev. Card</button>
@@ -111,10 +111,10 @@
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Buy Developement Card!</h4>
+                            <h4 class="modal-title">Buy Development Card!</h4>
                         </div>
                         <div class="modal-body">
-                            <h5>Cost of one developement card:</h5>
+                            <h5>Cost of one development card:</h5>
                             <ul class="list-group">
                                 <li class="list-group-item">1 Wool</li>
                                 <li class="list-group-item">1 Wheat</li>
@@ -141,7 +141,20 @@
                             <li ng-repeat="(cardType, count) in activePlayer.devCards">{{cardType}}: {{count}} <span class="badge badge-pill badge-default" ng-click="useDevCard(cardType)">Use</span></li>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-default" data-toggle=""
+                            <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- - - - - - - - - 'Roads' Developement Card Used Modal - - - - - - - -->
+            <div class="modal fade" id="roadsCardUsedModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4>Place 2 roads on the map!</h4>
+                        </div>
+                        <div class="modal-footer">
                             <button class="btn btn-primary" data-dismiss="modal">OK</button>
                         </div>
                     </div>

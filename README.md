@@ -5,9 +5,9 @@ This program is an implmentation of the popular Settlers of Catan basic version.
 ![Screenshot of Expedition](https://github.com/lujohn/Expedition/blob/master/screenshot_main-menu.png)
 
 ## Getting Started
-A live version of this game can be found at http://tinyurl.com/kk8hk3n
+A live version of this game can be found at https://d3ibawmwga8ymy.cloudfront.net/
 
 ## Note
 Game is still missing support for the following:
 - trading ports
-- development cards
+- longest road / largest army cards
