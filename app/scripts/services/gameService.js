@@ -35,10 +35,12 @@ angular.module('expeditionApp')
         INITIAL - players choose initial settlements and roads
         PREP_TO_BEGIN - Transition phase to do any necessary setup before starting.
         NORMAL - Game is in session
-        ROBBER - 7 rolled or Knight card played
-        TRADE - ***
+        ROBBER - 7 rolled or 'Knight' card played
+        TRADE - *** To Implement ***
         ROADSCARD - When "roads" develeopment card is played
-        END GAME */
+        MONOPOLYCARD -When 'monopoly' development card is played
+        END GAME 
+    */
 
     this.STATE = "";
 

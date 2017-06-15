@@ -6,7 +6,7 @@ angular.module('expeditionApp')
 	
 	$scope.buyDevCard = function() {
 		var activePlayer = GameService.activePlayer;
-		var cost = {'wool': 1, 'wheat': 1, 'ore': 1};
+		var cost = {'wool': 1, 'grain': 1, 'ore': 1};
 		if (!activePlayer.hasSufficientResources(cost)) {
 			alert("Not enough resources for developement card!"); 
 			return;	
@@ -45,10 +45,10 @@ angular.module('expeditionApp')
 				GameService.setGameState('ROADSCARD');
 				break;
 			case 'monopoly':
-				console.log('monopoly has no implementation yet!');
+				GameService.setGameState('MONOPOLYCARD');
 				break;
 			case 'harvest':
-				console.log('harvest has no implementation yet!');
+				GameService.setGameState('HARVESTCARD');
 				break;
 			default:
 				alert('(Error): invalid dev. card');
@@ -56,6 +56,39 @@ angular.module('expeditionApp')
 		}
 		ap.removeDevCard(devCard);
 		GameService.canPlayDevCard = false;
-	}
+	};
+	/* ------------------------------- Monopoly --------------------------------- */
+
+	// This function is called after the player uses his/her monopoly card.
+	// The resourceType is the type that all other players must give up to 
+	// the active player.
+	$scope.monopoly = function (resourceType) {
+		var allPlayers = GameService.getAllPlayers();
+		for (var i = 0; i < allPlayers.length; i++) {
+			if (GameService.activePlayer.color !== allPlayers[i].color) {
+				var count = allPlayers[i].getResources()[resourceType];
+				console.log(allPlayers[i] + " just lost " + count + " " + resourceType);
+				GameService.activePlayer.incrementResource(resourceType, count);
+				allPlayers[i].decrementResources(resourceType, count);
+			}
+		}
+		GameService.setGameState('NORMAL');
+	};
+
+	/* --------------------------- Harvest (Year of Plenty) ------------------------- */
+	$scope.harvestSelection = [];
+	$scope.harvestSelect = function (type) {
+		$scope.harvestSelection.push(type);
+	};
+
+	$scope.selectedTwoForHarvest = function () {
+		return $scope.harvestSelection.length == 2;
+	};
+	$scope.harvest = function () {
+		var ap = GameService.activePlayer;
+		for (var i = 0; i < $scope.harvestSelection.length; i++) {
+			ap.incrementResource($scope.harvestSelection[i], 1);
+		}
+	};
 
 }]);

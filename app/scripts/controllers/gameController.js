@@ -2,8 +2,10 @@
  * Created by johnlu on 3/3/17.
  */
 angular.module('expeditionApp')
-.controller('GameController', ['$scope', 'GameService',
-    function ($scope, GameService) {
+.controller('GameController', ['$rootScope', '$scope', 'GameService',
+    function ($rootScope, $scope, GameService) {
+
+    $rootScope.landtypes = ['wool', 'lumber', 'ore', 'grain', 'brick'];
 
     // ---------------------------- Initialize Scope --------------------------------
     // State information
@@ -41,22 +43,30 @@ angular.module('expeditionApp')
             $scope.showPlayerInfo = true;
             $('#beginTurnModal').modal('show');
 
-            // Begin!!
+            // Begin Game!!
             GameService.setGameState('NORMAL');
+
         } else if (newState === 'NORMAL') {
             GameService.canBuildSettlement = true;
             GameService.canBuildRoad = true;
             GameService.canEndTurn = true;
+
         } else if (newState === 'ROBBER') {
             $('#robberInfoModal').modal('show');
             $scope.isPlacingRobber = true;
+
         } else if (newState === 'ROADSCARD') {
-            // If player uses the 'roads' development card
+            // Player get's 2 free roads.
             $('#roadsCardUsedModal').modal('show');
             GameService.bonusRoads = 2;
             // Restrict player's actions until both bonus roads are placed.
             GameService.canBuildSettlement = false;
             GameService.canEndTurn = false;
+        } else if (newState === 'MONOPOLYCARD') {
+            $('#monopolyCardUsedModal').modal('show');
+        } else if (newState === 'HARVESTCARD') {
+            // User picks two resources from bank
+            $('#harvestCardUsedModal').modal('show');
         }
     };
 

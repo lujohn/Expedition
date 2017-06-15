@@ -117,7 +117,7 @@
                             <h5>Cost of one development card:</h5>
                             <ul class="list-group">
                                 <li class="list-group-item">1 Wool</li>
-                                <li class="list-group-item">1 Wheat</li>
+                                <li class="list-group-item">1 Grain</li>
                                 <li class="list-group-item">1 Ore</li>
                             </ul>
                         </div>
@@ -156,6 +156,52 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- - - - - - - - - 'Monopoly' Developement Card Used Modal - - - - - - - -->
+            <div class="modal fade" id="monopolyCardUsedModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class='modal-title'>Choose 1 Resource Type to Steal!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <button class="btn btn-primary" ng-repeat="landtype in landtypes" ng-click="monopoly(landtype)">{{landtype}}</button>
+                        <!--
+                            <button class="btn btn-primary" ng-click="monopoly('wool')" data-dismiss="modal">Wool</button>
+                            <button class="btn btn-primary" ng-click="monopoly('lumber')" data-dismiss="modal">Lumber</button>
+                            <button class="btn btn-primary" ng-click="monopoly('ore')" data-dismiss="modal">Ore</button>
+                            <button class="btn btn-primary" ng-click="monopoly('grain')" data-dismiss="modal">Grain</button>
+                            <button class="btn btn-primary" ng-click="monopoly('brick')" data-dismiss="modal">Brick</button>
+                        -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="harvestCardUsedModal">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class='modal-title'>Choose any 2 resources to add to your hand!</h4>
+                        </div>
+                        <div class="modal-body row">
+                            <div class="btn-group col-xs-9" data-toggle="buttons">
+                                <label class="btn btn-default" ng-repeat="landtype in landtypes" ng-class="{active: harvestSelection.includes(landtype)}" ng-disabled="selectedTwoForHarvest()">
+                                    <input type="checkbox" ng-click="harvestSelect(landtype)" ng-disabled="selectedTwoForHarvest()">{{landtype}}
+                                </label>
+                            </div>
+                            <div class="col-xs-3">
+                                <h5> Selection: </h5>
+                                <span ng-repeat="sel in harvestSelection track by $index">{{sel}},&nbsp</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" ng-click="harvestSelection = []" ng-disabled="!selectedTwoForHarvest()">Reset</button>
+                            <button class="btn btn-default" ng-click="harvest()" data-dismiss="modal">Confirm</button>
                         </div>
                     </div>
                 </div>
