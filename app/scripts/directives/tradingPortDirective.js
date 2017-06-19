@@ -1,6 +1,7 @@
 angular.module('expeditionApp')
 .directive('tradePort', ['GameService', function (GameService) {
 	
+	/*** Move Trading Harbor implementation to this file ***/
 	game = GameService;
 
 	return {

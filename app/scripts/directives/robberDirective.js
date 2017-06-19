@@ -6,9 +6,6 @@ angular.module('expeditionApp')
 		link: function (scope, element, attr) {
 
 			scope.$watch(attr.land, function (land) {
-	        	console.log("hasRobber: ");
-	        	console.log(land);
-
         		// Remove robber from old location
         		if (document.getElementById("robber") !== null) {
         			gameBoardContainer.removeChild(document.getElementById("robber"));

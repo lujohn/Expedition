@@ -205,8 +205,10 @@ angular.module('expeditionApp')
 		cityImg.src = "images/" + GameService.activePlayer.color + "City.svg";
 		cityImg.width = settImg.width;
 		cityImg.height = settImg.height;
+		cityImg.style.position = 'absolute';
 		cityImg.style.left = settImg.style.left;
 		cityImg.style.top = settImg.style.top;
+		cityImg.style.zIndex = settImg.style.zIndex;
 
 		// Remove settlement image from board and add city image
 		var gameBoard = document.getElementById('gameBoardContainer');
@@ -348,9 +350,8 @@ angular.module('expeditionApp')
 			} else {
 				$scope.$apply($scope.setEnableBuildCityButton(false));
 			}
-			$('#buildCityModal').modal('show');
-
 			$scope.$apply($scope.setLastSettlementSelected(this.corner, settlementImage));
+			$('#buildCityModal').modal('show');
 		});
 		gameContainer.appendChild(settlementImage);
 	}

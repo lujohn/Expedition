@@ -305,8 +305,8 @@
 
         <!-- - - - - - - - - - - - -  Map and Main Controls - - - - - - - - - - - - - - -->
         <div class="row row-content">
-            <div ng-controller="MapController" class="col-xs-7">        
-                <game-board lands-array="landsArray"></game-board>
+            <div class="col-xs-7">        
+                <game-board lands-matrix="landsMatrix"></game-board>
             </div>
 
             <div ng-controller="MainControlsController" ng-show="showMainControls"  class="col-xs-4">
@@ -576,10 +576,10 @@
 <script src="scripts/directives/tradingPortDirective.js"></script>
 
 <script src="scripts/controllers/gameController.js"></script>
-<script src="scripts/controllers/mapController.js"></script>
 <script src="scripts/controllers/buildController.js"></script>
 <script src="scripts/controllers/tradeController.js"></script>
 <script src="scripts/controllers/devCardController.js"></script>
+<script src="scripts/controllers/robberController.js"></script>
 
 <script src="scripts/services/gameService.js"></script>
 <script src="scripts/services/playerService.js"></script>
