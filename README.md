@@ -9,5 +9,7 @@ A live version of this game can be found at https://d3ibawmwga8ymy.cloudfront.ne
 
 ## Missing Functionality (coming soon)
 Game is still missing support for the following:
-- trading ports
 - longest road / largest army cards
+
+## Other 
+- Will implement starting menu to select number of players and input player names.
