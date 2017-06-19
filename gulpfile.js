@@ -10,7 +10,7 @@ var zip = require('gulp-zip');
 
 gulp.task('default', ['clean'], function () {
 	console.log("Doing Something...");
-	gulp.start('jshint', 'usemin', 'copyimage');
+	gulp.start('jshint', 'usemin', 'copyimage', 'copyviews');
 });
 
 gulp.task('jshint', function () {
@@ -37,6 +37,11 @@ gulp.task('copyimage', function() {
 	.pipe(gulp.dest('dist/images'));
 
 	return stream;
+});
+
+gulp.task('copyviews', function() {
+	var stream = gulp.src('./app/views/**/*')
+	.pipe(gulp.dest('dist/views'));
 });
 
 gulp.task('zip', function() {
