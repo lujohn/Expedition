@@ -2,11 +2,6 @@ angular.module('expeditionApp')
 .controller('TradeController', ['$scope', 'GameService', function ($scope, GameService) {
 
     // -------------------------- For Bank Trades ----------------------------
-
-    // Default exchange rate is 4 of same type for 1 of any other type
-    $scope.bankExchangeRate = {
-        wool: 4, lumber: 4, grain: 4, ore: 4, brick: 4
-    };
     $scope.bankOfferType = "";
     $scope.bankDemandType = "";
 
@@ -23,8 +18,9 @@ angular.module('expeditionApp')
         var resAvail = activePlayer.getResources();
         var offerType = $scope.bankOfferType;
         var demandType = $scope.bankDemandType;
-        var rate = $scope.bankExchangeRate[offerType];
-
+        var rate = activePlayer.bankExchangeRates[offerType];
+                    console.log("available: " + resAvail[offerType]);
+            console.log(activePlayer.bankExchangeRates[offerType]);
         if (resAvail[offerType] >= rate) {
             activePlayer.decrementResource(offerType, rate);
             activePlayer.incrementResource(demandType, 1);

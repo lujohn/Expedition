@@ -1,25 +1,20 @@
 // Handles all map interactions
 
 angular.module('expeditionApp')
-.controller('MapController', ['$scope','GameService', function ($scope, GameService, MapService) {
+.controller('MapController', ['$scope','GameService', 'MapService', function ($scope, GameService, MapService) {
 
-	// Assign coordinates to lands.
-    GameService.initializeMap(GameService.landsMatrix);
+	// Assign coordinates to lands. This function must be called before using MapService.
+    //MapService.initializeGraph(GameService.landsMatrix);
 
+    // Make the lands available for drawing purposes. See 'landDirective.js'
 	$scope.landsArray = GameService.landsMatrix;
     $scope.landsDictionary = GameService.landsDictionary;
 
+    // Update the lastLandSelected (defined in GameController)
 	$scope.selectedLandWithID = function (landID) {
         var landSelected = $scope.landsDictionary[landID];
 
-        if (GameService.STATE === 0) {
-        	// Show build-sett menu only if build road is not already showing
-        	if (!$scope.$parent.showBuildRoad) {
-        		$scope.showBuildSettlementMenu(true);
-        	}
-        }
-        // ** Update Game Service State **
-
-        $scope.$parent.lastLandSelected = landSelected;
+        GameService.setLastLandSelected(landSelected);
+        //$scope.$parent.lastLandSelected = landSelected;
     };   
 }]);

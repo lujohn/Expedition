@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="16" tilewidth="48" tileheight="48">
+ <tileset firstgid="1" name="tiles" tilewidth="48" tileheight="48">
+  <image source="tiles.png" width="1022" height="512"/>
+  <tile id="0">
+   <properties>
+    <property name="test" value="toto"/>
+   </properties>
+  </tile>
+  <tile id="16">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="collisionLeft" value="20"/>
+    <property name="collisionTop" value="20"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="collisionTop" value="20"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="collisionTop" value="20"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="collisionRight" value="20"/>
+    <property name="collisionTop" value="20"/>
+   </properties>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="collisionLeft" value="20"/>
+   </properties>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="collisionRight" value="20"/>
+   </properties>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="collisionLeft" value="20"/>
+    <property name="collisionTop" value="20"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="collisionTop" value="20"/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="collisionRight" value="28"/>
+    <property name="collisionTop" value="20"/>
+   </properties>
+  </tile>
+  <tile id="34">
+   <properties>
+    <property name="collision" value="true"/>
+    <property name="collisionRight" value="28"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="collision" value="left:28"/>
+   </properties>
+  </tile>
+  <tile id="43">
+   <properties>
+    <property name="collisionLeft" value="20"/>
+   </properties>
+  </tile>
+  <tile id="46">
+   <properties>
+    <property name="collisionRight" value="20"/>
+   </properties>
+  </tile>
+  <tile id="51">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="52">
+   <properties>
+    <property name="collisionBottom" value="20"/>
+    <property name="collisionLeft" value="20"/>
+   </properties>
+  </tile>
+  <tile id="53">
+   <properties>
+    <property name="collisionLeft" value="15"/>
+    <property name="collisionRight" value="15"/>
+    <property name="passTop" value="28"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="collisionBottom" value="20"/>
+    <property name="collisionRight" value="28"/>
+   </properties>
+  </tile>
+  <tile id="55">
+   <properties>
+    <property name="collision" value="right:24"/>
+   </properties>
+  </tile>
+  <tile id="57">
+   <properties>
+    <property name="collision" value="left:28"/>
+   </properties>
+  </tile>
+  <tile id="64">
+   <properties>
+    <property name="collisionLeft" value="20"/>
+   </properties>
+  </tile>
+  <tile id="67">
+   <properties>
+    <property name="collisionRight" value="20"/>
+   </properties>
+  </tile>
+  <tile id="70">
+   <properties>
+    <property name="collision" value="whole"/>
+    <property name="passLeft" value="28"/>
+    <property name="passTop" value="28"/>
+   </properties>
+  </tile>
+  <tile id="85">
+   <properties>
+    <property name="collisionBottom" value="20"/>
+    <property name="collisionLeft" value="20"/>
+   </properties>
+  </tile>
+  <tile id="86">
+   <properties>
+    <property name="collisionBottom" value="20"/>
+   </properties>
+  </tile>
+  <tile id="87">
+   <properties>
+    <property name="collisionBottom" value="20"/>
+   </properties>
+  </tile>
+  <tile id="88">
+   <properties>
+    <property name="collisionBottom" value="20"/>
+    <property name="collisionRight" value="20"/>
+   </properties>
+  </tile>
+  <tile id="90">
+   <properties>
+    <property name="collisionLeft" value="20"/>
+   </properties>
+  </tile>
+  <tile id="91">
+   <properties>
+    <property name="collisionRight" value="20"/>
+   </properties>
+  </tile>
+  <tile id="116">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="148">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="149">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="150">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="151">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="169">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="172">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="190">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="192">
+   <properties>
+    <property name="collisionBottom" value="20"/>
+   </properties>
+  </tile>
+  <tile id="193">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="209">
+   <properties>
+    <property name="test" value="test"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="211" name="Ground" tilewidth="48" tileheight="48">
+  <image source="ground.png" width="192" height="96"/>
+  <tile id="0">
+   <properties>
+    <property name="collision" value="true"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="test" value="hello"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="background" width="20" height="16">
+  <data encoding="base64" compression="zlib">
+   eJyVktENwjAMBbN8UmaAMENaZoCyFkGypdPDacnHqVJaX51n55RSNq5CDiid5eTc65sw8nvtJThXz9rZ7P3Iz74azsrAo30s4mfPfka/uyrqSbVv74b2vaJHuqNsz/J/dF7wRLnf0NPRP768zbfLnZmP35/506E5ZHP6rjQ83cU6dVYjmp87dC4kmtGWfnenwPEUJ1E/76m9R3uX7d3If7SnketfdEaeaZTPDJzPKJ8ZmEGUzSzM4AP/or0x
+  </data>
+ </layer>
+ <layer name="front" width="20" height="16">
+  <data encoding="base64" compression="zlib">
+   eJy1lFsKwjAQRWcLLsc1uJ6mS7DQbx+gbsAHqBsQ3ULoT1fjBDJwvY6JPx04NDTpmZsEGkUkTkSpvPlIY3alZw9r2gxWUJZK57g5Vw+IfLqtdspeGQo+c7IvZLAa5abc/8j3KxNXU5gz30pZKxtlK9/nZvubQV/eM/qOyjlzqeQLuV/NdyKfZRwIu1vvbMz3UObKU3nRmuQYM+b0PHwfC2fdSHh3yz48e+vdUqYrjJOvAw/7MCPuZ6R3iQPgZfO8+L3kbJYLqblq/wXsMdU/iXkDJS6QnA==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="20" height="16">
+  <object name="start" type="playerStart" x="411" y="349" width="54" height="30"/>
+  <object name="map 2" type="teleport" x="911" y="-14" width="59" height="795">
+   <properties>
+    <property name="map" value="map2.json"/>
+   </properties>
+  </object>
+  <object name="into house" type="teleport" x="148" y="447" width="37" height="36">
+   <properties>
+    <property name="map" value="house.json"/>
+   </properties>
+  </object>
+  <object name="house" type="position" x="151" y="497" width="32" height="25"/>
+  <object name="The old mayor" type="dialog" x="567" y="289" width="41" height="72">
+   <properties>
+    <property name="1) I am hungry" value="Go east, you will find bacon."/>
+    <property name="2) Is there anything funny to do around here?" value="Not really. This demo is really limited. You can play with you sword and talk to a few people."/>
+    <property name="start" value="Welcome the sprite.js RPG demo. What can I do for you?"/>
+    <property name="title" value="The mayor"/>
+   </properties>
+  </object>
+  <object name="Monster1" type="entity" gid="142" x="820" y="348">
+   <properties>
+    <property name="killable" value="true"/>
+    <property name="life" value="2"/>
+    <property name="move" value="1.2"/>
+    <property name="name" value="pig"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

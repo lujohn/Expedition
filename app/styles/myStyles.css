@@ -11,7 +11,8 @@ body {
 }
 
 #gameBoardContainer {
-	height: 650px;
+	top: 40px;
+	position: relative;
 }
 
 #gameBoardContainer > canvas {
@@ -20,12 +21,13 @@ body {
 	z-index: 1;
 }
 
+/*
 #gameBoardContainer > img {
 	position: absolute;
 	z-index: 100;
 }
-
-.animate-show-hide.ng-hide {
+*/ 
+/*.animate-show-hide.ng-hide {
   opacity: 0;
 }
 
@@ -41,4 +43,4 @@ body {
 .ng-hide:not(.ng-hide-animate) {
 	display: inline-block!important;
 	visibility: hidden;
-}
+}*/

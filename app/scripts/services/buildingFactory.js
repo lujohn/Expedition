@@ -23,7 +23,10 @@ angular.module('expeditionApp')
 		newBuilding.location = coordinates;
 		newBuilding.color = color;
 		newBuilding.type = "settlement";
-		newBuilding.lands = {};  // the lands the building sits on
+
+		// The lands the building sits on. This property helps with incrementing
+		// the player's resources when the corresponding dice number is rolled. See PlayerService.
+		newBuilding.lands = {};
 
 		// ** For Debugging **
 		newBuilding.toString = function() {

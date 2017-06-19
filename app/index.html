@@ -7,8 +7,10 @@
     <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles/myStyles.css" rel="stylesheet">
     <!-- endbuild -->
-</head>
 
+
+    <script src="scripts/sprite.js-master/sprite.js"></script>
+</head>
 
 <body>
     <div class="container" ng-controller="GameController">
@@ -170,13 +172,6 @@
                         </div>
                         <div class="modal-body">
                             <button class="btn btn-primary" ng-repeat="landtype in landtypes" ng-click="monopoly(landtype)">{{landtype}}</button>
-                        <!--
-                            <button class="btn btn-primary" ng-click="monopoly('wool')" data-dismiss="modal">Wool</button>
-                            <button class="btn btn-primary" ng-click="monopoly('lumber')" data-dismiss="modal">Lumber</button>
-                            <button class="btn btn-primary" ng-click="monopoly('ore')" data-dismiss="modal">Ore</button>
-                            <button class="btn btn-primary" ng-click="monopoly('grain')" data-dismiss="modal">Grain</button>
-                            <button class="btn btn-primary" ng-click="monopoly('brick')" data-dismiss="modal">Brick</button>
-                        -->
                         </div>
                     </div>
                 </div>
@@ -313,15 +308,8 @@
 
         <!-- - - - - - - - - - - - -  Map and Main Controls - - - - - - - - - - - - - - -->
         <div class="row row-content">
-            <div ng-controller="MapController" class="col-xs-7">
-                <div id="gameBoardContainer">
-                    <div ng-repeat="landRow in landsArray">
-                        <div ng-repeat="land in landRow">
-                            <land-hex data-land-type="{{land.type}}" id="{{land.landID}}"></land-hex>
-                        </div>
-                    </div>
-                    <robber data-land="landWithRobber"></robber>
-                </div>
+            <div ng-controller="MapController" class="col-xs-7">        
+                <game-board lands-array="landsArray"></game-board>
             </div>
 
             <div ng-controller="MainControlsController" ng-show="showMainControls"  class="col-xs-4">
@@ -357,18 +345,27 @@
                                     <h5> Number of Roads: {{activePlayer.roadsOwned.length}}</h5>
                                     <hr>
                                     <div>
+                                        <h3>Dev. Cards Showing</h3>
                                         <h5>Knights: {{activePlayer.knightsShowing}}</h5> 
                                     </div>
                                     <div>
                                         <h5>Victory Point Cards: {{activePlayer.vpCardsShowing}}</h5>
                                     </div>
-
+                                    <hr>
+                                    <div>
+                                        <h5>Trading Ports: </h5>
+                                        <span ng-repeat="harbor in activePlayer.harborsOwned">
+                                            <img width="40" height="40" ng-src="images/{{harbor}}.png"/>&nbsp&nbsp
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="col-xs-6">
                                     <h3>Resources In Hand</h3>
                                     <hr>
                                     <ul class="list-group">
-                                        <h5 class="list-group-item" ng-repeat="landtype in landtypes">{{landtype}}:&nbsp {{activePlayer.resourcesInHand[landtype]}} </h5>
+                                        <li class="list-group-item" ng-repeat="landtype in landtypes">
+                                            <img width="40" height="40" ng-src="images/{{landtype}}.png"/>&nbsp:&nbsp{{activePlayer.resourcesInHand[landtype]}}
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -388,7 +385,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-xs-3">
-                                <p>Land Selected: {{lastLandSelected.type}}</p>
+                                <p>Land Selected: {{lastLandSelected}}</p>
                             </div>
                             <div class="col-xs-9">
                                 <h3>Choose a corner for your settlement</h3>
@@ -448,7 +445,7 @@
         </div> <!-- End Build Menus -->
 
         <!-- Trade Modals - use angular form -->
-        <div class="row row-content animate-show-hide fade" ng-show="true">
+        <div class="row row-content">
             <div class="col-xs-12" ng-controller="TradeController">
                 <!-- Trade Request Modal -->
                 <div class="modal fade" id="tradeRequestModal">
@@ -465,7 +462,7 @@
                                             <label class="radio-inline form-check-label">
                                             <input ng-model="tradeRequest.tradePartner" class="form-check-input" name="tradePartner" type="radio" value="bank" required> bank
                                             </label>
-                                            <label ng-repeat="player in players" class="radio-inline form-check-label">
+                                            <label ng-if="player.color !== activePlayer.color" ng-repeat="player in players" class="radio-inline form-check-label">
                                                 <input ng-model="tradeRequest.tradePartner" class="form-check-input" name="tradePartner" type="radio" value="{{player.color}}" required> {{player.color}}
                                             </label>
                                             <span ng-show="tradeForm.tradePartner.$error.required" class="help-block">Must Select a Player</span>
@@ -477,7 +474,7 @@
                                             <label class="control-label col-xs-1">Offer: </label>
                                             <div class="col-xs-11">
                                                 <div class="btn-group">
-                                                    <div ng-repeat="(resType, rate) in bankExchangeRate" ng-click="selectOffer(resType)" ng-class="{ active: bankOfferType === resType }" class="btn btn-md btn-default"> {{rate}} {{resType}}
+                                                    <div ng-repeat="(resType, rate) in activePlayer.bankExchangeRates" ng-click="selectOffer(resType)" ng-class="{ active: bankOfferType === resType }" class="btn btn-md btn-default"> {{rate}} {{resType}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -486,7 +483,7 @@
                                             <label class="control-label col-xs-1">Demand: </label>
                                             <div class="col-xs-11">
                                                 <div class="btn-group">
-                                                    <div ng-repeat="(resType, rate) in bankExchangeRate" ng-click="selectDemand(resType)" ng-class="{ active: bankDemandType === resType }" class="btn btn-md btn-default"> 1 {{resType}}
+                                                    <div ng-repeat="(resType, rate) in activePlayer.bankExchangeRates" ng-click="selectDemand(resType)" ng-class="{ active: bankDemandType === resType }" class="btn btn-md btn-default"> 1 {{resType}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -570,15 +567,16 @@
 <script src="../bower_components/jquery/dist/jquery.min.js"></script>
 <script src="../bower_components/bootstrap/js/modal.js"></script>
 
-
 <script src="../bower_components/angular/angular.js"></script>
 <script src="../bower_components/angular-animate/angular-animate.js"></script>
 
 <script src="scripts/app.js"></script>
-<script src="scripts/constants/landConstants.js"></script>
+<script src="scripts/constants/constants.js"></script>
 
+<script src="scripts/directives/gameBoardDirective.js"></script>
 <script src="scripts/directives/landDirective.js"></script>
 <script src="scripts/directives/robberDirective.js"></script>
+<script src="scripts/directives/tradingPortDirective.js"></script>
 
 <script src="scripts/controllers/gameController.js"></script>
 <script src="scripts/controllers/mapController.js"></script>
@@ -592,6 +590,7 @@
 <script src="scripts/services/mapService.js"></script>
 <script src="scripts/services/buildingFactory.js"></script>
 <script src="scripts/services/mapGraphService.js"></script>
+
 <!-- endbuild -->
 
 </body>

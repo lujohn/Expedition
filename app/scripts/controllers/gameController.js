@@ -6,13 +6,13 @@ angular.module('expeditionApp')
     function ($rootScope, $scope, GameService) {
 
     $rootScope.landtypes = ['wool', 'lumber', 'ore', 'grain', 'brick'];
-
+    $scope.game = GameService;
     // ---------------------------- Initialize Scope --------------------------------
     // State information
     $scope.activePlayer = null;
     $scope.players = null;
-    $scope.lastLandSelected = null;
-    $scope.landWithRobber = "";
+    $scope.lastLandSelected = {type: "boo"};
+    $scope.landWithRobber = null;
     $scope.rollResult = null;
 
     // For Special Events
@@ -29,6 +29,15 @@ angular.module('expeditionApp')
     $scope.showEndTurn = false;
     
     /* ============================= Observer Registration ========================== */
+    // Listen for changes in the lastLandSelected
+    // GameService.registerLastLandSelectedObserver(this);
+    // this.updateLastLandSelected = function (land) {
+    //     $scope.lastLandSelected = land;
+    // };
+    $scope.$watch(function () { return GameService.lastLandSelected }, function (land) {
+        $scope.lastLandSelected = land;
+    });
+
     // Listen for changes in the active player
     GameService.registerActivePlayerObserver(this);
     this.updateActivePlayer = function (activePlayer) {
@@ -53,8 +62,16 @@ angular.module('expeditionApp')
             GameService.canEndTurn = true;
 
         } else if (newState === 'ROBBER') {
+            GameService.canBuildRoad = false;
+            GameService.canEndTurn = false;
+            GameService.canBuildSettlement = false;
             $('#robberInfoModal').modal('show');
+
+            // This will show the 'place robber' button
             $scope.isPlacingRobber = true;
+
+            $scope.showBuildRoadMenu(false);
+            $scope.showBuildSettlementMenu(false);
 
         } else if (newState === 'ROADSCARD') {
             // Player get's 2 free roads.
@@ -91,34 +108,6 @@ angular.module('expeditionApp')
     // Display instruction to first player to place a settlement
     $('#placeSettlementModal').modal('show');
 
-    /* ================================ Displaying Menus =============================== */
-    $scope.showBuildSettlementMenu = function (bool) {
-        $scope.showBuildSettlement = bool;
-    };   
-    
-    $scope.showBuildRoadMenu = function (bool) {
-        $scope.showBuildRoad = bool;
-    };
-
-    $scope.showMainControlsMenu = function (bool) {
-        $scope.showMainControls = bool;
-    };
-
-    $scope.setActivePlayer = function(num) {
-        $scope.activePlayer = GameService.turnsOrder[num];
-    };
-
-    function hideAllControlMenus() {
-        // Control Menus
-        $scope.showMainControls = false;
-        $scope.showBuildSettlement = false;
-        $scope.showBuildRoad = false;
-    };
-
-    function hideAllControlButtons() {
-        // Control Buttons
-        $scope.showEndTurn = false;
-    };
     /* ================================== Game Flow  ================================== */
     $scope.rollDice = function () {
         $scope.showMainControls = true;
@@ -126,7 +115,7 @@ angular.module('expeditionApp')
         // Generate integer in range [2, 12].
         var die1 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
         var die2 = Math.floor(Math.random() * 6) + 1;  // [1, 6]
-        var rollResult = die1 + die2;
+        var rollResult = 7; // die1 + die2;
         $scope.rollResult = rollResult;
         if (rollResult === 7) {
             // Players with more than 7 cards must discard half (rounding down)
@@ -160,12 +149,41 @@ angular.module('expeditionApp')
         oldRobberLand.hasRobber = false;
 
         // Put robber on new position
-        var newRobberLand = $scope.lastLandSelected;
+        var newRobberLand = GameService.lastLandSelected;
         newRobberLand.hasRobber = true;
         GameService.landWithRobber = $scope.landWithRobber = newRobberLand;
 
         $scope.isPlacingRobber = false;
-    };					
+    };	
+
+    /* ================================ Displaying Menus =============================== */
+    $scope.showBuildSettlementMenu = function (bool) {
+        $scope.showBuildSettlement = bool;
+    };   
+    
+    $scope.showBuildRoadMenu = function (bool) {
+        $scope.showBuildRoad = bool;
+    };
+
+    $scope.showMainControlsMenu = function (bool) {
+        $scope.showMainControls = bool;
+    };
+
+    $scope.setActivePlayer = function(num) {
+        $scope.activePlayer = GameService.turnsOrder[num];
+    };
+
+    function hideAllControlMenus() {
+        // Control Menus
+        $scope.showMainControls = false;
+        $scope.showBuildSettlement = false;
+        $scope.showBuildRoad = false;
+    };
+
+    function hideAllControlButtons() {
+        // Control Buttons
+        $scope.showEndTurn = false;
+    };				
 }])
 
 .controller('MainControlsController', ['$scope', function ($scope) {
@@ -228,7 +246,6 @@ angular.module('expeditionApp')
         } else {
             $('#discardModal').modal('hide');
             $('#placeRobberModal').modal('show');
-            $scope.showMainControlsMenu(true);
         }
 
         // provide clean buffer for next player

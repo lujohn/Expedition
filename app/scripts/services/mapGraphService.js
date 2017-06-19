@@ -5,7 +5,8 @@ and helps with accessing and adding buildings (on verticies) and roads (on edges
 angular.module('expeditionApp')
 .service('MapGraphService', function () {
 
-	// Every vertex is identified by it's coordinates in the game board.
+	// Every vertex is identified by it's coordinates in the game board (using the 
+	// string representation of the coordinates).
 	this.verticies = {}; // Vertices in the Graph represent buildings (city / settlements)
 
 	// Represents existing roads. Representation will be a hash of hashes. Outer hash
@@ -59,6 +60,7 @@ angular.module('expeditionApp')
         return true;
 	}
 
+	// Does not error check. Use only to update existing edge.
 	this.setEdge = function (color, from, to) {
 		var edges = this.getEdges(from);
 		edges[coordinatesToString(to)] = color;
@@ -67,7 +69,6 @@ angular.module('expeditionApp')
 		edges = this.getEdges(to);
 		edges[coordinatesToString(from)] = color;
 	}
-
 
 	this.setVertex = function (color, type, coord) {
 		var vertex = this.getVertex(coord);

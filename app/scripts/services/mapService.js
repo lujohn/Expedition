@@ -9,7 +9,7 @@
 */
 
 angular.module('expeditionApp')
-.service('MapService', ['MapGraphService', function(MapGraphService) {
+.service('MapService', ['MapGraphService', 'Harbors', function (MapGraphService, Harbors) {
 	
 	// Constants used for calculating hex coordinates
     const HEX_WIDTH = 160;
@@ -18,7 +18,7 @@ angular.module('expeditionApp')
     const MID_ROW_IDX = 2;
     const VERT_GAP_CLOSE = 40; 
 
-    // This function must be called before using MapService.
+    // This function must be called before using MapService. 'lands' is the landsMatrix
     this.initializeGraph = function (lands) {
         var xOffset = 0; var yOffset = 0;
         for (var i = 0; i < lands.length; i++) {
@@ -46,13 +46,22 @@ angular.module('expeditionApp')
                 var land = lands[i][j];
                 land.coordinates = hexCoordinates;
 
+                // Attach trade harbor
+                if (Harbors.locations.hasOwnProperty(land.landID)) {
+                    var harborCorners = Harbors.locations[land.landID].split('-');
+                    console.log("harborCorners: " + harborCorners);
+                    land.harborCoord = harborCorners.map(function (corner, idx) {
+                        return land.coordinates[corner];
+                    });
+                }
+
                 // Set up the MapGraph for use
                 this.addAllVerticiesInHexToGraph(hexCoordinates);
                 this.addAllEdgesFromHexToGraph(hexCoordinates);
                 this.registerLandWithVerticies(land);
             }
         }
-    }
+    };
 
     // This function adds all verticies found in the parameter lands matrix
     this.addAllVerticiesInHexToGraph = function (hexCoordinates) {
@@ -62,7 +71,7 @@ angular.module('expeditionApp')
                 MapGraphService.addVertex(coord);  // coord is [x,y] coordinates
             }
         }
-    }
+    };
 
     // This function forms edges out of all hexagonal points and adds them to the
     // map graph. That is, every hexagon will generate 6 edges and be added to the

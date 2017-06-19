@@ -1,0 +1,135 @@
+<!DOCTYPE html><html>
+<head>
+<title>Test 32 sprites in a cycle animation</title>
+<meta name = "viewport" content = "user-scalable=no, width=device-width">
+
+    <script type="text/javascript" src="../vendors/glMatrix.js"></script>
+    <script type="text/javascript" src="../vendors/webgl-utils.js"></script>
+    <script type="text/javascript" src="../lib/webgl.js"></script>
+    <script src="../sprite.js"></script>
+
+    <style>.sjs{border:2px #999 solid;}</style>
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec2 aTextureCoord;
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+
+        varying vec2 vTextureCoord;
+
+        void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+            vTextureCoord = aTextureCoord;
+        }
+    </script>
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+        #ifdef GL_ES
+            precision highp float;
+        #endif
+
+        varying vec2 vTextureCoord;
+
+        uniform sampler2D uSampler;
+
+        void main(void) {
+            gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        }
+    </script>
+
+</head>
+<body>
+
+<p>Sprite.js, 32 animated sprites, rotation and scaling. <a href="https://github.com/batiste/sprite.js">Get the source</a>. <br>
+system load <span id="load"></span>%  (<span id="fps"></span>FPS)
+<br><a href="?canvas=1" id="canvas-mode">Use canvas engine.</a>
+<a href="?html=1" id="html-mode">Use HTML engine</a>
+<a href="?webgl=1" id="webgl-mode">Use WebGL engine (experimental)</a>
+</p>
+
+</body>
+
+<script>
+
+window.onload = function() {
+
+    var scene = sjs.Scene({w:300, h:400});
+
+    scene.loadImages(['img/character.png', 'img/spritejs.png'], function() {
+
+    var canvas = window.location.href.indexOf('canvas') != -1;
+    var webgl = window.location.href.indexOf('webgl') != -1;
+
+    var sprites = [];
+    if(canvas) {
+        document.getElementById('canvas-mode').style.display = 'none';
+        var layer = scene.Layer("layer", {useCanvas:true});
+    } else if(webgl) {
+        document.getElementById('webgl-mode').style.display = 'none';
+        var layer = scene.Layer("layer", {useWebGL:true});
+    } else {
+        document.getElementById('html-mode').style.display = 'none';
+        var layer = scene.Layer("layer", {useCanvas:false});
+    }
+
+    for(var i=0; i<32; i++) {
+        var sp = scene.Sprite('img/character.png', layer);
+        sp.size(30, 55);
+        sp.setYOffset(2);
+        sp.move(6 * i + 10, 70 + ((i%4) * 60));
+        sprites.push(sp);
+    }
+
+    var logo = scene.Sprite(false, layer);
+    logo.move(120, 170);
+    logo.loadImg('img/spritejs.png');
+
+    var cycle = sjs.Cycle([[0, 2, 5],
+                               [30, 2, 5],
+                               [60, 2, 5],
+                               [90, 2, 5],
+                               [120, 2, 5],
+                               [150, 2, 5],
+                               [180, 2, 5]]);
+    cycle.addSprites(sprites);
+
+    var sin_cycle = 0,
+        ms_to_render = 0,
+        average_ms = 0,
+        load = document.getElementById('load'),
+        fps = document.getElementById('fps');
+
+    function paint() {
+
+        var start = new Date().getTime(),
+            xv = Math.sin(ticker.currentTick / 15) * 2,
+            xscale = xv < 0 ? 1 : -1;
+
+        cycle.next(ticker.lastTicksElapsed);
+        for(var i=0, sp; sp = sprites[i]; i++) {
+            sp.move(xv, 0)
+              .scale(xscale, 1)
+              .update();
+        }
+
+        logo.opacity = Math.abs(Math.sin(ticker.current_tick / 15));
+        logo.scale(xv)
+            .rotate(0.02)
+            .update();
+
+        if(ticker.currentTick % 30 == 0) {
+            load.innerHTML = ticker.load;
+            fps.innerHTML = ticker.fps;
+        }
+        //ticker.pause()
+    };
+    var ticker = scene.Ticker(30, paint);
+    ticker.run();
+
+    });
+
+};
+</script>
+</html>

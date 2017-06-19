@@ -35,7 +35,6 @@ angular.module('expeditionApp')
 
  	// =========================== buildSettlement function =========================
 	$scope.buildSettlement = function (corner) {
-
 		if (!GameService.canBuildSettlement) {
 			alert("Cannot build settlement at this time...");
 			return;
@@ -45,8 +44,9 @@ angular.module('expeditionApp')
 		var activePlayer = GameService.activePlayer;
 
 		// Get information about land to add land to map graph
-		var landToBuildOn = $scope.lastLandSelected;   // Inherited from MapController
+		var landToBuildOn = GameService.lastLandSelected;
 		var coordOfCorner = landToBuildOn.coordinates[corner];
+
 
 		// Check if corner is legal to build on. Only corners that are not
 		// adjacent to any other existing building can be built on
@@ -75,7 +75,6 @@ angular.module('expeditionApp')
 
 			// Draw settlement
 			drawSettlement(coordOfCorner);
-
 		} 
 		// ------------------------ Game STATE: NORMAL ---------------------------
 		else if (GameService.getGameState() === 'NORMAL') {
@@ -111,7 +110,7 @@ angular.module('expeditionApp')
 
 		// Grab activePlayer and last land clicked.
 		var activePlayer = GameService.activePlayer;
-		var landToBuildOn = $scope.lastLandSelected;
+		var landToBuildOn = GameService.lastLandSelected;
 
 		// Create new road
 		var coord1 = landToBuildOn.coordinates[corners[0]];
@@ -229,7 +228,6 @@ angular.module('expeditionApp')
 		if (GameService.buildingExists(cornerCoord) || GameService.getAdjacentBuildings(cornerCoord).length !== 0) {
 			return false;
 		}
-
 		if (GameService.getGameState() === 'NORMAL') {
 			// Find a bordering road. getRoadsWithSource() returns an array of colors
 			// representing which players have a road that connects to the passed in corner
@@ -269,14 +267,17 @@ angular.module('expeditionApp')
 		return false;
 	}
 
-	// This function draws a new road -- ** NOTE: move drawing code to directive **
+	// This function draws a new road -- 
+	// ** NOTE: move drawing code to directive **
 	function drawRoad (coord1, coord2, edgeLabel) {
 
 		var road = document.createElement('canvas');
-		var x1 = coord1[0]; var y1 = coord1[1]; var x2 = coord2[0]; var y2= coord2[1];
+		var x1 = coord1[0]; var y1 = coord1[1]; var x2 = coord2[0]; var y2 = coord2[1];
 
-		road.style.zIndex = "2";
+		// road z-index must be set lower than settlements (which is set at 101)
+		road.style.zIndex = '100';
 
+		// Get the context for drawing new road.
 		var rdCtx = road.getContext('2d');
 
 		// Positioning road canvas depends on which side of the hex the road is being built upon.
@@ -331,6 +332,8 @@ angular.module('expeditionApp')
 		settlementImage.src = "images/" + GameService.activePlayer.color + "Settlement.svg";
 		settlementImage.width = 40;
 		settlementImage.height = 40;
+		settlementImage.style.position = 'absolute';
+		settlementImage.style.zIndex = '101';
 		settlementImage.style.left = coordOfCorner[0] - (settlementImage.width / 2) + 'px';
 		settlementImage.style.top = coordOfCorner[1] - (settlementImage.height / 2) + 'px';
 		settlementImage.corner = coordOfCorner;
@@ -339,8 +342,6 @@ angular.module('expeditionApp')
 		// If user clicks on settlement, give user the option to build a city if user
 		// has sufficient resources. 
 		settlementImage.addEventListener('click', function (e) {
-			console.log(this.color);
-			console.log(this.corner);
 			var resAvail = GameService.activePlayer.getResources();
 			if (resAvail.ore >= 3 && resAvail.grain >= 2 && GameService.activePlayer.color === this.color) {
 				$scope.$apply($scope.setEnableBuildCityButton(true));

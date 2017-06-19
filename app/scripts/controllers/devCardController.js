@@ -28,7 +28,7 @@ angular.module('expeditionApp')
 		var ap = GameService.activePlayer;
 		if (!ap.hasDevCard(devCard) && GameService.canPlayDevCard) {
 			alert('Cannot play a' + ' "' + devCard + '"' + ' right now.');
-			//return;
+			return;
 		}
 
 		switch (devCard) {

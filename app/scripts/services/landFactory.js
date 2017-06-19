@@ -11,17 +11,13 @@ angular.module('expeditionApp')
         var newLand = {};
         newLand.type = type;
         newLand.diceNumber = -1;
-        // Note: the newLandID uniquely determines the location.
-        newLand.landID = "land" + this.landCount;
-
+        newLand.landID = "land" + this.landCount;  // landID uniquely determines the land.
         newLand.coordinates = {}; 
-
-        // State information
         newLand.hasRobber = false;
-        newLand.occupiedCorners = {
-        };  // 0 to 6. 0 is north corner. Count counterclockwise
-        newLand.occupiedEdges = {
-        };    // 'N', 'NE', 'NW', 'S', 'SE', 'SW'
+        // Coordinates of harbors belonging to this land (if exists). E.g. ['160,80', '0,80'].
+        // harborCoords is set in MapService.initializeGraph()
+        newLand.harborCoord = [];
+        newLand.harborType = null;
 
         this.landCount++;
 
@@ -30,9 +26,6 @@ angular.module('expeditionApp')
         }
         return newLand;
     }
-
-    // Other factory methods
-
 
     return landFactory;
 });

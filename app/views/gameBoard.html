@@ -1,0 +1,9 @@
+
+<div id="gameBoardContainer">
+    <div ng-repeat="landRow in landsArray">
+        <div ng-repeat="land in landRow">
+            <canvas land-hex data-land-type="{{land.type}}" id="{{land.landID}}"></canvas>
+        </div>
+    </div>
+    <robber data-land="landWithRobber"></robber>
+</div>

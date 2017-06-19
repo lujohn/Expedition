@@ -13,6 +13,12 @@ angular.module('expeditionApp')
 		newPlayer.buildingsOwned = [];
 		newPlayer.roadsOwned = [];
 
+		// Keeps track of the trading harbors owned.
+		newPlayer.harborsOwned = [];
+		// Default exchange rate with bank is 4 of the same type for 1 of any type. Owning harbors
+		// gives the player better exchange rates
+		newPlayer.bankExchangeRates = { wool: 4, lumber: 4, grain: 4, ore: 4, brick: 4 };
+
 		// This buffer keeps track of all developement cards purchased in player's current turn. 
 		// Player must wait a turn before these can be played.
 		newPlayer.newDevCardsBuffer = [];
@@ -44,6 +50,22 @@ angular.module('expeditionApp')
 				}
 			}
 		};
+
+		newPlayer.addHarbor = function (harborType) {
+			console.log("adding harbor: " + harborType + " to " + this.color);
+			var exchangeRates = this.bankExchangeRates;
+			if (harborType === "three-to-one") {
+				angular.forEach(exchangeRates, function (rate, type) {
+					if (rate > 3) {
+						exchangeRates[type] = 3;
+					} 
+				});
+			} else {
+				exchangeRates[harborType] = 2;
+				console.log("new rate: " + exchangeRates[harborType]);
+			}
+			this.harborsOwned.push(harborType);
+		}
 
 		/*------------------------ player building functions ------------------------- */
 		newPlayer.addRoad = function (road) {

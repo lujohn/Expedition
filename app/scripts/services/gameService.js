@@ -6,7 +6,9 @@
     the game */
 
 angular.module('expeditionApp')
-.service('GameService', ['LandFactory', 'PlayerService', 'MapService', 'BuildingFactory', function (LandFactory, PlayerService, MapService, BuildingFactory) {
+.service('GameService', ['LandFactory', 'PlayerService', 'MapService', 'BuildingFactory', 'Harbors', function (LandFactory, PlayerService, MapService, BuildingFactory, Harbors) {
+    
+    // The number of each type of land
     var LAND_CONSTRUCTION_DICTIONARY = {
         "grain": 4,
         "lumber": 4,
@@ -16,17 +18,29 @@ angular.module('expeditionApp')
         "desert": 1
     };
 
+    // The number of each type of development card
     var DEV_CARD_CONSTURCTION_DICTIONARY = {
         "knight": 14,
         "victoryPts": 5,
         "roadBuilding": 2,
         "monopoly": 2,
         "yearOfPlenty": 2
-    }
+    };
+
+    var HARBOR_TYPES_DICTIONARY = {
+        "grain": 1,
+        "lumber": 1,
+        "wool": 1,
+        "ore": 1,
+        "brick": 1,
+        "three-to-one": 4 
+    };
+
+    this.harborCoords = {};
 
     this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
     this.landsMatrix = [[],[],[],[],[]];   // Stores the lands in play for this game
-    this.landsDictionary = {}   // Stores lands for later lookup
+    this.landsDictionary = {}   // Stores lands for later lookup. Stores only land type (not land object).
     this.playersDictionary = {};  // Player information as key, value pair <Color, PlayerObject>
     this.turnsOrder = []  // Array of players (color only) indicating turn order.
     this.devCardsDeck = []  // Stores development cards
@@ -46,6 +60,14 @@ angular.module('expeditionApp')
 
     this.activePlayer = null;   // Pointer to active player
     this.landWithRobber = null;  // landID that robber is on
+    this.lastLandSelected = null;
+    
+    this.setLastLandSelected = function (landID) {
+        this.lastLandSelected = this.landsDictionary[landID];
+        for (var i = 0; i < lastLandSelectedObservers.length; i++) {
+            lastLandSelectedObservers[i].updateLastLandSelected(this.lastLandSelected);
+        }
+    }
 
     // These control restrict the actions of the active player. For instance, canPlayDevCard
     // is true when the player begins his/her turn and false after a card has been played during
@@ -55,6 +77,13 @@ angular.module('expeditionApp')
     this.canPlayDevCard = false;
 
     /* ================================ Observers ================================ */
+
+    // Observers for lastLandSelected change.
+    var lastLandSelectedObservers = [];
+    this.registerLastLandSelectedObserver = function (observer) {
+        lastLandSelectedObservers.push(observer);
+    }
+
     // Observers for activePlayer change.
     var activePlayerOberservers = [];
     this.registerActivePlayerObserver = function (observer) {
@@ -99,11 +128,17 @@ angular.module('expeditionApp')
 
     /* ============================== Game Creation ============================== */
     this.createRandomGame = function (numPlayers) {
-        // Generate lands randomly for now. MODIFY
+        // Generate lands randomly for now. *** MODIFY ***
         this.generateLandsRandom();
+
+        // Generate the graph of game board. Land coordinates and harbor information is generated here.
+        MapService.initializeGraph(this.landsMatrix);
+
         // Assign dice numbers to land
         this.assignLandDiceNumbersRandom();
-        // Create players
+
+        // Assign Harbors
+        this.assignHarbors();
 
         // Generate Development Cards
         this.generateDevCards();
@@ -111,7 +146,6 @@ angular.module('expeditionApp')
     };
 
     this.generateLandsRandom = function () {
-
         // Construct an array of land types.
         var arrangement = [];
         for (var prop in LAND_CONSTRUCTION_DICTIONARY) {
@@ -122,7 +156,6 @@ angular.module('expeditionApp')
                 }
             }
         }
-
         // Arrange land types Randomly.
         shuffle(arrangement);
 
@@ -148,7 +181,7 @@ angular.module('expeditionApp')
                 this.landsDictionary[newLand.landID] = newLand; 
             }
         }
-    }
+    };
 
     this.assignLandDiceNumbersRandom = function () {
         var possibleNumbers = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12];
@@ -167,11 +200,78 @@ angular.module('expeditionApp')
                 } 
             }
         }
-    }
+    };
+
+    // This function populates the harborCoords dictionary with the coordinates of each harbor location.
+    // E.g. If there is a wool harbor at land0, corner 'A' ([x, y]), then an entry in harborCoords will be of the 
+    // form { [x, y] : 'wool' }. IMPORTANT: this function can only be called after lands have been created
+    // and initialized.
+    this.assignHarbors = function () {
+        var landsDictionary = this.landsDictionary;
+        var harborCoordDict = this.harborCoords;
+
+        // Generate a randomly ordered list of harbors
+        var harbors = [];
+        angular.forEach(HARBOR_TYPES_DICTIONARY, function (value, key) {
+            for (var i = 0; i < value; i++) {
+                harbors.push(key);
+            }
+        });
+        shuffle(harbors);
+
+        // Find all the coordinates of all locations with harbors and store the type of harbor.
+        angular.forEach(Harbors.locations, function (harbor, landID) {
+            var harborCornerLabels = harbor.split('-');
+            var harborType = harbors.pop();
+            for (var i = 0; i < harborCornerLabels.length; i++) {
+                var land = landsDictionary[landID];
+                var harborCoord = land.coordinates[harborCornerLabels[i]];
+                harborCoordDict[harborCoord] = harborType;
+
+                // ******** For drawing harbor (in landDirective).... Please change this *****
+                land.harborType = harborType;
+            }
+        });
+
+        // corners are in the form 'A-B'
+        // angular.forEach(Harbors.locations, function (corners, landID) {
+        //     var land = landsDictionary[landID];
+        //     var harborCorners = corners.split('-');
+        //     var harborType = harbors.pop();
+
+        //     // Corner is A | B | C ... | F
+        //     angular.forEach(harborCorners, function (corner) {
+        //         var coord = land.coordinates[corner];
+        //         var lands = MapService.getLandsForCoordinates(coord);
+        //         angular.forEach(lands, function (land) {
+        //             var isDuplicate = false;
+        //             for (var i = 0; i < land.harborCoord.length; i++) {
+        //                 console.log("land: " + land.landID);
+        //                 console.log("harborCoord" + land.harborCoord[i]);
+        //                 console.log("coord: " + coord);
+        //                 if (land.harborCoord[i][0] === coord[0] && land.harborCoord[i][1] === coord[1]) {
+        //                     isDuplicate = true;
+        //                     break;
+        //                 }
+        //             }
+
+        //             if (!isDuplicate) {
+        //                 console.log("adding: " + harborType + "to land: " + land.landID);
+        //                 land.harborCoord.push(coord);
+        //                 land.harborType = harborType;
+        //             }
+        //             // if (!land.harborCoord.includes(coord)) {
+        //             //     land.harborCoord.push(coord);
+        //             //     land.harborType = harborType;
+        //             // }
+        //         });
+        //     });
+        // });
+    };
 
     this.getLandWithID = function (landID) {
         return this.landsDictionary[landID];
-    }
+    };
 
     /* ========================== Development cards functions ============================ */
     this.generateDevCards = function() {
@@ -199,16 +299,26 @@ angular.module('expeditionApp')
 
     this.addBuilding = function (color, coordinates) {
         var newBuilding = BuildingFactory.createBuilding(color, coordinates);
+        var player = this.playersDictionary[color];
         newBuilding.lands = MapService.getLandsForCoordinates(coordinates);
 
         // Add building to the player
-        this.playersDictionary[color].addBuilding(newBuilding);
+        player.addBuilding(newBuilding);
+
+        // Check if this new building location has a harbor
+        if (this.harborCoords.hasOwnProperty(coordinates)) {
+            var harborType = this.harborCoords[coordinates];
+            console.log("New Settlement location has a harbor!  " + harborType);
+            if (!player.harborsOwned.includes(harborType)) {
+                console.log("Adding harbor: " + harborType);
+                player.addHarbor(harborType);
+            }
+        }
 
         // Add building to the graph
         MapService.addBuildingToGraph(newBuilding);
-
-
-        return newBuilding;  // return the building created
+        // return the building created
+        return newBuilding;
     }
 
     this.addCity = function (color, coordinates) {
@@ -233,11 +343,6 @@ angular.module('expeditionApp')
 
     this.getRoadsWithSource = function (coordinates) {
         return MapService.getRoadsWithSource(coordinates);
-    }
-
-
-    this.initializeMap = function (lands) {
-        MapService.initializeGraph(lands);
     }
 
     /* ============================ Player-related functions ============================= */

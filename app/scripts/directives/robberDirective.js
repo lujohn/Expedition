@@ -1,13 +1,14 @@
 angular.module('expeditionApp')
-.directive('robber', function () {
+.directive('robber', ['GameService', 'LANDHEX', function (GameService, LANDHEX) {
+	game = GameService;
 	return {
+
 		link: function (scope, element, attr) {
 
-	        scope.$watch(attr.land, function(land) {
+			scope.$watch(attr.land, function (land) {
 	        	console.log("hasRobber: ");
 	        	console.log(land);
 
-	        	var landWithRobber = attr.land;
         		// Remove robber from old location
         		if (document.getElementById("robber") !== null) {
         			gameBoardContainer.removeChild(document.getElementById("robber"));
@@ -29,9 +30,7 @@ angular.module('expeditionApp')
 
 		        robberImg.style.zIndex = 201;
 		        gameBoardContainer.appendChild(robberImg);
-        	
-		    });
-
+			});
 		}
 	}; 
-});
+}]);

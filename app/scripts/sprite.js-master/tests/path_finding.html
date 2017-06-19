@@ -1,0 +1,99 @@
+<!DOCTYPE html><html>
+<head>
+<title>Path finding algorithm</title>
+<meta name = "viewport" content = "user-scalable=no, width=device-width">
+
+</head>
+<body>
+
+<p>This a simple implementation of a flexible path finding algorithm for 
+the <a href="https://github.com/batiste/sprite.js">Sprite.js project</a>. To create walls click on 
+the grid.</p>
+
+<script src="../sprite.js"></script>
+<script src="../lib/path.js"></script>
+
+<script>
+
+window.onload = function() {
+
+    var scene = sjs.Scene({w:400, h:400});
+    var layer = scene.Layer("front", {useCanvas:true});
+    var sprite = scene.Sprite(false, {w:38, h:38, color:"#999", layer:layer});
+        var wall = scene.Sprite(false, {w:38, h:38, color:"#333", layer:layer});
+            var pathSprite = scene.Sprite(false, {w:34, h:34, color:"#1f2", layer:layer});
+
+    var forbidden_nodes = [];
+    scene.dom.onclick = function(e) {
+        var x = Math.floor(e.offsetX / 40.);
+        var y = Math.floor(e.offsetY / 40.);
+        var node = new Node(x, y);
+        forbidden_nodes.push(node);
+        draw();
+    }
+
+    function Node(x, y, parent) {
+        this.parent = parent;
+        this.x = x;
+        this.y = y;
+    }
+    
+    Node.prototype.neighbors = function() {
+        return [
+            new Node(this.x-1, this.y, this), 
+            new Node(this.x+1, this.y, this),
+            new Node(this.x, this.y + 1, this),
+            new Node(this.x, this.y - 1, this)
+        ];
+    }
+    
+    Node.prototype.distance = function(node) {
+        return sjs.math.hypo(this.x - node.x, this.y-node.y);
+    }
+    
+    Node.prototype.disabled = function() {
+        if(this.x < 0 | this.y < 0 | this.y > 9 | this.x > 9)
+            return true;
+        for(var i=0; i<forbidden_nodes.length; i++) {
+            if(forbidden_nodes[i].equals(this)) {
+                return true;
+            }		
+        }
+        return false;
+    }
+    
+    Node.prototype.equals = function(node) {
+        return this.x == node.x && this.y == node.y;
+    }
+
+    function draw() {
+        layer.clear();
+    
+        for(var x=0; x<10; x+=1) {
+            for(var y=0; y<10; y+=1) {
+                sprite.position(x*40, y*40);
+                sprite.canvasUpdate(layer);
+            }
+        }
+        for(var i=0; i<forbidden_nodes.length; i++) {
+            var node = forbidden_nodes[i];
+            wall.position(node.x*40, node.y*40);
+            wall.canvasUpdate(layer);	
+        }
+        
+        var startNode = new Node(1,1);
+        var endNode = new Node(8,8);
+        var node = sjs.path.find(startNode, endNode);
+    
+        while(node) {
+            pathSprite.position(2 + node.x*40, 2 + node.y*40);
+            pathSprite.canvasUpdate(layer);
+            node = node.parent;
+        }
+        
+    }
+
+    draw();
+
+}
+</script>

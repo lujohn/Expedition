@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="12" height="12" tilewidth="48" tileheight="48">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <tileset firstgid="211" source="ground.tsx"/>
+ <layer name="Tile Layer 1" width="12" height="12">
+  <data encoding="base64" compression="zlib">
+   eJyNkdEJwDAIRNMROqwr9LfLRYiZphROeEhS+nEY9XJejLXW7CfmR32i76Xf1evCJdzKq/ZQnjGQD9RTmzwDN4QDtcpP36d8O7xV/YTjHNAxzJ2LGanLXRk0uEv6j7bfuet96bPy+qJ2bLj8q+qRdzO+eACE/F2O
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="12" height="12">
+  <object name="player start" type="playerStart" x="44" y="271" width="83" height="64"/>
+  <object name="map 1" type="teleport" x="-9" y="210" width="43" height="165">
+   <properties>
+    <property name="map" value="map.json"/>
+   </properties>
+  </object>
+  <object name="The farmer" type="dialog" x="276" y="234" width="45" height="88">
+   <properties>
+    <property name="1) You pigs are ugly!" value="Not as ugly as you are, but much more delicious!"/>
+    <property name="1.1) You are ugly, and old!" value="I see I touched a sensitive point."/>
+    <property name="1.2) Can I have some of this bacon then?" value="It's 1 gold for 10 slices"/>
+    <property name="2) Is that your pigs?" value="Yes, do you want to buy some bacon?"/>
+    <property name="2.1) Yes please." value="It's 1 gold for 20 slices."/>
+    <property name="2.2) No I am a vegetarian." value="Too bad."/>
+    <property name="start" value="Hello good sir, I am the pig farmer. What can I do fo you?"/>
+    <property name="title" value="The farmer"/>
+   </properties>
+  </object>
+  <object type="entity" gid="142" x="373" y="234">
+   <properties>
+    <property name="move" value="true"/>
+   </properties>
+  </object>
+  <object type="entity" gid="142" x="276" y="169">
+   <properties>
+    <property name="move" value="true"/>
+   </properties>
+  </object>
+  <object type="entity" gid="142" x="400" y="328">
+   <properties>
+    <property name="move" value="true"/>
+   </properties>
+  </object>
+  <object type="entity" gid="142" x="367" y="371">
+   <properties>
+    <property name="move" value="true"/>
+   </properties>
+  </object>
+  <object type="entity" gid="142" x="171" y="340">
+   <properties>
+    <property name="move" value="true"/>
+   </properties>
+  </object>
+  <object type="entity" gid="142" x="125" y="180">
+   <properties>
+    <property name="move" value="true"/>
+   </properties>
+  </object>
+  <object type="entity" gid="142" x="227" y="456">
+   <properties>
+    <property name="move" value="true"/>
+   </properties>
+  </object>
+  <object type="entity" gid="142" x="406" y="379">
+   <properties>
+    <property name="move" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
