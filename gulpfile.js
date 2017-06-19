@@ -39,7 +39,7 @@ gulp.task('copyimage', function() {
 	return stream;
 });
 
-gulp.task('zip', ['default'], function() {
+gulp.task('zip', function() {
 	return gulp.src('dist/**')
 	.pipe(zip('dist.zip'))
 	.pipe(gulp.dest('/'));
