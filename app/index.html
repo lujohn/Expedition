@@ -304,27 +304,41 @@
         </div> 
 
         <!-- - - - - - - - - - - - -  Map and Main Controls - - - - - - - - - - - - - - -->
-        <div class="row row-content">
-            <div class="col-xs-7">        
-                <game-board lands-matrix="landsMatrix"></game-board>
-            </div>
+        <div class="row row-content">      
+            <game-board lands-matrix="landsMatrix"></game-board>
 
-            <div ng-controller="MainControlsController" ng-show="showMainControls"  class="col-xs-4">
+            <div ng-controller="MainControlsController" ng-show="showMainControls" class="col-xs-5 col-xs-offset-7">
                 <div class="row row-content">
-                    <p style="padding: 20px"></p>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Main Controls (&nbsp{{activePlayer.color | uppercase}}'s Turn &nbsp)</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="btn-group-vertical" ng-hide="isPlacingRobber">
-                                <span class="btn btn-lg btn-danger" ng-click="toggleBuildSettlementMenu()">Build Settlement</span>
-                                <span class="btn btn-lg btn-info" ng-click="toggleBuildRoadMenu()">Build Road</span>
-                                <span class="btn btn-lg btn-warning" data-toggle="modal" data-target="#tradeRequestModal">Trade</span>
-                                <span class="btn btn-lg btn-success" data-toggle="modal" data-target="#devCardInfoModal">Development Card</span>
-                                <span ng-click="endTurn()" class="btn btn-lg btn-default">End Turn</span>
+                    <div class="col-xs-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><b>Main Controls<b></h3>
                             </div>
-                            <div class="btn btn-lg btn-primary" ng-click="placeRobber()" ng-show="isPlacingRobber">Place Robber</div>
+                            <div class="panel-body">
+                                <div class="btn-group-vertical" ng-hide="isPlacingRobber">
+                                    <span class="btn btn-lg btn-danger" ng-click="toggleBuildSettlementMenu()">Build Settlement</span>
+                                    <span class="btn btn-lg btn-info" ng-click="toggleBuildRoadMenu()">Build Road</span>
+                                    <span class="btn btn-lg btn-warning" data-toggle="modal" data-target="#tradeRequestModal">Trade</span>
+                                    <span class="btn btn-lg btn-success" data-toggle="modal" data-target="#devCardInfoModal">Development Card</span>
+                                    <span ng-click="endTurn()" class="btn btn-lg btn-default">End Turn</span>
+                                </div>
+                                <div class="btn btn-lg btn-primary" ng-click="placeRobber()" ng-show="isPlacingRobber">Place Robber</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><b>Recipes<b></h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item">Road: 1 lumber, 1 brick</li>
+                                    <li class="list-group-item">Settlement: 1 lumber, 1 brick, 1 wheat, 1 wool</li>
+                                    <li class="list-group-item">City: 3 ore, 2 wheat</li>
+                                    <li class="list-group-item">Development Card: 1 ore, 1 wheat, 1 wool</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>   
