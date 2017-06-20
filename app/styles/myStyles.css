@@ -21,6 +21,29 @@ body {
 	z-index: 1;
 }
 
+.inner-addon {
+	position: relative;
+}
+
+.inner-trade-addon .imgicon {
+	position: absolute;
+	padding: 0px;
+}
+
+.left-trade-addon .imgicon {
+	left: 5px;
+	top: 0px;
+}
+
+.left-trade-addon input {
+	padding-left: 30px;
+}
+
+.imgicon {
+	width: 20px;
+	height: 20px;
+}
+
 /*
 #gameBoardContainer > img {
 	position: absolute;

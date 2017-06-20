@@ -491,7 +491,12 @@
                                     <div ng-hide="tradeRequest.tradePartner === 'bank'">
                                         <div class="form-group row">
                                             <label class="control-label col-xs-1">Offer:</label>
-                                            <div class="form-inline col-xs-11">            
+                                            <div class="form-inline col-xs-11"> 
+                                                <span class='inner-addon inner-trade-addon left-trade-addon' ng-repeat="landtype in landtypes">  
+                                                    <img class="imgicon" ng-src="images/{{landtype}}.png"/>
+                                                    <input style="width: 80px" class="form-control" ng-model="tradeRequest.offer[landtype]" type="number" value="0" min="0">
+                                                </span>
+                                                <!--
                                                 <label for="trade-offer-wool" class="control-label">Wool</label>
                                                 <input ng-model="tradeRequest.offer.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-wool">
                                                 <label for="trade-offer-lumber" class="control-label">Lumber</label>
@@ -502,11 +507,18 @@
                                                 <input ng-model="tradeRequest.offer.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-grain">
                                                 <label for="trade-offer-brick" class="control-label">Brick</label>
                                                 <input ng-model="tradeRequest.offer.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-offer-brick">
+                                                -->
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="control-label col-xs-1">Demand:</label>
-                                            <div class="form-inline col-xs-11">            
+                                            <div class="form-inline col-xs-11">  
+                                                <span class='inner-addon inner-trade-addon left-trade-addon' ng-repeat="landtype in landtypes">
+                                                    <input style="width: 80px" class="form-control" ng-model="tradeRequest.demand[landtype]" type="number" value="0" min="0">
+                                                    <img class="imgicon" ng-src="images/{{landtype}}.png"/>
+                                                </span>
+
+                                                <!--          
                                                 <label for="trade-demand-wool" class="control-label">Wool</label>
                                                 <input ng-model="tradeRequest.demand.wool" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-wool">
                                                 <label for="trade-demand-lumber" class="control-label">Lumber</label>
@@ -517,6 +529,7 @@
                                                 <input ng-model="tradeRequest.demand.grain" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-grain">
                                                 <label for="trade-demand-brick" class="control-label">Brick</label>
                                                 <input ng-model="tradeRequest.demand.brick" class="form-control" style="width: 60px" type="number" value="0" min="0" id="trade-demand-brick">
+                                                -->
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary" ng-disabled="tradeForm.$invalid" data-dismiss="modal" ng-click="submitTradeRequest()">Submit</button>
