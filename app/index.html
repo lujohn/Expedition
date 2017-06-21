@@ -9,8 +9,9 @@
     <!-- endbuild -->
 </head>
 
-<body>
-    <div class="container" ng-controller="GameController">
+<body ng-controller="GameController">
+    <h1 style="padding-left: 20px">Current Player: {{activePlayer.color | uppercase}}</h1>
+    <div class="container">
         <!-- - - - - - - - - - - - - - - Instruction Modals - - - - - - - - - - - - - - - -->
         <!-- Place-Settlement Modal -->
         <div class="modal fade" id="placeSettlementModal">
