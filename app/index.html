@@ -473,8 +473,8 @@
                                             <label class="radio-inline form-check-label">
                                             <input ng-model="tradeRequest.tradePartner" class="form-check-input" name="tradePartner" type="radio" value="bank" required> bank
                                             </label>
-                                            <label ng-if="player.color !== activePlayer.color" ng-repeat="player in players" class="radio-inline form-check-label">
-                                                <input ng-model="tradeRequest.tradePartner" class="form-check-input" name="tradePartner" type="radio" value="{{player.color}}" required> {{player.color}}
+                                            <label ng-repeat="player in players" ng-if="player.color !== activePlayer.color" class="radio-inline form-check-label">
+                                                <input ng-model="tradeRequest.tradePartner" class="form-check-input" type="radio" ng-Value="player" required> {{player.color}}
                                             </label>
                                             <span ng-show="tradeForm.tradePartner.$error.required" class="help-block">Must Select a Player</span>
                                         </div>
@@ -507,7 +507,7 @@
                                             <label class="control-label col-xs-1">Offer:</label>
                                             <div class="form-inline col-xs-11"> 
                                                 <span class='inner-addon inner-trade-addon left-trade-addon' ng-repeat="landtype in landtypes">  
-                                                    <img class="imgicon" ng-src="images/{{landtype}}.png"/>
+                                                    <img class="addon-img-icon" ng-src="images/{{landtype}}.png"/>
                                                     <input style="width: 80px" class="form-control" ng-model="tradeRequest.offer[landtype]" type="number" value="0" min="0">
                                                 </span>
                                                 <!--
@@ -529,7 +529,7 @@
                                             <div class="form-inline col-xs-11">  
                                                 <span class='inner-addon inner-trade-addon left-trade-addon' ng-repeat="landtype in landtypes">
                                                     <input style="width: 80px" class="form-control" ng-model="tradeRequest.demand[landtype]" type="number" value="0" min="0">
-                                                    <img class="imgicon" ng-src="images/{{landtype}}.png"/>
+                                                    <img class="addon-img-icon" ng-src="images/{{landtype}}.png"/>
                                                 </span>
 
                                                 <!--          
@@ -573,6 +573,12 @@
                                         <h5 style="padding: 10px;">Demanding:</h5>
                                         <p style="float: left; padding-left: 10px;" ng-repeat="(type, count) in tradeRequest.demand"> {{type}}: {{count}}</p>
                                     </div>
+                                    <p>{{tradeRequest.tradePartner.color}}, you have: </p>
+                                    <ul class="list-group">
+                                        <span class="resource-icon-inline" ng-repeat="(resType, count) in tradeRequest.tradePartner.resourcesInHand">
+                                            <img ng-src="images/{{resType}}.png"/>: {{count}}
+                                        </span>
+                                    </ul>
                                 </div>
                                 <div class="modal-footer">
                                     <button ng-click="acceptTrade()" class="btn btn-primary" data-dismiss="modal">Accept</button>

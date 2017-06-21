@@ -25,12 +25,12 @@ body {
 	position: relative;
 }
 
-.inner-trade-addon .imgicon {
+.inner-trade-addon .addon-img-icon {
 	position: absolute;
 	padding: 0px;
 }
 
-.left-trade-addon .imgicon {
+.left-trade-addon .addon-img-icon {
 	left: 5px;
 	top: 0px;
 }
@@ -39,9 +39,18 @@ body {
 	padding-left: 30px;
 }
 
-.imgicon {
+.addon-img-icon {
 	width: 20px;
 	height: 20px;
+}
+
+.resource-icon-inline {
+	margin: 5px;
+}
+
+.resource-icon-inline img {
+	width: 40px;
+	height: 40px;
 }
 
 /*

@@ -31,12 +31,17 @@ angular.module('expeditionApp')
 
     // ----------------------- For Player to Player Trades -----------------------
     $scope.tradeRequest = {
-        tradePartner: "",
+        tradePartner: null,
         offer: { wool: 0, lumber: 0, grain: 0, ore: 0, brick: 0},
         demand: { wool: 0, lumber: 0, grain: 0, ore: 0, brick: 0}
     };
 
+    // $scope.setTradePartner = function (player) {
+    //     $scope.tradeRequest.tradePartner = player;
+    // }
+
     $scope.submitTradeRequest = function () {
+        console.log("trading with: " + $scope.tradeRequest.tradePartner);
         // Check for sufficient resources
         var offer = $scope.tradeRequest.offer;
         var activePlayer = GameService.activePlayer;
@@ -52,7 +57,7 @@ angular.module('expeditionApp')
     $scope.acceptTrade = function () {
 
         // Get the player and check if he/she has sufficient resources
-        var tradePartner = GameService.getPlayerByColor($scope.tradeRequest.tradePartner);
+        var tradePartner = $scope.tradeRequest.tradePartner;
         var offer = $scope.tradeRequest.offer;
         var demand = $scope.tradeRequest.demand;
 

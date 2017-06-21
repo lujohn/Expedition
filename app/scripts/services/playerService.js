@@ -7,7 +7,7 @@ angular.module('expeditionApp')
 		newPlayer.color = playerColor;
 
 		// This object keeps track of the number of each resource the player has in hand
-		newPlayer.resourcesInHand = { "wool": 0, "ore": 0, "brick": 0, "lumber": 0, "grain": 0 };
+		newPlayer.resourcesInHand = { "wool": 1, "ore": 0, "brick": 0, "lumber": 0, "grain": 0 };
 
 		newPlayer.victoryPoints = 0;
 		newPlayer.buildingsOwned = [];
@@ -177,10 +177,6 @@ angular.module('expeditionApp')
 	            }
 	        }
 	        return true;
-		};
-
-		newPlayer.toString = function () {
-			return this.color;
 		};
 		
 		return newPlayer;
