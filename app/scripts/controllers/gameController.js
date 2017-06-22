@@ -10,7 +10,7 @@ angular.module('expeditionApp')
     // State information
     $scope.activePlayer = null;
     $scope.players = null;
-    $scope.lastLandSelected = {type: "boo"};
+    $scope.lastLandSelected = null;
     $scope.landWithRobber = null;
     $scope.rollResult = null;
 
@@ -30,6 +30,7 @@ angular.module('expeditionApp')
 
     $scope.players = GameService.getAllPlayers();
     $scope.landWithRobber = GameService.landWithRobber;
+    $scope.activePlayer = GameService.activePlayer;
 
     // Display instruction to first player to place a settlement
     $('#placeSettlementModal').modal('show');
@@ -104,7 +105,7 @@ angular.module('expeditionApp')
     this.gameStateChanged = function (newState) {
         console.log('Game State changed to ' + newState);
         if (newState === 'PREP_TO_START') {
-            
+
             GameService.setActivePlayer(0);
             $scope.showPlayerInfo = true;
             $('#beginTurnModal').modal('show');

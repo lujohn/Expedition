@@ -3,14 +3,14 @@
  */
 'use strict'
 
-angular.module('expeditionApp', ['ui.router', 'ngAnimate'])
+angular.module('expeditionApp', ['ui.router'])
 
 
-.config( function ($stateProvider) {
+.config( function ($stateProvider, $urlRouterProvider) {
 
 	$stateProvider
 	.state('startMenu', {
-		url: '',
+		url: '/',
 		templateUrl: 'views/startMenu.html',
 		controller: 'StartMenuController' 
 
@@ -21,5 +21,7 @@ angular.module('expeditionApp', ['ui.router', 'ngAnimate'])
 		templateUrl: 'views/main.html',
 		controller: 'GameController'
 	})
+
+	$urlRouterProvider.otherwise('/');
 })
 ;
