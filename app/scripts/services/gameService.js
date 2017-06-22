@@ -36,6 +36,8 @@ angular.module('expeditionApp')
         "three-to-one": 4 
     };
 
+    var colors = ['red', 'blue', 'orange', 'yellow'];
+
     this.harborCoords = {};
 
     this.NUM_HEXES_IN_ROW = [3, 4, 5, 4, 3];  // Helps with populating game map
@@ -76,73 +78,28 @@ angular.module('expeditionApp')
     this.canBuildRoad = false;
     this.canPlayDevCard = false;
 
-    /* ================================ Observers ================================ */
-
-    // Observers for lastLandSelected change.
-    var lastLandSelectedObservers = [];
-    this.registerLastLandSelectedObserver = function (observer) {
-        lastLandSelectedObservers.push(observer);
-    }
-
-    // Observers for activePlayer change.
-    var activePlayerOberservers = [];
-    this.registerActivePlayerObserver = function (observer) {
-        activePlayerOberservers.push(observer);
-    }
-
-    // Observers for GAME STATE change
-    var gameStateObservers = [];
-    this.registerGameStateObserver = function (observer) {
-        gameStateObservers.push(observer);
-    }
-
-    this.setGameState = function (state) {
-        this.STATE = state;
-
-        // Notify observers that game state has changed. Mainly, used by gameController to
-        // present robber modal.
-        for (var i = 0; i < gameStateObservers.length; i++) {
-            gameStateObservers[i].gameStateChanged(state);
-        }
-    }
-
-    this.getGameState = function () {
-        return this.STATE;
-    }
-
-    this.setActivePlayer = function (num) {
-
-        // Set active player to next player
-        var playerColor = this.turnsOrder[num];
-        this.activePlayer = this.getPlayerByColor(playerColor);
-
-        // Setup for new turn. 
-        this.activePlayer.flushDevCardsBuffer();
-        this.canPlayDevCard = true;
-        
-        // Notify all observers that active player has changed
-        for (var i = 0; i < activePlayerOberservers.length; i++) {
-            activePlayerOberservers[i].updateActivePlayer(this.activePlayer);
-        }
-    }
-
     /* ============================== Game Creation ============================== */
-    this.createRandomGame = function (numPlayers) {
-        // Generate lands randomly for now. *** MODIFY ***
-        this.generateLandsRandom();
+    this.createGame = function (numPlayers) {
+        this.generateLandsRandom();  // Create the lands
+        this.assignLandDiceNumbersRandom();  // Associate a dice number from 2 to 12 with each land
+        this.generateDevCards();  // Create the development cards
 
         // Generate the graph of game board. Land coordinates and harbor information is generated here.
         MapService.initializeGraph(this.landsMatrix);
 
-        // Assign dice numbers to land
-        this.assignLandDiceNumbersRandom();
-
-        // Assign Harbors
+        // MapService must be initalized before calling assignHarbors()
         this.assignHarbors();
 
-        // Generate Development Cards
-        this.generateDevCards();
+        // Create players. 
+        for (var i = 0; i < numPlayers; i++) {
+            this.addPlayer(colors[i]);
+        }
 
+        this.setActivePlayer(0);
+
+        // Set game state to INITAL STATE - which is the state for picking the initial
+        // 2 settlements and roads.
+        this.setGameState('INITIAL');
     };
 
     this.generateLandsRandom = function () {
@@ -232,46 +189,61 @@ angular.module('expeditionApp')
                 land.harborType = harborType;
             }
         });
-
-        // corners are in the form 'A-B'
-        // angular.forEach(Harbors.locations, function (corners, landID) {
-        //     var land = landsDictionary[landID];
-        //     var harborCorners = corners.split('-');
-        //     var harborType = harbors.pop();
-
-        //     // Corner is A | B | C ... | F
-        //     angular.forEach(harborCorners, function (corner) {
-        //         var coord = land.coordinates[corner];
-        //         var lands = MapService.getLandsForCoordinates(coord);
-        //         angular.forEach(lands, function (land) {
-        //             var isDuplicate = false;
-        //             for (var i = 0; i < land.harborCoord.length; i++) {
-        //                 console.log("land: " + land.landID);
-        //                 console.log("harborCoord" + land.harborCoord[i]);
-        //                 console.log("coord: " + coord);
-        //                 if (land.harborCoord[i][0] === coord[0] && land.harborCoord[i][1] === coord[1]) {
-        //                     isDuplicate = true;
-        //                     break;
-        //                 }
-        //             }
-
-        //             if (!isDuplicate) {
-        //                 console.log("adding: " + harborType + "to land: " + land.landID);
-        //                 land.harborCoord.push(coord);
-        //                 land.harborType = harborType;
-        //             }
-        //             // if (!land.harborCoord.includes(coord)) {
-        //             //     land.harborCoord.push(coord);
-        //             //     land.harborType = harborType;
-        //             // }
-        //         });
-        //     });
-        // });
     };
 
     this.getLandWithID = function (landID) {
         return this.landsDictionary[landID];
     };
+
+    /* ================================ Observers ================================ */
+
+    // Observers for lastLandSelected change.
+    var lastLandSelectedObservers = [];
+    this.registerLastLandSelectedObserver = function (observer) {
+        lastLandSelectedObservers.push(observer);
+    }
+
+    // Observers for activePlayer change.
+    var activePlayerOberservers = [];
+    this.registerActivePlayerObserver = function (observer) {
+        activePlayerOberservers.push(observer);
+    }
+
+    // Observers for GAME STATE change
+    var gameStateObservers = [];
+    this.registerGameStateObserver = function (observer) {
+        gameStateObservers.push(observer);
+    }
+
+    this.setGameState = function (state) {
+        this.STATE = state;
+
+        // Notify observers that game state has changed. Mainly, used by gameController to
+        // present robber modal.
+        for (var i = 0; i < gameStateObservers.length; i++) {
+            gameStateObservers[i].gameStateChanged(state);
+        }
+    }
+
+    this.getGameState = function () {
+        return this.STATE;
+    }
+
+    this.setActivePlayer = function (num) {
+
+        // Set active player to next player
+        var playerColor = this.turnsOrder[num];
+        this.activePlayer = this.getPlayerByColor(playerColor);
+
+        // Setup for new turn. 
+        this.activePlayer.flushDevCardsBuffer();
+        this.canPlayDevCard = true;
+        
+        // Notify all observers that active player has changed
+        for (var i = 0; i < activePlayerOberservers.length; i++) {
+            activePlayerOberservers[i].updateActivePlayer(this.activePlayer);
+        }
+    }
 
     /* ========================== Development cards functions ============================ */
     this.generateDevCards = function() {
@@ -308,9 +280,7 @@ angular.module('expeditionApp')
         // Check if this new building location has a harbor
         if (this.harborCoords.hasOwnProperty(coordinates)) {
             var harborType = this.harborCoords[coordinates];
-            console.log("New Settlement location has a harbor!  " + harborType);
             if (!player.harborsOwned.includes(harborType)) {
-                console.log("Adding harbor: " + harborType);
                 player.addHarbor(harborType);
             }
         }

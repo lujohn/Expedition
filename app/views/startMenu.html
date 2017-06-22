@@ -1,0 +1,24 @@
+
+<div ng-controller='StartMenuController'>
+	<div class="modal fade" id="startMenuModal">
+	    <div class="modal-dialog modal-md">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h4 class="modal-title">Game Options</h4>
+	            </div>
+	            <div class="modal-body">
+	                <p>Some Description...</p>
+	                <form>
+						<div class="form-group row">
+							<label class="col-xs-2 control-label"># Of Players</label>
+							<div class="col-xs-4">
+						    	<input class="form-control" type="number" min="2" max="4" ng-model="nPlayers">
+						  	</div>
+						</div>
+						<button class="btn btn-default" type="submit" ng-click="submitOptions()">Start Game</button>
+					</form>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>

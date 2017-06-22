@@ -2,8 +2,7 @@
  * Created by johnlu on 3/3/17.
  */
 angular.module('expeditionApp')
-.controller('GameController', ['$rootScope', '$scope', 'GameService',
-    function ($rootScope, $scope, GameService) {
+.controller('GameController', ['$rootScope', '$scope', 'GameService', function ($rootScope, $scope, GameService) {
 
     $rootScope.landtypes = ['wool', 'lumber', 'ore', 'grain', 'brick'];
     $scope.game = GameService;
@@ -28,86 +27,17 @@ angular.module('expeditionApp')
     $scope.showRollDice = false;
     $scope.showEndTurn = false;
     
-    /* ============================= Observer Registration ========================== */
-    // Listen for changes in the lastLandSelected
-    // GameService.registerLastLandSelectedObserver(this);
-    // this.updateLastLandSelected = function (land) {
-    //     $scope.lastLandSelected = land;
-    // };
-    $scope.$watch(function () { return GameService.lastLandSelected }, function (land) {
-        $scope.lastLandSelected = land;
-    });
-
-    // Listen for changes in the active player
-    GameService.registerActivePlayerObserver(this);
-    this.updateActivePlayer = function (activePlayer) {
-        $scope.activePlayer = activePlayer;
-    };
-
-    // Listen for change in Game State
-    GameService.registerGameStateObserver(this);
-    this.gameStateChanged = function (newState) {
-        console.log('Game State changed to ' + newState);
-        if (newState === 'PREP_TO_START') {
-            GameService.setActivePlayer(0);
-            $scope.showPlayerInfo = true;
-            $('#beginTurnModal').modal('show');
-
-            // Begin Game!!
-            GameService.setGameState('NORMAL');
-
-        } else if (newState === 'NORMAL') {
-            GameService.canBuildSettlement = true;
-            GameService.canBuildRoad = true;
-            GameService.canEndTurn = true;
-
-        } else if (newState === 'ROBBER') {
-            GameService.canBuildRoad = false;
-            GameService.canEndTurn = false;
-            GameService.canBuildSettlement = false;
-            $('#robberInfoModal').modal('show');
-
-            // This will show the 'place robber' button
-            $scope.isPlacingRobber = true;
-
-            // Hide the building menus
-            $scope.showBuildRoadMenu(false);
-            $scope.showBuildSettlementMenu(false);
-
-        } else if (newState === 'ROADSCARD') {
-            // Player get's 2 free roads.
-            $('#roadsCardUsedModal').modal('show');
-            GameService.bonusRoads = 2;
-            // Restrict player's actions until both bonus roads are placed.
-            GameService.canBuildSettlement = false;
-            GameService.canEndTurn = false;
-        } else if (newState === 'MONOPOLYCARD') {
-            $('#monopolyCardUsedModal').modal('show');
-        } else if (newState === 'HARVESTCARD') {
-            // User picks two resources from bank
-            $('#harvestCardUsedModal').modal('show');
-        }
-    };
-
-    /* =============================== Game Creation ================================ */
-    // Initialize Game with 2 players. Will generate lands
-    GameService.createRandomGame(1);  // ** needs modification **
-
-    // Add players to Game
-    GameService.addPlayers(['red', 'blue']);
-
-    // Set active player to red
-    GameService.setActivePlayer(0);
-
-    // Set game state to INITAL STATE - which is the state for picking the initial
-    // 2 settlements and roads.
-    GameService.setGameState('INITIAL');
 
     $scope.players = GameService.getAllPlayers();
     $scope.landWithRobber = GameService.landWithRobber;
 
     // Display instruction to first player to place a settlement
     $('#placeSettlementModal').modal('show');
+
+    $scope.setActivePlayer = function(num) {
+        console.log("GameController.setActivePlayer() called!");
+        $scope.activePlayer = GameService.turnsOrder[num];
+    };
 
     /* ================================== Game Flow  ================================== */
     $scope.rollDice = function () {
@@ -158,6 +88,70 @@ angular.module('expeditionApp')
         GameService.setGameState('NORMAL');
     };	
 
+    /* ============================= Observer Registration ========================== */
+    $scope.$watch(function () { return GameService.lastLandSelected }, function (land) {
+        $scope.lastLandSelected = land;
+    });
+
+    // Listen for changes in the active player
+    GameService.registerActivePlayerObserver(this);
+    this.updateActivePlayer = function (activePlayer) {
+        $scope.activePlayer = activePlayer;
+    };
+
+    // Listen for change in Game State
+    GameService.registerGameStateObserver(this);
+    this.gameStateChanged = function (newState) {
+        console.log('Game State changed to ' + newState);
+        if (newState === 'PREP_TO_START') {
+            
+            GameService.setActivePlayer(0);
+            $scope.showPlayerInfo = true;
+            $('#beginTurnModal').modal('show');
+
+            // Begin Game!!
+            GameService.setGameState('NORMAL');
+
+        } else if (newState === 'NORMAL') {
+
+            GameService.canBuildSettlement = true;
+            GameService.canBuildRoad = true;
+            GameService.canEndTurn = true;
+
+        } else if (newState === 'ROBBER') {
+
+            GameService.canBuildRoad = false;
+            GameService.canEndTurn = false;
+            GameService.canBuildSettlement = false;
+            $('#robberInfoModal').modal('show');
+
+            // This will show the 'place robber' button
+            $scope.isPlacingRobber = true;
+
+            // Hide the building menus
+            $scope.showBuildRoadMenu(false);
+            $scope.showBuildSettlementMenu(false);
+
+        } else if (newState === 'ROADSCARD') {
+
+            // Player get's 2 free roads.
+            $('#roadsCardUsedModal').modal('show');
+            GameService.bonusRoads = 2;
+            // Restrict player's actions until both bonus roads are placed.
+            GameService.canBuildSettlement = false;
+            GameService.canEndTurn = false;
+
+        } else if (newState === 'MONOPOLYCARD') {
+
+            $('#monopolyCardUsedModal').modal('show');
+
+        } else if (newState === 'HARVESTCARD') {
+
+            // User picks two resources from bank
+            $('#harvestCardUsedModal').modal('show');
+        }
+    };
+
     /* ================================ Displaying Menus =============================== */
     $scope.showBuildSettlementMenu = function (bool) {
         $scope.showBuildSettlement = bool;
@@ -169,10 +163,6 @@ angular.module('expeditionApp')
 
     $scope.showMainControlsMenu = function (bool) {
         $scope.showMainControls = bool;
-    };
-
-    $scope.setActivePlayer = function(num) {
-        $scope.activePlayer = GameService.turnsOrder[num];
     };
 
     function hideAllControlMenus() {
