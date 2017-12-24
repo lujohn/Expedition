@@ -19,3 +19,4 @@ Game is still missing support for the following:
 
 ## Other Developmental Details
 - UI/UX needs to be revamped
+
